@@ -404,15 +404,26 @@
       const nameEl = document.getElementById('name');
 
       try {
-        // 1) handle OAuth callback (code exchange)
+        // 1) handle OAuth callback (code exchange) - FIXED: properly handle redirect
         const url = new URL(window.location.href);
-        if (url.searchParams.get("code")) {
-          await sb.auth.exchangeCodeForSession(window.location.href);
-          // clean URL
-          window.history.replaceState({}, document.title, "/dashboard/");
+        const params = url.searchParams;
+        
+        // If we have a code param, exchange it and then redirect cleanly
+        if (params.get("code")) {
+          const { error } = await sb.auth.exchangeCodeForSession(window.location.href);
+          if (error) throw error;
+          
+          // Remove the code param from URL to prevent re-processing
+          const cleanUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+          
+          // After exchange, we need to reload the session data
+          // We'll just reload the page to ensure everything is fresh
+          // But to avoid infinite loop, we'll only reload if we actually exchanged
+          // However, better approach: just continue and re-fetch session
         }
 
-        // 2) get session
+        // 2) get session - always fetch fresh
         const { data: { session }, error: sessionError } = await sb.auth.getSession();
         if (sessionError) throw sessionError;
 
@@ -443,7 +454,6 @@
           avatarEl.src = avatarUrl;
           avatarEl.style.display = 'block';
         } else {
-          // fallback initials
           avatarEl.style.display = 'none';
         }
 
@@ -466,7 +476,18 @@
       window.location.href = "/";
     }
 
-    // ----- init -----
+    // ----- init with auth state listener for immediate updates -----
+    // Listen for auth state changes to handle login from OAuth redirect
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        // Session changed, reload dashboard content
+        loadDashboard();
+      } else if (event === 'SIGNED_OUT') {
+        window.location.href = "/";
+      }
+    });
+
+    // Load dashboard on page load
     loadDashboard();
   </script>
 

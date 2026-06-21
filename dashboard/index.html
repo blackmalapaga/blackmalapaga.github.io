@@ -1,128 +1,453 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard | Eval Tweaks</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard · Eval Tweaks</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* ----- reset & base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    body {
+      background: #0b0b0b;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-<style>
-body {
-    margin:0;
-    font-family:Inter;
-    background:#0a0a0a;
-    color:white;
-    text-align:center;
-}
+    /* ---- animated glow background (same as main) ---- */
+    .glow-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 60, 60, 0.05) 0%, transparent 60%);
+      animation: breatheGlow 7s ease-in-out infinite alternate;
+    }
 
-.card {
-    background:#141414;
-    width:350px;
-    margin:60px auto;
-    padding:30px;
-    border-radius:10px;
-    border:1px solid #333;
-}
+    @keyframes breatheGlow {
+      0% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1.06);
+      }
+    }
 
-img {
-    width:80px;
-    border-radius:50%;
-    margin-bottom:10px;
-}
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      z-index: 0;
+      animation: floatOrb 16s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    .orb1 {
+      width: 450px;
+      height: 450px;
+      background: #ff1a1a;
+      top: -120px;
+      left: -120px;
+      animation-duration: 18s;
+    }
+    .orb2 {
+      width: 500px;
+      height: 500px;
+      background: #cc0000;
+      bottom: -150px;
+      right: -120px;
+      animation-duration: 22s;
+      animation-delay: -4s;
+    }
 
-.btn {
-    padding:12px 18px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:800;
-    margin:6px;
-    text-decoration:none;
-}
+    @keyframes floatOrb {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        transform: translate(50px, 30px) scale(1.15);
+      }
+    }
 
-.red { background:red; color:white; }
-.gray { background:#333; color:white; }
-.blue { background:#5865F2; color:white; }
-</style>
+    /* ---- main card layer ---- */
+    .dashboard-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 480px;
+      margin: 20px auto;
+    }
+
+    .card {
+      background: rgba(16, 16, 16, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 40px;
+      padding: 44px 32px 38px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow: 0 30px 80px -20px #000000ee, 0 0 0 1px rgba(255, 0, 0, 0.03);
+      transition: 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* subtle card glow ring */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 40px;
+      padding: 1px;
+      background: conic-gradient(from 0deg, transparent, #ff000055, transparent, #ff000055, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.3;
+      animation: spinGlow 12s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes spinGlow {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .avatar {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      border: 2px solid #ff333355;
+      object-fit: cover;
+      margin: 0 auto 12px;
+      display: block;
+      box-shadow: 0 0 40px #ff000033;
+      transition: 0.3s;
+    }
+
+    .avatar:hover {
+      transform: scale(1.02);
+      border-color: #ff6666;
+    }
+
+    .card h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-top: 4px;
+      background: linear-gradient(to right, #f0f0f0, #ffb3b3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 0, 0, 0.15);
+      border: 1px solid #ff333344;
+      border-radius: 40px;
+      padding: 6px 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #ff9999;
+      margin-top: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .status-text {
+      color: #aaa;
+      font-weight: 300;
+      margin: 18px 0 24px;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 8px 12px;
+      border-radius: 40px;
+      display: inline-block;
+      backdrop-filter: blur(2px);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 24px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: 0.25s cubic-bezier(0.2, 0.9, 0.4, 1);
+      cursor: pointer;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(4px);
+      color: #eee;
+      border-color: #333;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn i {
+      font-size: 1.1rem;
+    }
+
+    .btn.red {
+      background: #d60000;
+      color: #fff;
+      border-color: #ff333377;
+      box-shadow: 0 0 30px #d6000044;
+    }
+
+    .btn.red:hover {
+      background: #ff1a1a;
+      box-shadow: 0 0 60px #ff1a1aaa;
+      transform: translateY(-3px) scale(1.01);
+      border-color: #ff6666;
+    }
+
+    .btn.blue {
+      background: #5865F2;
+      color: #fff;
+      border-color: #7984f577;
+      box-shadow: 0 0 20px #5865f244;
+    }
+
+    .btn.blue:hover {
+      background: #6b77f5;
+      box-shadow: 0 0 50px #5865f2aa;
+      transform: translateY(-3px) scale(1.01);
+    }
+
+    .btn.gray {
+      background: rgba(40, 40, 40, 0.8);
+      color: #ddd;
+      border-color: #4a4a4a;
+    }
+
+    .btn.gray:hover {
+      background: #3a3a3a;
+      border-color: #888;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px #00000066;
+    }
+
+    .btn.logout {
+      background: transparent;
+      border-color: #3f3f3f;
+      color: #999;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 12px;
+      margin-top: 8px;
+    }
+
+    .btn.logout:hover {
+      background: #1f1f1f;
+      border-color: #ff333366;
+      color: #ff9999;
+      transform: translateY(-2px);
+    }
+
+    .loader {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #333;
+      border-top: 3px solid #ff3333;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* small */
+    .footer-note {
+      margin-top: 28px;
+      font-size: 0.7rem;
+      color: #555;
+      letter-spacing: 0.3px;
+      border-top: 1px solid #1f1f1f;
+      padding-top: 22px;
+    }
+
+    .footer-note i {
+      color: #ff3333;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        padding: 32px 20px 30px;
+        border-radius: 28px;
+      }
+      .avatar {
+        width: 72px;
+        height: 72px;
+      }
+      .card h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>Dashboard</h1>
+  <!-- background glow -->
+  <div class="glow-bg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
 
-<div class="card">
-    <p id="status">Loading...</p>
+  <div class="dashboard-wrapper">
+    <div class="card">
 
-    <img id="avatar" style="display:none;">
-    <h3 id="name"></h3>
+      <!-- avatar & name -->
+      <img id="avatar" class="avatar" style="display: none;" alt="avatar">
+      <h2 id="name">—</h2>
+      <div class="badge"><i class="fab fa-discord" style="margin-right: 6px;"></i> Discord</div>
 
-    <br>
+      <!-- status / loader -->
+      <div id="statusArea">
+        <div class="loader"></div>
+        <p style="color:#888; margin-top: 10px; font-weight: 300;">Verificando sesión...</p>
+      </div>
 
-    <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
-        Download EvalOS
-    </a>
+      <div id="userContent" style="display: none;">
+        <div class="status-text"><i class="fas fa-circle" style="color: #44ff88; font-size: 0.6rem; margin-right: 8px;"></i> Conectado</div>
 
-    <a class="btn blue" href="https://discord.gg/pFHrbTwTQA" target="_blank">
-        Discord Support
-    </a>
+        <div class="btn-group">
+          <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
+            <i class="fas fa-download"></i> Descargar EvalOS
+          </a>
+          <a class="btn blue" href="https://discord.gg/pFHrbTwTQA" target="_blank">
+            <i class="fab fa-discord"></i> Soporte Discord
+          </a>
+          <button class="btn logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          </button>
+        </div>
+      </div>
 
-    <br><br>
+      <div class="footer-note">
+        <i class="fas fa-bolt"></i> Eval Tweaks · rendimiento extremo
+      </div>
 
-    <button class="btn gray" onclick="logout()">Logout</button>
-</div>
+    </div>
+  </div>
 
-<script>
-const sb = supabase.createClient(
-    "https://rgdkdflkviigwdtuodjy.supabase.co",
-    "YOUR_ANON_KEY"
-);
+  <script>
+    // ----- Supabase client (public) -----
+    const sb = supabase.createClient(
+      "https://rgdkdflkviigwdtuodjy.supabase.co",
+      "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
+    );
 
-async function load() {
+    // ----- dashboard logic -----
+    async function loadDashboard() {
 
-    // FIX OAuth callback
-    const url = new URL(window.location.href);
+      const statusEl = document.getElementById('statusArea');
+      const userContent = document.getElementById('userContent');
+      const avatarEl = document.getElementById('avatar');
+      const nameEl = document.getElementById('name');
 
-    if (url.searchParams.get("code")) {
-        await sb.auth.exchangeCodeForSession(window.location.href);
-        window.history.replaceState({}, document.title, "/dashboard/");
+      try {
+        // 1) handle OAuth callback (code exchange)
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("code")) {
+          await sb.auth.exchangeCodeForSession(window.location.href);
+          // clean URL
+          window.history.replaceState({}, document.title, "/dashboard/");
+        }
+
+        // 2) get session
+        const { data: { session }, error: sessionError } = await sb.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        // 3) not logged in → redirect to home
+        if (!session?.user) {
+          window.location.href = "/";
+          return;
+        }
+
+        // 4) enforce discord provider
+        if (session.user.app_metadata?.provider !== "discord") {
+          alert("⚠️ Solo se permite inicio de sesión con Discord.");
+          await sb.auth.signOut();
+          window.location.href = "/";
+          return;
+        }
+
+        // 5) user valid → show dashboard
+        statusEl.style.display = 'none';
+        userContent.style.display = 'block';
+
+        const meta = session.user.user_metadata || {};
+        const fullName = meta.full_name || meta.name || session.user.email || 'Usuario';
+        nameEl.innerText = fullName;
+
+        const avatarUrl = meta.avatar_url || meta.picture || '';
+        if (avatarUrl) {
+          avatarEl.src = avatarUrl;
+          avatarEl.style.display = 'block';
+        } else {
+          // fallback initials
+          avatarEl.style.display = 'none';
+        }
+
+      } catch (err) {
+        console.error("Dashboard error:", err);
+        document.getElementById('statusArea').innerHTML = `
+          <p style="color:#ff6666; margin-top:10px;">
+            <i class="fas fa-triangle-exclamation"></i> Error al cargar perfil
+          </p>
+          <button class="btn gray" style="margin-top:16px; padding:10px 28px;" onclick="window.location.href='/'">
+            Volver al inicio
+          </button>
+        `;
+      }
     }
 
-    const { data: { session } } = await sb.auth.getSession();
-
-    // NOT LOGGED IN
-    if (!session?.user) {
-        window.location.href = "/";
-        return;
+    // ----- logout -----
+    async function logout() {
+      await sb.auth.signOut();
+      window.location.href = "/";
     }
 
-    // DISCORD ONLY CHECK
-    if (session.user.app_metadata?.provider !== "discord") {
-        alert("Discord login only");
-        await sb.auth.signOut();
-        window.location.href = "/";
-        return;
-    }
-
-    document.getElementById("status").style.display = "none";
-
-    document.getElementById("name").innerText =
-        session.user.user_metadata?.full_name ||
-        session.user.email;
-
-    document.getElementById("avatar").src =
-        session.user.user_metadata?.avatar_url || "";
-
-    document.getElementById("avatar").style.display = "block";
-}
-
-// LOGOUT
-async function logout() {
-    await sb.auth.signOut();
-    window.location.href = "/";
-}
-
-load();
-</script>
+    // ----- init -----
+    loadDashboard();
+  </script>
 
 </body>
 </html>

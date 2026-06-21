@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eval Tweaks | Pro Performance</title>
+    <title>Eval Tweaks | Pro Performance | FIXED </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -13,7 +13,7 @@
         .hero { padding: 80px 20px; text-align: center; background: radial-gradient(circle at center, #1a0000 0%, #0a0a0a 70%); position: relative; }
         h1 { font-size: 3.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .accent { color: var(--accent); }
-        .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
+        .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
         .btn { padding: 18px 30px; background: var(--accent); color: white; text-decoration: none; font-weight: 800; border-radius: 4px; transition: 0.2s; border: none; cursor: pointer; }
         .btn-secondary { background: #333; }
         .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
@@ -30,25 +30,36 @@
 <body>
 
 <section class="hero">
+    <!-- BOTÓN DE LOGIN CON DISCORD -->
     <button id="login-btn" class="discord-login-btn" onclick="signInWithDiscord()">
-        <i class="fab fa-discord"></i> Login con Discord Fixed
+        <i class="fab fa-discord"></i> Login con Discord
     </button>
 
+    <!-- DASHBOARD (se muestra después de login) -->
     <div id="dashboard">
         <img id="user-avatar" src="" alt="Avatar">
         <h3>Bienvenido, <span id="username"></span>!</h3>
         <button onclick="signOut()" class="btn btn-secondary">Cerrar Sesión</button>
     </div>
 
+    <!-- TÍTULO Y DESCRIPCIÓN -->
     <h1>EVAL <span class="accent">TWEAKS</span></h1>
     <p>Optimiza tu PC. Domina el juego.</p>
     
+    <!-- BOTONES PRINCIPALES -->
     <div class="button-group">
-        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download" class="btn">DESCARGAR EVALOS</a>
-        <a href="https://discord.gg/pFHrbTwTQA" class="btn btn-secondary">COMPRAR UTILIDAD (DISCORD)</a>
+        <!-- REEMPLAZA el href con tu link de Google Drive -->
+        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download" class="btn">
+            DESCARGAR EVALOS
+        </a>
+        <!-- REEMPLAZA el href con tu link de Discord -->
+        <a href="https://discord.gg/pFHrbTwTQA" class="btn btn-secondary">
+            COMPRAR UTILIDAD (DISCORD)
+        </a>
     </div>
 </section>
 
+<!-- SECCIÓN DE PRECIOS -->
 <div class="container">
     <div class="grid">
         <div class="card">
@@ -74,49 +85,90 @@
 </footer>
 
 <script>
-    // Inicialización del cliente evitando colisiones
-    const sbClient = supabase.createClient(
-        'https://rgdkdflkviigwdtuodjy.supabase.co', 
-        'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip'
-    );
+    // ============================================================
+    // CONFIGURACIÓN DE SUPABASE - REEMPLAZA CON TUS DATOS
+    // ============================================================
+    const SUPABASE_URL = 'https://rgdkdflkviigwdtuodjy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip';
 
-    // Función de control de interfaz
+    // ============================================================
+    // INICIALIZACIÓN
+    // ============================================================
+    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ============================================================
+    // FUNCIONES
+    // ============================================================
     function updateDashboard(user) {
         document.getElementById('login-btn').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('username').innerText = user.user_metadata.full_name || "Usuario";
-        document.getElementById('user-avatar').src = user.user_metadata.avatar_url || "";
-        // Limpiar URL
-        window.history.replaceState(null, null, window.location.pathname);
+        document.getElementById('username').innerText = user.user_metadata?.full_name || user.user_metadata?.name || 'Usuario';
+        document.getElementById('user-avatar').src = user.user_metadata?.avatar_url || '';
+
+        // Limpia los tokens de la URL
+        if (window.location.hash.includes('access_token')) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     }
 
-    // Funciones globales vinculadas al objeto window
+    // Login con Discord
     window.signInWithDiscord = async function() {
-        await sbClient.auth.signInWithOAuth({ 
-            provider: 'discord',
-            options: { redirectTo: window.location.origin + window.location.pathname }
-        });
+        try {
+            const { error } = await sbClient.auth.signInWithOAuth({
+                provider: 'discord',
+                options: {
+                    redirectTo: window.location.origin
+                }
+            });
+            if (error) {
+                console.error('Error:', error);
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error: ' + err.message);
+        }
     };
 
+    // Logout
     window.signOut = async function() {
         await sbClient.auth.signOut();
         location.reload();
     };
 
-    // Escuchar estado
+    // ============================================================
+    // DETECCIÓN DE SESIÓN
+    // ============================================================
+    async function checkSession() {
+        try {
+            const { data: { session }, error } = await sbClient.auth.getSession();
+            if (error) {
+                console.error('Error al obtener sesión:', error);
+                return;
+            }
+            if (session?.user) {
+                console.log('Usuario logueado:', session.user.email);
+                updateDashboard(session.user);
+            } else {
+                console.log('No hay sesión activa');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Escuchar cambios en la autenticación
     sbClient.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session) {
+        console.log('Auth Event:', event);
+        if (session?.user) {
             updateDashboard(session.user);
         }
     });
 
-    // Inicialización
-    async function init() {
-        const { data: { session } } = await sbClient.auth.getSession();
-        if (session) updateDashboard(session.user);
-    }
-
-    init();
+    // ============================================================
+    // INICIALIZAR AL CARGAR LA PÁGINA
+    // ============================================================
+    window.addEventListener('load', checkSession);
 </script>
 
 </body>

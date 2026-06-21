@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard</title>
+<title>Dashboard | Eval Tweaks</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 body {
     margin:0;
-    font-family:Arial;
+    font-family:Inter;
     background:#0a0a0a;
     color:white;
     text-align:center;
@@ -16,16 +17,32 @@ body {
 
 .card {
     background:#141414;
-    padding:30px;
-    width:320px;
+    width:350px;
     margin:60px auto;
+    padding:30px;
     border-radius:10px;
+    border:1px solid #333;
 }
 
 img {
-    width:70px;
+    width:80px;
     border-radius:50%;
+    margin-bottom:10px;
 }
+
+.btn {
+    padding:12px 18px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:800;
+    margin:6px;
+    text-decoration:none;
+}
+
+.red { background:red; color:white; }
+.gray { background:#333; color:white; }
+.blue { background:#5865F2; color:white; }
 </style>
 </head>
 
@@ -41,32 +58,47 @@ img {
 
     <br>
 
-    <a href="https://drive.google.com/your-link" target="_blank">Download EvalOS</a>
-    <br><br>
-    <a href="https://discord.gg/pFHrbTwTQA" target="_blank">Discord Support</a>
+    <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
+        Download EvalOS
+    </a>
+
+    <a class="btn blue" href="https://discord.gg/pFHrbTwTQA" target="_blank">
+        Discord Support
+    </a>
+
     <br><br>
 
-    <button onclick="logout()">Logout</button>
+    <button class="btn gray" onclick="logout()">Logout</button>
 </div>
 
 <script>
-const supabase = window.supabase.createClient(
+const sb = supabase.createClient(
     "https://rgdkdflkviigwdtuodjy.supabase.co",
-    "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
+    "YOUR_ANON_KEY"
 );
 
-// 🔥 FIX 1: handle OAuth callback properly
-async function handleAuth() {
+async function load() {
+
+    // FIX OAuth callback
     const url = new URL(window.location.href);
 
     if (url.searchParams.get("code")) {
-        await supabase.auth.exchangeCodeForSession(window.location.href);
+        await sb.auth.exchangeCodeForSession(window.location.href);
         window.history.replaceState({}, document.title, "/dashboard/");
     }
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sb.auth.getSession();
 
+    // NOT LOGGED IN
     if (!session?.user) {
+        window.location.href = "/";
+        return;
+    }
+
+    // DISCORD ONLY CHECK
+    if (session.user.app_metadata?.provider !== "discord") {
+        alert("Discord login only");
+        await sb.auth.signOut();
         window.location.href = "/";
         return;
     }
@@ -83,13 +115,13 @@ async function handleAuth() {
     document.getElementById("avatar").style.display = "block";
 }
 
-// logout
+// LOGOUT
 async function logout() {
-    await supabase.auth.signOut();
+    await sb.auth.signOut();
     window.location.href = "/";
 }
 
-handleAuth();
+load();
 </script>
 
 </body>

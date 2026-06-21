@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eval Tweaks | Pro Performance | FIXED</title>
+    <title>Eval Tweaks | Pro Performance</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -50,15 +50,8 @@
             margin: 10px;
         }
 
-        .btn-red {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-gray {
-            background: #333;
-            color: white;
-        }
+        .btn-red { background: var(--accent); color: white; }
+        .btn-gray { background: #333; color: white; }
 
         .discord-btn {
             position: absolute;
@@ -117,11 +110,12 @@
 
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN BUTTON -->
 <button class="discord-btn" onclick="loginDiscord()">
     <i class="fab fa-discord"></i> Login
 </button>
 
+<!-- DASHBOARD -->
 <div id="dashboard">
     <img id="avatar">
     <h3>Bienvenido <span id="name"></span></h3>
@@ -136,7 +130,7 @@
     <a class="btn btn-red"
        href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906"
        target="_blank">
-        DESCARGAR EVAL-OS
+        DESCARGAR EVALOS
     </a>
 
     <a class="btn btn-gray"
@@ -180,7 +174,8 @@
         auth: {
             flowType: 'pkce',
             detectSessionInUrl: true,
-            persistSession: true
+            persistSession: true,
+            autoRefreshToken: true
         }
     });
 
@@ -190,43 +185,73 @@
 
         document.getElementById("name").innerText =
             user.user_metadata?.full_name ||
-            user.email;
+            user.user_metadata?.name ||
+            user.email ||
+            "Usuario";
 
         document.getElementById("avatar").src =
             user.user_metadata?.avatar_url || "";
     }
 
+    function hideUser() {
+        document.getElementById("dashboard").style.display = "none";
+    }
+
     // ===================== LOGIN =====================
     async function loginDiscord() {
-        await sb.auth.signInWithOAuth({
+        const { error } = await sb.auth.signInWithOAuth({
             provider: "discord",
             options: {
                 redirectTo: window.location.origin
             }
         });
+
+        if (error) {
+            console.error(error);
+            alert("Login error: " + error.message);
+        }
     }
 
     // ===================== LOGOUT =====================
     async function logout() {
         await sb.auth.signOut();
+        hideUser();
         location.reload();
     }
 
     // ===================== SESSION =====================
     async function loadSession() {
-        const { data: { session } } = await sb.auth.getSession();
+
+        // 🔥 FIX IMPORTANT (PKCE exchange)
+        await sb.auth.exchangeCodeForSession(window.location.href);
+
+        const { data: { session }, error } = await sb.auth.getSession();
+
+        if (error) {
+            console.error(error);
+            return;
+        }
 
         if (session?.user) {
             showUser(session.user);
+
+            // limpiar URL (?code=...)
+            window.history.replaceState({}, document.title, "/");
         }
     }
 
+    // ===================== AUTH LISTENER =====================
     sb.auth.onAuthStateChange((event, session) => {
+        console.log("AUTH EVENT:", event);
+
         if (session?.user) {
             showUser(session.user);
+        } else {
+            hideUser();
         }
     });
 
+    // ===================== INIT =====================
     window.addEventListener("load", loadSession);
 </script>
 

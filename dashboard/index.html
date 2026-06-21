@@ -277,6 +277,23 @@
       transform: translateY(-2px);
     }
 
+    .btn.back {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: #2a2a2a;
+      color: #aaa;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 12px;
+      margin-top: 4px;
+    }
+
+    .btn.back:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #555;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
     .loader {
       display: inline-block;
       width: 28px;
@@ -357,6 +374,10 @@
           <button class="btn logout" onclick="logout()">
             <i class="fas fa-sign-out-alt"></i> Cerrar sesión
           </button>
+          <!-- BACK TO MAIN BUTTON -->
+          <a class="btn back" href="/">
+            <i class="fas fa-arrow-left"></i> Volver al inicio
+          </a>
         </div>
       </div>
 

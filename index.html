@@ -49,10 +49,7 @@ h1 { font-size:3.5rem; }
     cursor:pointer;
     font-weight:800;
     text-decoration:none;
-    transition:0.2s;
 }
-
-.btn:hover { transform:scale(1.05); }
 
 .red { background:var(--accent); color:white; }
 .gray { background:#333; color:white; }
@@ -94,10 +91,6 @@ h1 { font-size:3.5rem; }
     color:var(--accent);
     font-weight:800;
 }
-
-#dashboardPreview {
-    display:none;
-}
 </style>
 </head>
 
@@ -114,22 +107,16 @@ h1 { font-size:3.5rem; }
     <p>Optimiza tu PC. Domina el juego.</p>
 
     <div class="button-group">
-        <a class="btn red"
-           href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906"
-           target="_blank">
-           DESCARGAR EVAL-OS
+        <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
+            DESCARGAR EVALOS
         </a>
 
-        <a class="btn gray"
-           href="https://discord.gg/pFHrbTwTQA"
-           target="_blank">
-           DISCORD
+        <a class="btn gray" href="https://discord.gg/pFHrbTwTQA" target="_blank">
+            DISCORD
         </a>
 
-        <a class="btn gray"
-           href="/dashboard/"
-           style="background:#222;">
-           DASHBOARD
+        <a class="btn gray" href="/dashboard/">
+            DASHBOARD
         </a>
     </div>
 </section>
@@ -146,33 +133,35 @@ h1 { font-size:3.5rem; }
 
         <div class="card">
             <h2>Utilidad Monthly</h2>
-            <div class="price">$20 / mes</div>
+            <div class="price">$45 / month</div>
             <p>Acceso completo + soporte</p>
         </div>
 
         <div class="card">
             <h2>Lifetime</h2>
-            <div class="price">$50</div>
-            <p>Pago único (de por vida)</p>
+            <div class="price">$75</div>
+            <p>Pago único de por vida</p>
         </div>
 
     </div>
 </div>
 
 <script>
-const supabase = window.supabase.createClient(
+const sb = supabase.createClient(
     "https://rgdkdflkviigwdtuodjy.supabase.co",
     "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
 );
 
-// LOGIN DISCORD
+// LOGIN DISCORD (FIXED)
 async function login() {
-    await supabase.auth.signInWithOAuth({
-        provider:"discord",
-        options:{
-            redirectTo:"https://evaltweaks.com/dashboard/"
+    const { error } = await sb.auth.signInWithOAuth({
+        provider: "discord",
+        options: {
+            redirectTo: "https://evaltweaks.com/dashboard/"
         }
     });
+
+    if (error) alert(error.message);
 }
 </script>
 

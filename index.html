@@ -50,13 +50,13 @@
         </div>
         <div class="card">
             <h2>Utilidad (Mensual)</h2>
-            <div class="price">$20 USD / mes</div>
-            <p>Acceso total a la utilidad y soporte integrado.</p>
+            <div class="price">$45 USD / mes</div>
+            <p>Acceso total a la utilidad y soporte especializado.</p>
         </div>
         <div class="card">
             <h2>Utilidad (Lifetime)</h2>
-            <div class="price">$50 USD</div>
-            <p>Acceso de por vida. (Pago único)</p>
+            <div class="price">$75 USD</div>
+            <p>Acceso de por vida. Pago único.</p>
         </div>
     </div>
 </div>
@@ -66,17 +66,20 @@
 </footer>
 
 <script>
-    // URL lista, solo falta que pegues tu llave pública en la línea de abajo
-    const supabase = supabase.createClient(
+    // Inicialización única
+    window.supabase = supabase.createClient(
         'https://rgdkdflkviigwdtuodjy.supabase.co', 
         'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip'
     );
 
     async function signInWithDiscord() {
-        const { error } = await supabase.auth.signInWithOAuth({
+        const { error } = await window.supabase.auth.signInWithOAuth({
             provider: 'discord',
         });
-        if (error) alert("Error: " + error.message);
+        if (error) {
+            console.error("Error:", error.message);
+            alert("Error: " + error.message);
+        }
     }
 </script>
 

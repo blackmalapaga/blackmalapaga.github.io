@@ -1,143 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eval Tweaks | Pro Performance</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Tweaks | Pro Performance</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
 
-        :root {
-            --bg: #0a0a0a;
-            --card: #141414;
-            --accent: #ff0000;
-            --text: #ffffff;
-        }
+:root {
+    --bg:#0a0a0a;
+    --card:#141414;
+    --accent:#ff0000;
+    --text:#fff;
+}
 
-        body {
-            margin: 0;
-            font-family: Inter, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-        }
+body {
+    margin:0;
+    font-family:Inter;
+    background:var(--bg);
+    color:var(--text);
+}
 
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: radial-gradient(circle, #1a0000, #0a0a0a);
-        }
+.hero {
+    padding:80px 20px;
+    text-align:center;
+    background:radial-gradient(circle,#1a0000,#0a0a0a);
+}
 
-        h1 {
-            font-size: 3rem;
-        }
+h1 { font-size:3.5rem; }
+.accent { color:var(--accent); }
 
-        .accent {
-            color: var(--accent);
-        }
+.button-group {
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
 
-        .btn {
-            padding: 15px 25px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 6px;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px;
-        }
+.btn {
+    padding:16px 28px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:800;
+    text-decoration:none;
+    transition:0.2s;
+}
 
-        .btn-red { background: var(--accent); color: white; }
-        .btn-gray { background: #333; color: white; }
+.btn:hover { transform:scale(1.05); }
 
-        .discord-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #5865F2;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            border: none;
-        }
+.red { background:var(--accent); color:white; }
+.gray { background:#333; color:white; }
 
-        #dashboard {
-            display: none;
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 400px;
-            margin: 20px auto;
-            text-align: center;
-        }
+.discord-login {
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:#5865F2;
+    color:white;
+    padding:10px 18px;
+    border-radius:20px;
+    border:none;
+    cursor:pointer;
+}
 
-        #avatar {
-            width: 60px;
-            border-radius: 50%;
-        }
+.container {
+    max-width:1000px;
+    margin:auto;
+    padding:50px 20px;
+}
 
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            padding: 40px;
-        }
+.grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
+}
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
+.card {
+    background:var(--card);
+    padding:40px;
+    border:1px solid #333;
+    border-radius:10px;
+    text-align:center;
+}
 
-        .card {
-            background: var(--card);
-            padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            text-align: center;
-        }
+.price {
+    font-size:1.8rem;
+    color:var(--accent);
+    font-weight:800;
+}
 
-        .price {
-            color: var(--accent);
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-    </style>
+#dashboardPreview {
+    display:none;
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN BUTTON -->
-<button class="discord-btn" onclick="loginDiscord()">
+<!-- LOGIN -->
+<button class="discord-login" onclick="login()">
     <i class="fab fa-discord"></i> Login
 </button>
-
-<!-- DASHBOARD -->
-<div id="dashboard">
-    <img id="avatar">
-    <h3>Bienvenido <span id="name"></span></h3>
-    <button class="btn btn-gray" onclick="logout()">Cerrar sesión</button>
-</div>
 
 <!-- HERO -->
 <section class="hero">
     <h1>EVAL <span class="accent">TWEAKS</span></h1>
     <p>Optimiza tu PC. Domina el juego.</p>
 
-    <a class="btn btn-red"
-       href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906"
-       target="_blank">
-        DESCARGAR EVALOS
-    </a>
+    <div class="button-group">
+        <a class="btn red"
+           href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906"
+           target="_blank">
+           DESCARGAR EVAL-OS
+        </a>
 
-    <a class="btn btn-gray"
-       href="https://discord.gg/pFHrbTwTQA"
-       target="_blank">
-        DISCORD
-    </a>
+        <a class="btn gray"
+           href="https://discord.gg/pFHrbTwTQA"
+           target="_blank">
+           DISCORD
+        </a>
+
+        <a class="btn gray"
+           href="/dashboard/"
+           style="background:#222;">
+           DASHBOARD
+        </a>
+    </div>
 </section>
 
 <!-- CARDS -->
@@ -146,113 +140,40 @@
 
         <div class="card">
             <h2>EvalOS</h2>
-            <p class="price">FREE</p>
+            <div class="price">FREE</div>
             <p>Optimización básica del sistema</p>
         </div>
 
         <div class="card">
             <h2>Utilidad Monthly</h2>
-            <p class="price">$45 / mes</p>
+            <div class="price">$20 / mes</div>
             <p>Acceso completo + soporte</p>
         </div>
 
         <div class="card">
             <h2>Lifetime</h2>
-            <p class="price">$75</p>
-            <p>Pago único de por vida</p>
+            <div class="price">$50</div>
+            <p>Pago único (de por vida)</p>
         </div>
 
     </div>
 </div>
 
 <script>
-    // ===================== SUPABASE =====================
-    const SUPABASE_URL = "https://rgdkdflkviigwdtuodjy.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip";
+const supabase = window.supabase.createClient(
+    "https://rgdkdflkviigwdtuodjy.supabase.co",
+    "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
+);
 
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: {
-            flowType: 'pkce',
-            detectSessionInUrl: true,
-            persistSession: true,
-            autoRefreshToken: true
+// LOGIN DISCORD
+async function login() {
+    await supabase.auth.signInWithOAuth({
+        provider:"discord",
+        options:{
+            redirectTo:"https://evaltweaks.com/dashboard/"
         }
     });
-
-    // ===================== UI =====================
-    function showUser(user) {
-        document.getElementById("dashboard").style.display = "block";
-
-        document.getElementById("name").innerText =
-            user.user_metadata?.full_name ||
-            user.user_metadata?.name ||
-            user.email ||
-            "Usuario";
-
-        document.getElementById("avatar").src =
-            user.user_metadata?.avatar_url || "";
-    }
-
-    function hideUser() {
-        document.getElementById("dashboard").style.display = "none";
-    }
-
-    // ===================== LOGIN =====================
-    async function loginDiscord() {
-        const { error } = await sb.auth.signInWithOAuth({
-            provider: "discord",
-            options: {
-                redirectTo: window.location.origin
-            }
-        });
-
-        if (error) {
-            console.error(error);
-            alert("Login error: " + error.message);
-        }
-    }
-
-    // ===================== LOGOUT =====================
-    async function logout() {
-        await sb.auth.signOut();
-        hideUser();
-        location.reload();
-    }
-
-    // ===================== SESSION =====================
-    async function loadSession() {
-
-        // 🔥 FIX IMPORTANT (PKCE exchange)
-        await sb.auth.exchangeCodeForSession(window.location.href);
-
-        const { data: { session }, error } = await sb.auth.getSession();
-
-        if (error) {
-            console.error(error);
-            return;
-        }
-
-        if (session?.user) {
-            showUser(session.user);
-
-            // limpiar URL (?code=...)
-            window.history.replaceState({}, document.title, "/");
-        }
-    }
-
-    // ===================== AUTH LISTENER =====================
-    sb.auth.onAuthStateChange((event, session) => {
-        console.log("AUTH EVENT:", event);
-
-        if (session?.user) {
-            showUser(session.user);
-        } else {
-            hideUser();
-        }
-    });
-
-    // ===================== INIT =====================
-    window.addEventListener("load", loadSession);
+}
 </script>
 
 </body>

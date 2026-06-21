@@ -3,172 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eval Tweaks | Pro Performance | FIXED </title>
+    <title>Eval Tweaks | Pro Performance</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
-        :root { --bg: #0a0a0a; --card-bg: #141414; --accent: #ff0000; --text: #ffffff; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
-        .hero { padding: 80px 20px; text-align: center; background: radial-gradient(circle at center, #1a0000 0%, #0a0a0a 70%); position: relative; }
-        h1 { font-size: 3.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
-        .accent { color: var(--accent); }
-        .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
-        .btn { padding: 18px 30px; background: var(--accent); color: white; text-decoration: none; font-weight: 800; border-radius: 4px; transition: 0.2s; border: none; cursor: pointer; }
-        .btn-secondary { background: #333; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
-        .container { max-width: 1000px; margin: 50px auto; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); padding: 40px; border: 1px solid #333; border-radius: 8px; text-align: center; }
-        .price { font-size: 1.8rem; font-weight: 800; margin: 15px 0; color: var(--accent); }
-        .discord-login-btn { position: absolute; top: 20px; right: 20px; background: #5865F2; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: 600; }
-        #dashboard { display: none; padding: 20px; text-align: center; background: #1a1a1a; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; max-width: 400px; margin-left: auto; margin-right: auto; }
-        #user-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 10px; }
-        footer { text-align: center; padding: 60px; color: #a0a0a0; font-size: 0.9rem; }
+
+        :root {
+            --bg: #0a0a0a;
+            --card: #141414;
+            --accent: #ff0000;
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: radial-gradient(circle, #1a0000, #0a0a0a);
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn-red {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-gray {
+            background: #333;
+            color: white;
+        }
+
+        .discord-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #5865F2;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+        }
+
+        #dashboard {
+            display: none;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #avatar {
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .price {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
 
+<!-- LOGIN -->
+<button class="discord-btn" onclick="loginDiscord()">
+    <i class="fab fa-discord"></i> Login
+</button>
+
+<div id="dashboard">
+    <img id="avatar">
+    <h3>Bienvenido <span id="name"></span></h3>
+    <button class="btn btn-gray" onclick="logout()">Cerrar sesión</button>
+</div>
+
+<!-- HERO -->
 <section class="hero">
-    <!-- BOTÓN DE LOGIN CON DISCORD -->
-    <button id="login-btn" class="discord-login-btn" onclick="signInWithDiscord()">
-        <i class="fab fa-discord"></i> Login con Discord
-    </button>
-
-    <!-- DASHBOARD (se muestra después de login) -->
-    <div id="dashboard">
-        <img id="user-avatar" src="" alt="Avatar">
-        <h3>Bienvenido, <span id="username"></span>!</h3>
-        <button onclick="signOut()" class="btn btn-secondary">Cerrar Sesión</button>
-    </div>
-
-    <!-- TÍTULO Y DESCRIPCIÓN -->
     <h1>EVAL <span class="accent">TWEAKS</span></h1>
     <p>Optimiza tu PC. Domina el juego.</p>
-    
-    <!-- BOTONES PRINCIPALES -->
-    <div class="button-group">
-        <!-- REEMPLAZA el href con tu link de Google Drive -->
-        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download" class="btn">
-            DESCARGAR EVALOS
-        </a>
-        <!-- REEMPLAZA el href con tu link de Discord -->
-        <a href="https://discord.gg/pFHrbTwTQA" class="btn btn-secondary">
-            COMPRAR UTILIDAD (DISCORD)
-        </a>
-    </div>
+
+    <a class="btn btn-red"
+       href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906"
+       target="_blank">
+        DESCARGAR EVAL-OS
+    </a>
+
+    <a class="btn btn-gray"
+       href="https://discord.gg/pFHrbTwTQA"
+       target="_blank">
+        DISCORD
+    </a>
 </section>
 
-<!-- SECCIÓN DE PRECIOS -->
+<!-- CARDS -->
 <div class="container">
     <div class="grid">
+
         <div class="card">
             <h2>EvalOS</h2>
-            <div class="price">FREE</div>
-            <p>Optimización básica de sistema.</p>
+            <p class="price">FREE</p>
+            <p>Optimización básica del sistema</p>
         </div>
+
         <div class="card">
-            <h2>Utilidad (Mensual)</h2>
-            <div class="price">$45 USD / mes</div>
-            <p>Acceso total a la utilidad y soporte especializado.</p>
+            <h2>Utilidad Monthly</h2>
+            <p class="price">$45 / mes</p>
+            <p>Acceso completo + soporte</p>
         </div>
+
         <div class="card">
-            <h2>Utilidad (Lifetime)</h2>
-            <div class="price">$75 USD</div>
-            <p>Acceso de por vida. Pago único.</p>
+            <h2>Lifetime</h2>
+            <p class="price">$75</p>
+            <p>Pago único de por vida</p>
         </div>
+
     </div>
 </div>
 
-<footer>
-    &copy; 2026 Eval Tweaks. Todos los derechos reservados.
-</footer>
-
 <script>
-    // ============================================================
-    // CONFIGURACIÓN DE SUPABASE - REEMPLAZA CON TUS DATOS
-    // ============================================================
-    const SUPABASE_URL = 'https://rgdkdflkviigwdtuodjy.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip';
+    // ===================== SUPABASE =====================
+    const SUPABASE_URL = "https://rgdkdflkviigwdtuodjy.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip";
 
-    // ============================================================
-    // INICIALIZACIÓN
-    // ============================================================
-    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ============================================================
-    // FUNCIONES
-    // ============================================================
-    function updateDashboard(user) {
-        document.getElementById('login-btn').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('username').innerText = user.user_metadata?.full_name || user.user_metadata?.name || 'Usuario';
-        document.getElementById('user-avatar').src = user.user_metadata?.avatar_url || '';
-
-        // Limpia los tokens de la URL
-        if (window.location.hash.includes('access_token')) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }
-
-    // Login con Discord
-    window.signInWithDiscord = async function() {
-        try {
-            const { error } = await sbClient.auth.signInWithOAuth({
-                provider: 'discord',
-                options: {
-                    redirectTo: window.location.origin
-                }
-            });
-            if (error) {
-                console.error('Error:', error);
-                alert('Error al iniciar sesión: ' + error.message);
-            }
-        } catch (err) {
-            console.error(err);
-            alert('Error: ' + err.message);
-        }
-    };
-
-    // Logout
-    window.signOut = async function() {
-        await sbClient.auth.signOut();
-        location.reload();
-    };
-
-    // ============================================================
-    // DETECCIÓN DE SESIÓN
-    // ============================================================
-    async function checkSession() {
-        try {
-            const { data: { session }, error } = await sbClient.auth.getSession();
-            if (error) {
-                console.error('Error al obtener sesión:', error);
-                return;
-            }
-            if (session?.user) {
-                console.log('Usuario logueado:', session.user.email);
-                updateDashboard(session.user);
-            } else {
-                console.log('No hay sesión activa');
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    // Escuchar cambios en la autenticación
-    sbClient.auth.onAuthStateChange((event, session) => {
-        console.log('Auth Event:', event);
-        if (session?.user) {
-            updateDashboard(session.user);
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+            flowType: 'pkce',
+            detectSessionInUrl: true,
+            persistSession: true
         }
     });
 
-    // ============================================================
-    // INICIALIZAR AL CARGAR LA PÁGINA
-    // ============================================================
-    window.addEventListener('load', checkSession);
+    // ===================== UI =====================
+    function showUser(user) {
+        document.getElementById("dashboard").style.display = "block";
+
+        document.getElementById("name").innerText =
+            user.user_metadata?.full_name ||
+            user.email;
+
+        document.getElementById("avatar").src =
+            user.user_metadata?.avatar_url || "";
+    }
+
+    // ===================== LOGIN =====================
+    async function loginDiscord() {
+        await sb.auth.signInWithOAuth({
+            provider: "discord",
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+    }
+
+    // ===================== LOGOUT =====================
+    async function logout() {
+        await sb.auth.signOut();
+        location.reload();
+    }
+
+    // ===================== SESSION =====================
+    async function loadSession() {
+        const { data: { session } } = await sb.auth.getSession();
+
+        if (session?.user) {
+            showUser(session.user);
+        }
+    }
+
+    sb.auth.onAuthStateChange((event, session) => {
+        if (session?.user) {
+            showUser(session.user);
+        }
+    });
+
+    window.addEventListener("load", loadSession);
 </script>
 
 </body>

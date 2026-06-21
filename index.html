@@ -10,21 +10,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
         :root { --bg: #0a0a0a; --card-bg: #141414; --accent: #ff0000; --text: #ffffff; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
-        
         .hero { padding: 80px 20px; text-align: center; background: radial-gradient(circle at center, #1a0000 0%, #0a0a0a 70%); position: relative; }
         h1 { font-size: 3.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .accent { color: var(--accent); }
-        
         .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
         .btn { padding: 18px 30px; background: var(--accent); color: white; text-decoration: none; font-weight: 800; border-radius: 4px; transition: 0.2s; border: none; cursor: pointer; }
         .btn-secondary { background: #333; }
         .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
-        
         .container { max-width: 1000px; margin: 50px auto; padding: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: var(--card-bg); padding: 40px; border: 1px solid #333; border-radius: 8px; text-align: center; }
         .price { font-size: 1.8rem; font-weight: 800; margin: 15px 0; color: var(--accent); }
-        
         .discord-login-btn { position: absolute; top: 20px; right: 20px; background: #5865F2; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: 600; }
         #dashboard { display: none; padding: 20px; text-align: center; background: #1a1a1a; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; max-width: 400px; margin-left: auto; margin-right: auto; }
         #user-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 10px; }
@@ -78,21 +74,36 @@
 </footer>
 
 <script>
+    // Inicialización del cliente de Supabase
     const supabase = supabase.createClient(
         'https://rgdkdflkviigwdtuodjy.supabase.co', 
         'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip'
     );
 
+    // Función para actualizar la interfaz al loguearse
     function showDashboard(user) {
         document.getElementById('login-btn').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('username').innerText = user.user_metadata.full_name || "Usuario";
         document.getElementById('user-avatar').src = user.user_metadata.avatar_url || "";
-        // Limpia la URL para quitar el token
+        // Limpiar la URL de tokens
         window.history.replaceState(null, null, window.location.pathname);
     }
 
-    // Inicializar sesión
+    // Funciones globales para botones
+    window.signInWithDiscord = async function() {
+        await supabase.auth.signInWithOAuth({ 
+            provider: 'discord',
+            options: { redirectTo: window.location.origin + window.location.pathname }
+        });
+    };
+
+    window.signOut = async function() {
+        await supabase.auth.signOut();
+        location.reload();
+    };
+
+    // Inicialización: Verificar si el usuario ya tiene sesión activa
     async function init() {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
@@ -100,21 +111,12 @@
         }
     }
 
-    // Escuchar cambios
+    // Escuchar cambios de autenticación
     supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
             showDashboard(session.user);
         }
     });
-
-    async function signInWithDiscord() {
-        await supabase.auth.signInWithOAuth({ provider: 'discord' });
-    }
-
-    async function signOut() {
-        await supabase.auth.signOut();
-        location.reload();
-    }
 
     init();
 </script>

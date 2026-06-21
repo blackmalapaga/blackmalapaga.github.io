@@ -31,7 +31,7 @@
 
 <section class="hero">
     <button id="login-btn" class="discord-login-btn" onclick="signInWithDiscord()">
-        <i class="fab fa-discord"></i> Login con Discord
+        <i class="fab fa-discord"></i> Login con Discord Fixed
     </button>
 
     <div id="dashboard">
@@ -74,49 +74,47 @@
 </footer>
 
 <script>
-    // Inicialización del cliente de Supabase
-    const supabase = supabase.createClient(
+    // Inicialización del cliente evitando colisiones
+    const sbClient = supabase.createClient(
         'https://rgdkdflkviigwdtuodjy.supabase.co', 
         'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip'
     );
 
-    // Función para actualizar la interfaz al loguearse
-    function showDashboard(user) {
+    // Función de control de interfaz
+    function updateDashboard(user) {
         document.getElementById('login-btn').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
         document.getElementById('username').innerText = user.user_metadata.full_name || "Usuario";
         document.getElementById('user-avatar').src = user.user_metadata.avatar_url || "";
-        // Limpiar la URL de tokens
+        // Limpiar URL
         window.history.replaceState(null, null, window.location.pathname);
     }
 
-    // Funciones globales para botones
+    // Funciones globales vinculadas al objeto window
     window.signInWithDiscord = async function() {
-        await supabase.auth.signInWithOAuth({ 
+        await sbClient.auth.signInWithOAuth({ 
             provider: 'discord',
             options: { redirectTo: window.location.origin + window.location.pathname }
         });
     };
 
     window.signOut = async function() {
-        await supabase.auth.signOut();
+        await sbClient.auth.signOut();
         location.reload();
     };
 
-    // Inicialización: Verificar si el usuario ya tiene sesión activa
-    async function init() {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            showDashboard(session.user);
-        }
-    }
-
-    // Escuchar cambios de autenticación
-    supabase.auth.onAuthStateChange((event, session) => {
+    // Escuchar estado
+    sbClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
-            showDashboard(session.user);
+            updateDashboard(session.user);
         }
     });
+
+    // Inicialización
+    async function init() {
+        const { data: { session } } = await sbClient.auth.getSession();
+        if (session) updateDashboard(session.user);
+    }
 
     init();
 </script>

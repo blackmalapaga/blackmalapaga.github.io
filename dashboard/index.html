@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard | Eval Tweaks</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body {
+    margin:0;
+    font-family:Inter;
+    background:#0a0a0a;
+    color:white;
+}
+
+.header {
+    text-align:center;
+    padding:50px;
+    background:radial-gradient(circle,#111,#0a0a0a);
+}
+
+.container {
+    max-width:900px;
+    margin:auto;
+    padding:40px;
+}
+
+.card {
+    background:#141414;
+    border:1px solid #333;
+    padding:40px;
+    border-radius:10px;
+    text-align:center;
+}
+
+img {
+    width:80px;
+    border-radius:50%;
+    margin-bottom:10px;
+}
+
+.btn {
+    padding:12px 18px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:800;
+    margin:8px;
+    text-decoration:none;
+}
+
+.red { background:red; color:white; }
+.gray { background:#333; color:white; }
+.blue { background:#5865F2; color:white; }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <img id="avatar">
+        <h2 id="name">Loading...</h2>
+
+        <p>Welcome to Eval Tweaks Control Panel</p>
+
+        <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
+            Download EvalOS
+        </a>
+
+        <a class="btn blue" href="https://discord.gg/pFHrbTwTQA" target="_blank">
+            Discord Support
+        </a>
+
+        <br><br>
+
+        <button class="btn gray" onclick="logout()">Logout</button>
+    </div>
+
+</div>
+
+<script>
+const supabase = window.supabase.createClient(
+    "https://rgdkdflkviigwdtuodjy.supabase.co",
+    "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
+);
+
+// SESSION CHECK
+async function load() {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+        window.location.href = "/";
+        return;
+    }
+
+    document.getElementById("name").innerText =
+        session.user.user_metadata?.full_name ||
+        session.user.email;
+
+    document.getElementById("avatar").src =
+        session.user.user_metadata?.avatar_url || "";
+}
+
+// LOGOUT
+async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+}
+
+load();
+</script>
+
+</body>
+</html>

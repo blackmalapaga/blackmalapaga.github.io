@@ -209,6 +209,7 @@
       align-items: center;
       gap: 10px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
     }
 
     .btn::before {
@@ -248,6 +249,20 @@
       background: #2a2a2a;
       border-color: #888;
       box-shadow: 0 0 30px #ffffff22;
+    }
+
+    .btn.gold {
+      background: #d4a017;
+      color: #0a0a0a;
+      border-color: #f5c542;
+      box-shadow: 0 0 30px #d4a01755;
+      font-weight: 800;
+    }
+
+    .btn.gold:hover {
+      background: #e6b422;
+      box-shadow: 0 0 60px #d4a017aa;
+      border-color: #ffd966;
     }
 
     /* ----- cards section ----- */
@@ -422,9 +437,11 @@
       <h1>EVAL <span class="accent">TWEAKS</span></h1>
       <p>Optimiza tu PC · Domina el juego</p>
       <div class="button-group">
-        <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
-          <i class="fas fa-download"></i> DESCARGAR EVAL-OS
-        </a>
+        <!-- DOWNLOAD BUTTON: now triggers login if not authenticated -->
+        <button class="btn gold" id="downloadBtn" onclick="handleDownload()">
+          <i class="fas fa-download"></i> <span id="downloadLabel">INICIAR SESIÓN PARA DESCARGAR</span>
+        </button>
+
         <a class="btn gray" href="https://discord.gg/pFHrbTwTQA" target="_blank">
           <i class="fab fa-discord"></i> DISCORD
         </a>
@@ -473,12 +490,43 @@
       "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
     );
 
-    // Discord login
+    // ----- check session state and update UI -----
+    let currentUser = null;
+
+    async function checkSession() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        currentUser = session.user;
+        const label = document.getElementById('downloadLabel');
+        if (label) {
+          label.textContent = 'DESCARGAR EVAL-OS';
+        }
+        // also update login button to show user
+        const loginBtn = document.querySelector('.discord-login');
+        if (loginBtn) {
+          const name = session.user.user_metadata?.full_name || session.user.email || 'Usuario';
+          loginBtn.innerHTML = `<i class="fab fa-discord"></i> ${name}`;
+        }
+      } else {
+        currentUser = null;
+        const label = document.getElementById('downloadLabel');
+        if (label) {
+          label.textContent = 'INICIAR SESIÓN PARA DESCARGAR';
+        }
+        // reset login button
+        const loginBtn = document.querySelector('.discord-login');
+        if (loginBtn) {
+          loginBtn.innerHTML = `<i class="fab fa-discord"></i> Login`;
+        }
+      }
+    }
+
+    // ----- Discord login -----
     async function login() {
       const { error } = await sb.auth.signInWithOAuth({
         provider: "discord",
         options: {
-          redirectTo: "https://evaltweaks.com/dashboard/"
+          redirectTo: window.location.origin + "/dashboard/"
         }
       });
 
@@ -488,7 +536,38 @@
       }
     }
 
-    // (optional) tiny extra interactivity: log
+    // ----- handle download with guard -----
+    async function handleDownload() {
+      // re-check session in case it changed
+      const { data: { session } } = await sb.auth.getSession();
+
+      if (!session?.user) {
+        // not logged in → prompt and trigger login
+        const confirmLogin = confirm("🔐 Necesitas iniciar sesión con Discord para descargar Eval-OS. ¿Quieres iniciar sesión ahora?");
+        if (confirmLogin) {
+          await login();
+        }
+        return;
+      }
+
+      // logged in → proceed with download
+      const downloadUrl = "https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906";
+      window.open(downloadUrl, '_blank');
+    }
+
+    // ----- init -----
+    checkSession();
+
+    // listen for auth changes (if user logs in from another tab)
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        checkSession();
+      } else if (event === 'SIGNED_OUT') {
+        currentUser = null;
+        checkSession();
+      }
+    });
+
     console.log('🔥 Eval Tweaks · pro performance');
   </script>
 

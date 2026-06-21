@@ -48,7 +48,7 @@
     <p>Optimiza tu PC. Domina el juego.</p>
     
     <div class="button-group">
-        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" class="btn">DESCARGAR EVALOS</a>
+        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download" class="btn">DESCARGAR EVALOS</a>
         <a href="https://discord.gg/pFHrbTwTQA" class="btn btn-secondary">COMPRAR UTILIDAD (DISCORD)</a>
     </div>
 </section>
@@ -86,27 +86,29 @@
     function showDashboard(user) {
         document.getElementById('login-btn').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('username').innerText = user.user_metadata.full_name;
-        document.getElementById('user-avatar').src = user.user_metadata.avatar_url;
+        document.getElementById('username').innerText = user.user_metadata.full_name || "Usuario";
+        document.getElementById('user-avatar').src = user.user_metadata.avatar_url || "";
+        // Limpia la URL para quitar el token
         window.history.replaceState(null, null, window.location.pathname);
     }
 
+    // Inicializar sesión
+    async function init() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            showDashboard(session.user);
+        }
+    }
+
+    // Escuchar cambios
     supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
             showDashboard(session.user);
         }
     });
 
-    async function init() {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) showDashboard(user);
-    }
-
     async function signInWithDiscord() {
-        await supabase.auth.signInWithOAuth({ 
-            provider: 'discord',
-            options: { redirectTo: window.location.href }
-        });
+        await supabase.auth.signInWithOAuth({ provider: 'discord' });
     }
 
     async function signOut() {

@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eval Tweaks | Pro Performance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
         :root { --bg: #0a0a0a; --card-bg: #141414; --accent: #ff0000; --text: #ffffff; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
-        .hero { padding: 80px 20px; text-align: center; background: radial-gradient(circle at center, #1a0000 0%, #0a0a0a 70%); }
+        .hero { padding: 80px 20px; text-align: center; background: radial-gradient(circle at center, #1a0000 0%, #0a0a0a 70%); position: relative; }
         h1 { font-size: 3.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .accent { color: var(--accent); }
         .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
@@ -20,11 +22,16 @@
         .card { background: var(--card-bg); padding: 40px; border: 1px solid #333; border-radius: 8px; text-align: center; }
         .price { font-size: 1.8rem; font-weight: 800; margin: 15px 0; color: var(--accent); }
         footer { text-align: center; padding: 60px; color: #a0a0a0; font-size: 0.9rem; }
+        .discord-login-btn { position: absolute; top: 20px; right: 20px; background: #5865F2; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <section class="hero">
+    <button class="discord-login-btn" onclick="signInWithDiscord()">
+        <i class="fab fa-discord"></i> Login con Discord
+    </button>
+
     <h1>EVAL <span class="accent">TWEAKS</span></h1>
     <p>Optimiza tu PC. Domina el juego.</p>
     
@@ -43,13 +50,13 @@
         </div>
         <div class="card">
             <h2>Utilidad (Mensual)</h2>
-            <div class="price">$45 USD / mes</div>
-            <p>Acceso total a la utilidad y soporte especializado.</p>
+            <div class="price">$20 USD / mes</div>
+            <p>Acceso total a la utilidad y soporte integrado.</p>
         </div>
         <div class="card">
             <h2>Utilidad (Lifetime)</h2>
-            <div class="price">$75 USD</div>
-            <p>Acceso de por vida. Pago único.</p>
+            <div class="price">$50 USD</div>
+            <p>Acceso de por vida. (Pago único)</p>
         </div>
     </div>
 </div>
@@ -57,6 +64,21 @@
 <footer>
     &copy; 2026 Eval Tweaks. Todos los derechos reservados.
 </footer>
+
+<script>
+    // URL lista, solo falta que pegues tu llave pública en la línea de abajo
+    const supabase = supabase.createClient(
+        'https://rgdkdflkviigwdtuodjy.supabase.co', 
+        'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip'
+    );
+
+    async function signInWithDiscord() {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'discord',
+        });
+        if (error) alert("Error: " + error.message);
+    }
+</script>
 
 </body>
 </html>

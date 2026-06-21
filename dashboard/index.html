@@ -1,88 +1,52 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard | Eval Tweaks</title>
-
+<title>Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 body {
     margin:0;
-    font-family:Inter;
+    font-family:Arial;
     background:#0a0a0a;
     color:white;
-}
-
-.header {
     text-align:center;
-    padding:50px;
-    background:radial-gradient(circle,#111,#0a0a0a);
-}
-
-.container {
-    max-width:900px;
-    margin:auto;
-    padding:40px;
 }
 
 .card {
     background:#141414;
-    border:1px solid #333;
-    padding:40px;
+    padding:30px;
+    width:320px;
+    margin:60px auto;
     border-radius:10px;
-    text-align:center;
 }
 
 img {
-    width:80px;
+    width:70px;
     border-radius:50%;
-    margin-bottom:10px;
 }
-
-.btn {
-    padding:12px 18px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:800;
-    margin:8px;
-    text-decoration:none;
-}
-
-.red { background:red; color:white; }
-.gray { background:#333; color:white; }
-.blue { background:#5865F2; color:white; }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1>Dashboard</h1>
-</div>
+<h1>Dashboard</h1>
 
-<div class="container">
+<div class="card">
+    <p id="status">Loading...</p>
 
-    <div class="card">
-        <img id="avatar">
-        <h2 id="name">Loading...</h2>
+    <img id="avatar" style="display:none;">
+    <h3 id="name"></h3>
 
-        <p>Welcome to Eval Tweaks Control Panel</p>
+    <br>
 
-        <a class="btn red" href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" target="_blank">
-            Download EvalOS
-        </a>
+    <a href="https://drive.google.com/your-link" target="_blank">Download EvalOS</a>
+    <br><br>
+    <a href="https://discord.gg/pFHrbTwTQA" target="_blank">Discord Support</a>
+    <br><br>
 
-        <a class="btn blue" href="https://discord.gg/pFHrbTwTQA" target="_blank">
-            Discord Support
-        </a>
-
-        <br><br>
-
-        <button class="btn gray" onclick="logout()">Logout</button>
-    </div>
-
+    <button onclick="logout()">Logout</button>
 </div>
 
 <script>
@@ -91,8 +55,15 @@ const supabase = window.supabase.createClient(
     "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
 );
 
-// SESSION CHECK
-async function load() {
+// 🔥 FIX 1: handle OAuth callback properly
+async function handleAuth() {
+    const url = new URL(window.location.href);
+
+    if (url.searchParams.get("code")) {
+        await supabase.auth.exchangeCodeForSession(window.location.href);
+        window.history.replaceState({}, document.title, "/dashboard/");
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session?.user) {
@@ -100,21 +71,25 @@ async function load() {
         return;
     }
 
+    document.getElementById("status").style.display = "none";
+
     document.getElementById("name").innerText =
         session.user.user_metadata?.full_name ||
         session.user.email;
 
     document.getElementById("avatar").src =
         session.user.user_metadata?.avatar_url || "";
+
+    document.getElementById("avatar").style.display = "block";
 }
 
-// LOGOUT
+// logout
 async function logout() {
     await supabase.auth.signOut();
     window.location.href = "/";
 }
 
-load();
+handleAuth();
 </script>
 
 </body>

@@ -128,31 +128,31 @@ h1 { font-size:3.5rem; }
         <div class="card">
             <h2>EvalOS</h2>
             <div class="price">FREE</div>
-            <p>Optimización básica del sistema</p>
+            <p>Sistema Operativo Customizado, para mejor perfomance y mejor rendimiento.</p>
         </div>
 
         <div class="card">
             <h2>Utilidad Monthly</h2>
-            <div class="price">$45 / month</div>
+            <div class="price">$20 / month</div>
             <p>Acceso completo + soporte</p>
         </div>
 
         <div class="card">
             <h2>Lifetime</h2>
-            <div class="price">$75</div>
-            <p>Pago único de por vida</p>
+            <div class="price">$50</div>
+            <p>Pago único (de por vida)</p>
         </div>
 
     </div>
 </div>
 
 <script>
-const sb = supabase.createClient(
+const sb = window.supabase.createClient(
     "https://rgdkdflkviigwdtuodjy.supabase.co",
     "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
 );
 
-// LOGIN DISCORD (FIXED)
+// LOGIN DISCORD
 async function login() {
     const { error } = await sb.auth.signInWithOAuth({
         provider: "discord",
@@ -161,9 +161,23 @@ async function login() {
         }
     });
 
-    if (error) alert(error.message);
+    if (error) {
+        console.error(error);
+        alert("Login error: " + error.message);
+    }
 }
 </script>
-
+    
+<footer style="
+    text-align:center;
+    padding:50px 20px;
+    color:#777;
+    font-size:13px;
+    border-top:1px solid #222;
+    background:#0a0a0a;
+">
+    © 2026 Eval Tweaks. All rights reserved. | Built for performance.
+</footer>
+    
 </body>
 </html>

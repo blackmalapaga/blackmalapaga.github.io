@@ -10,33 +10,47 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
         :root { --bg: #0a0a0a; --card-bg: #141414; --accent: #ff0000; --text: #ffffff; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
+        
         .hero { padding: 80px 20px; text-align: center; background: radial-gradient(circle at center, #1a0000 0%, #0a0a0a 70%); position: relative; }
         h1 { font-size: 3.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .accent { color: var(--accent); }
+        
+        /* Botones y Cards */
         .button-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
-        .btn { padding: 18px 30px; background: var(--accent); color: white; text-decoration: none; font-weight: 800; border-radius: 4px; transition: 0.2s; }
+        .btn { padding: 18px 30px; background: var(--accent); color: white; text-decoration: none; font-weight: 800; border-radius: 4px; transition: 0.2s; border: none; cursor: pointer; }
         .btn-secondary { background: #333; }
         .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+        
         .container { max-width: 1000px; margin: 50px auto; padding: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: var(--card-bg); padding: 40px; border: 1px solid #333; border-radius: 8px; text-align: center; }
         .price { font-size: 1.8rem; font-weight: 800; margin: 15px 0; color: var(--accent); }
-        footer { text-align: center; padding: 60px; color: #a0a0a0; font-size: 0.9rem; }
+        
+        /* Dashboard y Login */
         .discord-login-btn { position: absolute; top: 20px; right: 20px; background: #5865F2; color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: 600; }
+        #dashboard { display: none; padding: 20px; text-align: center; background: #1a1a1a; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
+        #user-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 10px; }
+        footer { text-align: center; padding: 60px; color: #a0a0a0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <section class="hero">
-    <button class="discord-login-btn" onclick="signInWithDiscord()">
+    <button id="login-btn" class="discord-login-btn" onclick="signInWithDiscord()">
         <i class="fab fa-discord"></i> Login con Discord
     </button>
+
+    <div id="dashboard">
+        <img id="user-avatar" src="" alt="Avatar">
+        <h3>Bienvenido, <span id="username"></span>!</h3>
+        <button onclick="signOut()" class="btn btn-secondary">Cerrar Sesión</button>
+    </div>
 
     <h1>EVAL <span class="accent">TWEAKS</span></h1>
     <p>Optimiza tu PC. Domina el juego.</p>
     
     <div class="button-group">
-        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906" class="btn">DESCARGAR EVALOS</a>
+        <a href="https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download" class="btn">DESCARGAR EVALOS</a>
         <a href="https://discord.gg/pFHrbTwTQA" class="btn btn-secondary">COMPRAR UTILIDAD (DISCORD)</a>
     </div>
 </section>
@@ -50,13 +64,13 @@
         </div>
         <div class="card">
             <h2>Utilidad (Mensual)</h2>
-            <div class="price">$45 USD / mes</div>
-            <p>Acceso total a la utilidad y soporte especializado.</p>
+            <div class="price">$20 USD / mes</div>
+            <p>Acceso total a la utilidad y soporte integrado.</p>
         </div>
         <div class="card">
             <h2>Utilidad (Lifetime)</h2>
-            <div class="price">$75 USD</div>
-            <p>Acceso de por vida. Pago único.</p>
+            <div class="price">$50 USD</div>
+            <p>Acceso de por vida. (Pago único)</p>
         </div>
     </div>
 </div>
@@ -66,21 +80,32 @@
 </footer>
 
 <script>
-    // Inicialización única
-    window.supabase = supabase.createClient(
+    // Inicialización
+    const supabase = supabase.createClient(
         'https://rgdkdflkviigwdtuodjy.supabase.co', 
         'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip'
     );
 
-    async function signInWithDiscord() {
-        const { error } = await window.supabase.auth.signInWithOAuth({
-            provider: 'discord',
-        });
-        if (error) {
-            console.error("Error:", error.message);
-            alert("Error: " + error.message);
+    async function checkUser() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            document.getElementById('login-btn').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('username').innerText = user.user_metadata.full_name;
+            document.getElementById('user-avatar').src = user.user_metadata.avatar_url;
         }
     }
+
+    async function signInWithDiscord() {
+        await supabase.auth.signInWithOAuth({ provider: 'discord' });
+    }
+
+    async function signOut() {
+        await supabase.auth.signOut();
+        location.reload();
+    }
+
+    checkUser();
 </script>
 
 </body>

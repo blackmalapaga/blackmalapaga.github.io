@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hybrid Rift · Home</title>
+  <title>Hybrid Rift</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
   </script>
   <style>
-    /* ----- reset & base ----- */
     * {
       margin: 0;
       padding: 0;
@@ -16,102 +15,92 @@
     }
 
     body {
-      background: #0a0a0a;
-      font-family: 'Inter', sans-serif;
+      background: #080808;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: #fff;
-      overflow-x: hidden;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* ----- animated glow background ----- */
-    .glow-bg {
+    /* ----- animated background ----- */
+    .bg-glow {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.04) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.02) 0%, transparent 60%);
-      animation: breatheGlow 6s ease-in-out infinite alternate;
+        radial-gradient(ellipse 60% 50% at 20% 30%, rgba(255, 215, 0, 0.07), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(255, 215, 0, 0.05), transparent 70%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(255, 215, 0, 0.03), transparent 60%);
+      animation: breathe 8s ease-in-out infinite alternate;
     }
 
-    @keyframes breatheGlow {
-      0% {
-        opacity: 0.6;
-        transform: scale(1);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1.08);
-      }
+    @keyframes breathe {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.06); }
     }
 
-    /* floating orbs */
     .orb {
       position: fixed;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.12;
+      filter: blur(90px);
+      opacity: 0.10;
       z-index: 0;
-      animation: floatOrb 14s infinite alternate ease-in-out;
       pointer-events: none;
+      animation: floaty 16s infinite alternate ease-in-out;
     }
-    .orb1 {
+    .orb-1 {
       width: 500px;
       height: 500px;
       background: #ffd700;
-      top: -150px;
-      left: -100px;
+      top: -120px;
+      left: -80px;
       animation-duration: 18s;
     }
-    .orb2 {
+    .orb-2 {
       width: 600px;
       height: 600px;
       background: #e6b800;
-      bottom: -200px;
-      right: -100px;
+      bottom: -180px;
+      right: -80px;
       animation-duration: 22s;
       animation-delay: -4s;
     }
 
-    @keyframes floatOrb {
-      0% {
-        transform: translate(0, 0) scale(1);
-      }
-      100% {
-        transform: translate(80px, 50px) scale(1.3);
-      }
+    @keyframes floaty {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(70px, 50px) scale(1.2); }
     }
 
-    /* ----- main content layer ----- */
+    /* ----- content layer ----- */
     .content {
       position: relative;
       z-index: 2;
     }
 
-    /* ----- navigation bar (clean, minimal) ----- */
+    /* ----- navbar (glass, rounded) ----- */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 48px;
-      background: rgba(10, 10, 10, 0.8);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 14px 32px;
+      margin: 16px 24px 0;
+      background: rgba(16, 16, 16, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
       position: sticky;
-      top: 0;
+      top: 16px;
       z-index: 100;
     }
 
     .navbar .brand {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
-      letter-spacing: -0.3px;
-      background: linear-gradient(135deg, #ffffff 0%, #ffd700 80%);
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 0%, #ffd700 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -120,7 +109,7 @@
 
     .navbar .nav-links {
       display: flex;
-      gap: 28px;
+      gap: 20px;
       align-items: center;
     }
 
@@ -128,47 +117,30 @@
       color: #aaa;
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       transition: 0.25s ease;
-      letter-spacing: 0.3px;
-      position: relative;
-      padding: 4px 0;
-    }
-
-    .navbar .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #ffd700;
-      transition: 0.3s ease;
+      padding: 6px 14px;
+      border-radius: 40px;
+      letter-spacing: 0.2px;
     }
 
     .navbar .nav-links a:hover {
       color: #fff;
-    }
-
-    .navbar .nav-links a:hover::after {
-      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .navbar .nav-links a.active {
       color: #ffd700;
-    }
-
-    .navbar .nav-links a.active::after {
-      width: 100%;
+      background: rgba(255, 215, 0, 0.08);
     }
 
     .navbar .nav-links .login-btn {
-      background: rgba(88, 101, 242, 0.85);
+      background: rgba(88, 101, 242, 0.9);
       border: none;
       padding: 8px 22px;
       border-radius: 40px;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #fff;
       cursor: pointer;
       transition: 0.25s ease;
@@ -181,10 +153,9 @@
     .navbar .nav-links .login-btn:hover {
       transform: scale(1.04);
       background: #5865F2;
-      box-shadow: 0 0 30px #5865f255;
+      box-shadow: 0 0 30px #5865f244;
     }
 
-    /* hamburger */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -194,255 +165,249 @@
       border: none;
       padding: 4px;
     }
-
     .hamburger span {
-      width: 26px;
+      width: 24px;
       height: 2px;
       background: #ccc;
+      border-radius: 4px;
       transition: 0.3s;
-      border-radius: 2px;
     }
 
-    /* ----- hero section (home) ----- */
+    /* ----- hero section (rounded, glass) ----- */
     .hero {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 80px 40px 60px;
+      max-width: 1000px;
+      margin: 60px auto 0;
+      padding: 60px 40px 50px;
       text-align: center;
+      background: rgba(12, 12, 12, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 48px;
+      border: 1px solid rgba(255, 215, 0, 0.06);
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
     }
 
-    .hero .badge {
+    .hero .pill {
       display: inline-block;
-      background: rgba(255, 215, 0, 0.12);
+      background: rgba(255, 215, 0, 0.08);
       color: #ffd700;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
       padding: 6px 20px;
-      border-radius: 40px;
-      border: 1px solid rgba(255, 215, 0, 0.15);
-      margin-bottom: 24px;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 215, 0, 0.10);
+      margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-size: clamp(3rem, 10vw, 5.2rem);
+      font-size: clamp(2.8rem, 10vw, 5rem);
       font-weight: 800;
       letter-spacing: -2px;
-      line-height: 1.05;
+      line-height: 1.04;
       background: linear-gradient(135deg, #ffffff 0%, #ffd700 70%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .hero .sub {
-      font-size: 1.2rem;
+    .hero .desc {
+      font-size: 1.1rem;
       font-weight: 300;
       color: #999;
-      letter-spacing: 0.5px;
-      max-width: 600px;
-      margin: 0 auto 32px;
-      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto 30px;
+      line-height: 1.7;
+      letter-spacing: 0.2px;
     }
 
-    .hero .sub strong {
+    .hero .desc strong {
       color: #ffd700;
-      font-weight: 600;
+      font-weight: 500;
     }
 
-    .hero .cta-group {
+    .hero .btn-group {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
     }
 
-    .hero .cta-group .btn {
-      padding: 14px 36px;
+    .hero .btn-group .btn {
+      padding: 14px 34px;
       border-radius: 60px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-decoration: none;
       transition: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      cursor: pointer;
       border: none;
+      cursor: pointer;
     }
 
-    .hero .cta-group .btn-primary {
+    .hero .btn-group .btn-primary {
       background: #ffd700;
       color: #0a0a0a;
-      box-shadow: 0 0 30px #ffd70044;
+      box-shadow: 0 4px 30px rgba(255, 215, 0, 0.25);
     }
 
-    .hero .cta-group .btn-primary:hover {
+    .hero .btn-group .btn-primary:hover {
       background: #ffe033;
-      box-shadow: 0 0 50px #ffd70066;
+      box-shadow: 0 8px 50px rgba(255, 215, 0, 0.4);
       transform: translateY(-3px) scale(1.02);
     }
 
-    .hero .cta-group .btn-secondary {
+    .hero .btn-group .btn-secondary {
       background: rgba(30, 30, 30, 0.8);
       color: #eee;
-      border: 1px solid #333;
+      border: 1px solid #2a2a2a;
     }
 
-    .hero .cta-group .btn-secondary:hover {
+    .hero .btn-group .btn-secondary:hover {
       background: #2a2a2a;
-      border-color: #ffd70044;
+      border-color: #ffd70033;
       transform: translateY(-3px);
     }
 
-    /* ----- status section (hidden by default, shown when clicked) ----- */
+    /* ----- status section (rounded, glass) ----- */
     .status-section {
       display: none;
       max-width: 900px;
-      margin: 0 auto 60px;
-      padding: 0 40px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
     }
 
     .status-section.visible {
       display: block;
     }
 
-    .status-section h2 {
+    .status-section .status-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .status-section .status-head h2 {
       font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 8px;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff 0%, #ffd700 80%);
+      background: linear-gradient(135deg, #fff, #ffd700);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .status-section .subtitle {
+    .status-section .status-head p {
       color: #888;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 300;
-      margin-bottom: 32px;
-      letter-spacing: 0.3px;
+      margin-top: 4px;
     }
 
     .status-card {
-      background: rgba(18, 18, 18, 0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 36px 32px;
-      border: 1px solid #1a1a1a;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      background: rgba(16, 16, 16, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 40px;
+      padding: 36px 34px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.6);
     }
 
-    .status-header {
+    .status-card .s-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #1a1a1a;
       flex-wrap: wrap;
       gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    .status-header .product-name {
-      font-size: 1.6rem;
+    .status-card .s-header .name {
+      font-size: 1.5rem;
       font-weight: 700;
       color: #fff;
       letter-spacing: -0.3px;
     }
 
-    .status-header .product-name small {
+    .status-card .s-header .name small {
       font-size: 0.8rem;
-      color: #777;
+      color: #666;
       font-weight: 400;
       margin-left: 8px;
     }
 
-    .status-badge {
+    .status-card .s-header .badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 18px;
-      border-radius: 40px;
+      padding: 5px 18px;
+      border-radius: 60px;
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-    }
-
-    .status-badge.developing {
-      background: rgba(255, 215, 0, 0.12);
+      background: rgba(255, 215, 0, 0.08);
       color: #ffd700;
-      border: 1px solid rgba(255, 215, 0, 0.2);
+      border: 1px solid rgba(255, 215, 0, 0.12);
     }
 
-    .status-badge .dot {
+    .status-card .s-header .badge .dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      display: inline-block;
       background: #ffd700;
-      animation: pulseDot 1.5s infinite;
+      animation: pulse 1.6s infinite;
     }
 
-    @keyframes pulseDot {
-      0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.3;
-        transform: scale(0.7);
-      }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
     }
 
-    .status-grid {
+    .status-card .s-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px 32px;
+      gap: 16px 36px;
       margin-top: 22px;
     }
 
-    .status-grid .item {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .status-grid .item .label {
-      font-size: 0.7rem;
+    .status-card .s-grid .item .lbl {
+      font-size: 0.65rem;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: #666;
+      color: #555;
       font-weight: 600;
     }
 
-    .status-grid .item .value {
+    .status-card .s-grid .item .val {
       font-size: 0.95rem;
       color: #ddd;
       font-weight: 400;
+      margin-top: 2px;
     }
 
-    .status-grid .item .value.highlight {
+    .status-card .s-grid .item .val.gold {
       color: #ffd700;
     }
 
-    .status-grid .item .value.mono {
+    .status-card .s-grid .item .val.mono {
       font-family: 'Courier New', monospace;
       font-size: 0.85rem;
-      color: #999;
+      color: #888;
     }
 
-    .status-divider {
+    .status-card .s-divider {
       height: 1px;
-      background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.15), transparent);
+      background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.08), transparent);
       margin: 24px 0 18px;
     }
 
-    .status-footer {
+    .status-card .s-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -450,89 +415,101 @@
       gap: 12px;
     }
 
-    .status-footer .timestamp {
-      color: #666;
-      font-size: 0.78rem;
+    .status-card .s-footer .time {
+      color: #555;
+      font-size: 0.75rem;
       letter-spacing: 0.3px;
     }
 
-    .status-footer .timestamp i {
+    .status-card .s-footer .time i {
       margin-right: 6px;
-      color: #555;
     }
 
-    .status-footer .changelog-link {
-      color: #888;
+    .status-card .s-footer .link {
+      color: #777;
       text-decoration: none;
-      font-size: 0.82rem;
-      transition: 0.3s;
-      border: 1px solid #2a2a2a;
+      font-size: 0.8rem;
       padding: 5px 18px;
-      border-radius: 40px;
+      border-radius: 60px;
+      border: 1px solid #222;
+      transition: 0.3s;
     }
 
-    .status-footer .changelog-link:hover {
+    .status-card .s-footer .link:hover {
       color: #ffd700;
-      border-color: #ffd70044;
+      border-color: #ffd70033;
     }
 
     .status-note {
-      margin-top: 20px;
-      padding: 14px 20px;
-      background: rgba(18, 18, 18, 0.4);
-      border-radius: 14px;
-      border: 1px solid #161616;
+      margin-top: 18px;
+      padding: 14px 22px;
+      background: rgba(16, 16, 16, 0.5);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
     .status-note p {
-      color: #666;
-      font-size: 0.82rem;
-      letter-spacing: 0.3px;
+      color: #555;
+      font-size: 0.8rem;
+      letter-spacing: 0.2px;
     }
 
     .status-note p i {
       margin-right: 8px;
-      color: #444;
+      color: #333;
     }
 
-    /* ----- footer ----- */
+    /* ----- footer (rounded, glass) ----- */
     footer {
       text-align: center;
-      padding: 40px 20px 28px;
-      color: #444;
-      font-size: 0.78rem;
-      border-top: 1px solid #141414;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(4px);
-      margin-top: 20px;
-      letter-spacing: 0.3px;
-      position: relative;
-      z-index: 2;
+      padding: 32px 20px 24px;
+      margin: 40px 24px 16px;
+      background: rgba(12, 12, 12, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
-    footer .footer-links {
+    footer .f-links {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      margin-bottom: 12px;
+      gap: 20px;
       flex-wrap: wrap;
+      margin-bottom: 12px;
     }
 
-    footer .footer-links a {
+    footer .f-links a {
       color: #555;
       text-decoration: none;
       font-size: 0.78rem;
       transition: 0.3s;
+      padding: 4px 10px;
+      border-radius: 40px;
     }
 
-    footer .footer-links a:hover {
+    footer .f-links a:hover {
       color: #ffd700;
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    footer .copy {
+      color: #444;
+      font-size: 0.72rem;
+      letter-spacing: 0.3px;
+    }
+
+    footer .copy i {
+      color: #333;
+      margin: 0 4px;
     }
 
     /* ----- responsive ----- */
     @media (max-width: 768px) {
       .navbar {
-        padding: 14px 20px;
+        padding: 12px 20px;
+        margin: 12px 12px 0;
+        border-radius: 40px;
         flex-wrap: wrap;
       }
 
@@ -544,9 +521,9 @@
         display: none;
         width: 100%;
         flex-direction: column;
-        gap: 14px;
-        padding: 18px 0 8px;
-        border-top: 1px solid #1a1a1a;
+        gap: 10px;
+        padding: 16px 0 6px;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
         margin-top: 10px;
       }
 
@@ -555,9 +532,10 @@
       }
 
       .navbar .nav-links a {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         width: 100%;
         text-align: center;
+        padding: 8px;
       }
 
       .navbar .nav-links .login-btn {
@@ -566,66 +544,74 @@
       }
 
       .hero {
-        padding: 50px 20px 40px;
+        margin: 30px 12px 0;
+        padding: 40px 20px 36px;
+        border-radius: 32px;
       }
 
       .hero h1 {
-        font-size: 2.6rem;
+        font-size: 2.2rem;
       }
 
       .status-section {
-        padding: 0 20px;
-      }
-
-      .status-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-
-      .status-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .status-footer {
-        flex-direction: column;
-        align-items: flex-start;
+        padding: 0 12px;
       }
 
       .status-card {
         padding: 24px 18px;
+        border-radius: 28px;
+      }
+
+      .status-card .s-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .status-card .s-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .status-card .s-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer {
+        margin: 30px 12px 12px;
+        border-radius: 28px;
+        padding: 24px 16px 20px;
       }
     }
 
     @media (max-width: 480px) {
       .hero h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
-      .hero .sub {
-        font-size: 1rem;
+      .hero .desc {
+        font-size: 0.95rem;
       }
-      .hero .cta-group .btn {
-        padding: 12px 24px;
-        font-size: 0.85rem;
+      .hero .btn-group .btn {
+        padding: 12px 22px;
+        font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- animated background -->
-  <div class="glow-bg"></div>
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
+  <!-- background -->
+  <div class="bg-glow"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
 
-  <!-- main content -->
   <div class="content">
 
-    <!-- navigation bar -->
+    <!-- navbar -->
     <nav class="navbar">
       <a href="#" class="brand" id="homeLink">HYBRID RIFT</a>
 
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <button class="hamburger" id="hamburger">
         <span></span>
         <span></span>
         <span></span>
@@ -643,76 +629,78 @@
       </div>
     </nav>
 
-    <!-- HOME section -->
+    <!-- home -->
     <section id="homeSection" class="hero">
-      <div class="badge">Next-Gen Performance</div>
+      <span class="pill">Next-Gen Performance</span>
       <h1>Rift is your solution</h1>
-      <p class="sub">
+      <p class="desc">
         Undetected, reliable, and built for <strong>competitive dominance</strong>.
         Hybrid Rift delivers the tools you need to stay ahead.
       </p>
-      <div class="cta-group">
-        <a href="#" class="btn btn-primary" onclick="switchPage('status')">
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="switchPage('status')">
           <i class="fas fa-arrow-right"></i> View Status
-        </a>
+        </button>
         <a href="https://discord.gg/WBPZftYtvz" target="_blank" class="btn btn-secondary">
           <i class="fab fa-discord"></i> Join Discord
         </a>
       </div>
     </section>
 
-    <!-- STATUS section (hidden by default) -->
+    <!-- status -->
     <section id="statusSection" class="status-section">
-      <h2>System Status</h2>
-      <p class="subtitle">Real-time product status and development updates</p>
+      <div class="status-head">
+        <h2>System Status</h2>
+        <p>Real-time product status and development updates</p>
+      </div>
 
       <div class="status-card">
-        <div class="status-header">
-          <div class="product-name">
+        <div class="s-header">
+          <div class="name">
             Fortnite Slotted
             <small>v2.4.1</small>
           </div>
-          <div class="status-badge developing">
+          <div class="badge">
             <span class="dot"></span>
             Developing
           </div>
         </div>
 
-        <div class="status-grid">
+        <div class="s-grid">
           <div class="item">
-            <span class="label">Status</span>
-            <span class="value highlight">In Development</span>
+            <div class="lbl">Status</div>
+            <div class="val gold">In Development</div>
           </div>
           <div class="item">
-            <span class="label">Last Update</span>
-            <span class="value">2026-06-30 14:32 UTC</span>
+            <div class="lbl">Last Update</div>
+            <div class="val">2026-06-30 14:32 UTC</div>
           </div>
           <div class="item">
-            <span class="label">Last Issues</span>
-            <span class="value mono">null</span>
+            <div class="lbl">Last Issues</div>
+            <div class="val mono">null</div>
           </div>
           <div class="item">
-            <span class="label">Stability</span>
-            <span class="value">Testing Phase</span>
+            <div class="lbl">Stability</div>
+            <div class="val">Testing Phase</div>
           </div>
           <div class="item">
-            <span class="label">Detection Risk</span>
-            <span class="value" style="color: #ffd700;">Low</span>
+            <div class="lbl">Detection Risk</div>
+            <div class="val gold">Low</div>
           </div>
           <div class="item">
-            <span class="label">ETA</span>
-            <span class="value">Q3 2026</span>
+            <div class="lbl">ETA</div>
+            <div class="val">Q3 2026</div>
           </div>
         </div>
 
-        <div class="status-divider"></div>
+        <div class="s-divider"></div>
 
-        <div class="status-footer">
-          <div class="timestamp">
+        <div class="s-footer">
+          <div class="time">
             <i class="fas fa-clock"></i>
             Last checked: <span id="timestamp">just now</span>
           </div>
-          <a href="#" class="changelog-link">
+          <a href="#" class="link">
             <i class="fas fa-code" style="margin-right:6px;"></i> View Changelog
           </a>
         </div>
@@ -728,170 +716,100 @@
 
     <!-- footer -->
     <footer>
-      <div class="footer-links">
+      <div class="f-links">
         <a href="#" data-page="home">Home</a>
         <a href="#" data-page="status">Status</a>
         <a href="#" data-page="resell">Resell</a>
         <a href="#" data-page="terms">Terms & Privacy</a>
         <a href="#" data-page="about">About</a>
       </div>
-      <span><i class="fas fa-bolt" style="color:#444;"></i> 2026 Hybrid Rift. All rights reserved.</span>
+      <div class="copy">
+        <i class="fas fa-bolt"></i> 2026 Hybrid Rift. All rights reserved.
+      </div>
     </footer>
 
   </div>
 
   <script>
-    // Supabase client
     const sb = window.supabase.createClient(
       "https://rgdkdflkviigwdtuodjy.supabase.co",
       "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
     );
 
     // ----- page switching -----
-    const homeSection = document.getElementById('homeSection');
-    const statusSection = document.getElementById('statusSection');
+    const home = document.getElementById('homeSection');
+    const status = document.getElementById('statusSection');
     const navLinks = document.querySelectorAll('.nav-links a[data-page]');
-    const footerLinks = document.querySelectorAll('.footer-links a[data-page]');
+    const footerLinks = document.querySelectorAll('.f-links a[data-page]');
 
     function switchPage(page) {
-      // hide all sections
-      homeSection.style.display = 'none';
-      statusSection.classList.remove('visible');
-      statusSection.style.display = 'none';
+      home.style.display = 'none';
+      status.classList.remove('visible');
+      status.style.display = 'none';
 
-      // show selected
       if (page === 'home') {
-        homeSection.style.display = 'block';
+        home.style.display = 'block';
       } else if (page === 'status') {
-        statusSection.style.display = 'block';
-        statusSection.classList.add('visible');
-        // scroll to status
-        setTimeout(() => {
-          statusSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+        status.style.display = 'block';
+        status.classList.add('visible');
+        setTimeout(() => status.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
       } else {
-        // other pages: show home with a message
-        homeSection.style.display = 'block';
-        // update subtitle temporarily
-        const sub = homeSection.querySelector('.sub');
-        const originalText = sub.innerHTML;
-        const pageNames = {
-          'resell': 'Resell',
-          'terms': 'Terms & Privacy',
-          'about': 'About'
-        };
-        sub.innerHTML = `<span style="color:#ffd700;">${pageNames[page] || page}</span> page — coming soon.`;
-        setTimeout(() => {
-          sub.innerHTML = originalText;
-        }, 3000);
+        home.style.display = 'block';
+        const desc = home.querySelector('.desc');
+        const orig = desc.innerHTML;
+        const names = { resell: 'Resell', terms: 'Terms & Privacy', about: 'About' };
+        desc.innerHTML = `<span style="color:#ffd700;">${names[page] || page}</span> page — coming soon.`;
+        setTimeout(() => desc.innerHTML = orig, 2500);
       }
 
-      // update nav active state
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.dataset.page === page);
-      });
-      footerLinks.forEach(link => {
-        link.classList.toggle('active', link.dataset.page === page);
-      });
-
-      // close mobile menu
+      navLinks.forEach(l => l.classList.toggle('active', l.dataset.page === page));
+      footerLinks.forEach(l => l.classList.toggle('active', l.dataset.page === page));
       document.getElementById('navLinks').classList.remove('open');
     }
 
-    // nav click handlers
-    navLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchPage(link.dataset.page);
-      });
-    });
-
-    footerLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchPage(link.dataset.page);
-      });
-    });
-
-    // home link click
-    document.getElementById('homeLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      switchPage('home');
-    });
-
-    // make switchPage globally accessible
+    navLinks.forEach(l => l.addEventListener('click', e => { e.preventDefault(); switchPage(l.dataset.page); }));
+    footerLinks.forEach(l => l.addEventListener('click', e => { e.preventDefault(); switchPage(l.dataset.page); }));
+    document.getElementById('homeLink').addEventListener('click', e => { e.preventDefault(); switchPage('home'); });
     window.switchPage = switchPage;
 
-    // ----- hamburger toggle -----
-    const hamburger = document.getElementById('hamburger');
-    const navLinksContainer = document.getElementById('navLinks');
-
-    hamburger.addEventListener('click', () => {
-      navLinksContainer.classList.toggle('open');
+    // ----- hamburger -----
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
     });
 
-    // ----- timestamp update -----
-    function updateTimestamp() {
+    // ----- timestamp -----
+    function updateTime() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
-      document.getElementById('timestamp').textContent = timeStr + ' UTC';
+      document.getElementById('timestamp').textContent =
+        now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + ' UTC';
     }
-    updateTimestamp();
-    setInterval(updateTimestamp, 30000);
+    updateTime();
+    setInterval(updateTime, 30000);
 
-    // ----- session & login -----
-    let currentUser = null;
-
+    // ----- session -----
     async function checkSession() {
       const { data: { session } } = await sb.auth.getSession();
+      const btn = document.querySelector('.login-btn');
       if (session?.user) {
-        currentUser = session.user;
-        const loginBtn = document.querySelector('.login-btn');
-        if (loginBtn) {
-          const name = session.user.user_metadata?.full_name || session.user.email || 'User';
-          loginBtn.innerHTML = `<i class="fab fa-discord"></i> ${name}`;
-        }
+        const name = session.user.user_metadata?.full_name || session.user.email || 'User';
+        btn.innerHTML = `<i class="fab fa-discord"></i> ${name}`;
       } else {
-        currentUser = null;
-        const loginBtn = document.querySelector('.login-btn');
-        if (loginBtn) {
-          loginBtn.innerHTML = `<i class="fab fa-discord"></i> Log in`;
-        }
+        btn.innerHTML = `<i class="fab fa-discord"></i> Log in`;
       }
     }
 
     async function login() {
       const { error } = await sb.auth.signInWithOAuth({
         provider: "discord",
-        options: {
-          redirectTo: window.location.origin + "/dashboard/"
-        }
+        options: { redirectTo: window.location.origin + "/dashboard/" }
       });
-      if (error) {
-        console.error(error);
-        alert("Login error: " + error.message);
-      }
+      if (error) alert("Login error: " + error.message);
     }
-
     window.login = login;
 
-    // init
     checkSession();
-    sb.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        checkSession();
-      } else if (event === 'SIGNED_OUT') {
-        currentUser = null;
-        checkSession();
-      }
-    });
-
-    console.log('Hybrid Rift · Home & Status');
+    sb.auth.onAuthStateChange(() => checkSession());
+    console.log('Hybrid Rift · refined UI');
   </script>
 
 </body>

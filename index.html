@@ -196,7 +196,7 @@
 
     /* ----- sliding image carousel (stacked, slide to right) ----- */
     .carousel-wrap {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 30px auto 20px;
       padding: 0 20px;
       overflow: hidden;
@@ -205,25 +205,26 @@
 
     .carousel-track {
       display: flex;
-      gap: 24px;
-      animation: slideRight 18s infinite linear;
+      gap: 28px;
+      animation: slideRight 22s infinite linear;
       width: max-content;
     }
 
     .carousel-track img {
-      height: 200px;
+      height: 220px;
       width: auto;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px #ffd70022;
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px #ffd70022;
       border: 1px solid #ffd70033;
-      transition: transform 0.3s;
+      transition: transform 0.3s, border-color 0.3s;
       object-fit: cover;
       flex-shrink: 0;
     }
 
     .carousel-track img:hover {
-      transform: scale(1.03);
+      transform: scale(1.04);
       border-color: #ffd700aa;
+      box-shadow: 0 10px 50px rgba(255, 215, 0, 0.25);
     }
 
     @keyframes slideRight {
@@ -372,7 +373,7 @@
 
     .product-card img {
       width: 100%;
-      height: 160px;
+      height: 170px;
       object-fit: cover;
       border-radius: 16px;
       border: 1px solid #ffd70022;
@@ -436,6 +437,7 @@
       align-items: center;
       gap: 8px;
       box-shadow: 0 0 20px #ffd70033;
+      text-decoration: none;
     }
 
     .product-card .btn-small:hover {
@@ -510,13 +512,13 @@
         font-size: 0.9rem;
       }
       .carousel-track img {
-        height: 140px;
+        height: 150px;
       }
       .product-card {
         padding: 20px 14px;
       }
       .product-card img {
-        height: 130px;
+        height: 140px;
       }
     }
   </style>
@@ -569,9 +571,9 @@
     <section class="products-section" id="products">
       <h2>⚡ PREMIUM CHEAT SOLUTIONS</h2>
       <div class="product-grid">
-        <!-- product 1: SStack (from image) -->
+        <!-- product 1: SStack -->
         <div class="product-card">
-          <img src="https://i.ibb.co/2M7N9xL/sstack-placeholder.png" alt="SStack" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=SStack'">
+          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536" alt="SStack">
           <h3>SStack</h3>
           <span class="badge">fivem · cs2</span>
           <div class="price">$25 / mo</div>
@@ -579,9 +581,9 @@
           <button class="btn-small" onclick="handleDownload()"><i class="fas fa-cart-plus"></i> Get SStack</button>
         </div>
 
-        <!-- product 2: Fortnite Slotted (from image) -->
+        <!-- product 2: Fortnite Slotted -->
         <div class="product-card">
-          <img src="https://i.ibb.co/9hsx4Tp/fortnite-slotted.png" alt="Fortnite Slotted" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=Fortnite+Slotted'">
+          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536" alt="Fortnite Slotted">
           <h3>Fortnite Slotted</h3>
           <span class="badge">fortnite</span>
           <div class="price">$30 / mo</div>
@@ -591,7 +593,7 @@
 
         <!-- product 3: HR (coming soon) -->
         <div class="product-card">
-          <img src="https://i.ibb.co/4sZv3yM/hr-coming-soon.png" alt="HR" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=HR+%E2%80%A2+Coming+Soon'">
+          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536" alt="HR">
           <h3>HR · Private</h3>
           <span class="badge">coming soon</span>
           <div class="price">––</div>
@@ -599,9 +601,9 @@
           <a class="btn-small" href="https://discord.gg/WBPZftYtvz" target="_blank" style="text-decoration:none;"><i class="fab fa-discord"></i> Waitlist</a>
         </div>
 
-        <!-- product 4: extra / more services -->
+        <!-- product 4: more services -->
         <div class="product-card">
-          <img src="https://i.ibb.co/z7hP8wp/more-services.png" alt="More Services" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=More+Services'">
+          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536" alt="More Services">
           <h3>More Services</h3>
           <span class="badge">custom</span>
           <div class="price">varies</div>
@@ -626,31 +628,20 @@
     );
 
     // ----- image carousel: stack images and slide right -----
+    // using the two provided images, duplicated for seamless loop
     const imageUrls = [
-      "https://i.ibb.co/2M7N9xL/sstack-placeholder.png",
-      "https://i.ibb.co/9hsx4Tp/fortnite-slotted.png",
-      "https://i.ibb.co/4sZv3yM/hr-coming-soon.png",
-      "https://i.ibb.co/z7hP8wp/more-services.png"
-    ];
-
-    // fallback images if placeholder fails
-    const fallbacks = [
-      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=SStack",
-      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=Fortnite+Slotted",
-      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=HR+%E2%80%A2+Coming+Soon",
-      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=More+Services"
+      "https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536",
+      "https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536"
     ];
 
     const track = document.getElementById('carouselTrack');
     if (track) {
-      // build carousel: show each image twice for seamless loop
       let html = '';
-      for (let i = 0; i < imageUrls.length; i++) {
-        html += `<img src="${imageUrls[i]}" alt="slide" onerror="this.src='${fallbacks[i]}'">`;
-      }
-      // duplicate for seamless loop
-      for (let i = 0; i < imageUrls.length; i++) {
-        html += `<img src="${imageUrls[i]}" alt="slide" onerror="this.src='${fallbacks[i]}'" class="clone">`;
+      // show each image twice for seamless loop
+      for (let rep = 0; rep < 2; rep++) {
+        for (let i = 0; i < imageUrls.length; i++) {
+          html += `<img src="${imageUrls[i]}" alt="slide">`;
+        }
       }
       track.innerHTML = html;
     }

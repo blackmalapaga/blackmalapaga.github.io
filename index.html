@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hybrid Rift · Pro Performance</title>
+  <title>Hybrid Rift · Cheat Solutions</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
   </script>
@@ -143,9 +143,9 @@
       border-color: #fff3;
     }
 
-    /* ----- hero ----- */
+    /* ----- hero / carousel section ----- */
     .hero {
-      padding: 60px 20px 40px;
+      padding: 40px 20px 20px;
       text-align: center;
       position: relative;
     }
@@ -177,30 +177,81 @@
       text-shadow: 0 0 60px #ffd70055;
     }
 
-    .hero p {
-      font-size: 1.4rem;
-      font-weight: 300;
-      color: #ccc;
-      margin-top: 12px;
-      letter-spacing: 1px;
-      backdrop-filter: blur(2px);
-    }
-
     .hero .tagline {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: #ffd700;
       font-weight: 500;
       letter-spacing: 2px;
-      margin-top: 6px;
+      margin-top: 4px;
       opacity: 0.9;
     }
 
+    .hero p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: #ccc;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ----- sliding image carousel (stacked, slide to right) ----- */
+    .carousel-wrap {
+      max-width: 900px;
+      margin: 30px auto 20px;
+      padding: 0 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 24px;
+      animation: slideRight 18s infinite linear;
+      width: max-content;
+    }
+
+    .carousel-track img {
+      height: 200px;
+      width: auto;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px #ffd70022;
+      border: 1px solid #ffd70033;
+      transition: transform 0.3s;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .carousel-track img:hover {
+      transform: scale(1.03);
+      border-color: #ffd700aa;
+    }
+
+    @keyframes slideRight {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* pause on hover */
+    .carousel-wrap:hover .carousel-track {
+      animation-play-state: paused;
+    }
+
+    /* duplicate images for seamless loop */
+    .carousel-track .clone {
+      display: block;
+    }
+
+    /* ----- button group ----- */
     .button-group {
       display: flex;
       justify-content: center;
       gap: 18px;
       flex-wrap: wrap;
-      margin-top: 40px;
+      margin: 30px 0 20px;
     }
 
     .btn {
@@ -274,24 +325,35 @@
       box-shadow: 0 0 30px #ffd70044;
     }
 
-    /* ----- cards section ----- */
-    .container {
+    /* ----- products section (scrollable) ----- */
+    .products-section {
       max-width: 1200px;
-      margin: 30px auto 60px;
+      margin: 40px auto 60px;
       padding: 0 24px;
-      position: relative;
     }
 
-    .grid {
+    .products-section h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #fff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 40px 30px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 35px 30px;
     }
 
-    .card {
-      background: rgba(18, 18, 18, 0.75);
+    .product-card {
+      background: rgba(18, 18, 18, 0.8);
       backdrop-filter: blur(10px);
-      padding: 40px 28px;
+      padding: 30px 20px 25px;
       border-radius: 28px;
       text-align: center;
       border: 1px solid rgba(255, 215, 0, 0.08);
@@ -301,69 +363,99 @@
       overflow: hidden;
     }
 
-    .card::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.06), transparent 60%);
-      opacity: 0;
-      transition: 0.5s;
-      pointer-events: none;
-    }
-
-    .card:hover {
-      transform: translateY(-12px);
+    .product-card:hover {
+      transform: translateY(-10px);
       border-color: #ffd70055;
       box-shadow: 0 30px 70px -10px #ffd70022, 0 0 40px #ffd70010;
-      background: rgba(22, 22, 22, 0.8);
+      background: rgba(24, 24, 24, 0.85);
     }
 
-    .card:hover::after {
-      opacity: 1;
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid #ffd70022;
+      margin-bottom: 18px;
+      transition: 0.3s;
     }
 
-    .card h2 {
-      font-size: 2rem;
+    .product-card:hover img {
+      border-color: #ffd70088;
+      box-shadow: 0 0 30px #ffd70022;
+    }
+
+    .product-card h3 {
+      font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: -0.5px;
-      background: linear-gradient(to right, #fff, #dddddd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin-bottom: 8px;
+      color: #fff;
+      letter-spacing: -0.3px;
     }
 
-    .card .price {
-      font-size: 2.6rem;
+    .product-card .badge {
+      display: inline-block;
+      background: #ffd700;
+      color: #0a0a0a;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 4px 16px;
+      border-radius: 40px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .product-card .price {
+      font-size: 1.8rem;
       font-weight: 800;
       color: #ffd700;
-      text-shadow: 0 0 30px #ffd70066;
-      margin: 12px 0 20px;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffd700, #e6b800);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      text-shadow: 0 0 30px #ffd70044;
+      margin: 8px 0 12px;
     }
 
-    .card p {
+    .product-card p {
       color: #b0b0b0;
       font-weight: 300;
-      line-height: 1.6;
-      font-size: 0.95rem;
+      line-height: 1.5;
+      font-size: 0.9rem;
+    }
+
+    .product-card .btn-small {
+      margin-top: 16px;
+      padding: 10px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      background: #ffd700;
+      color: #0a0a0a;
+      border: none;
+      cursor: pointer;
+      transition: 0.25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 20px #ffd70033;
+    }
+
+    .product-card .btn-small:hover {
+      background: #ffe033;
+      box-shadow: 0 0 40px #ffd70066;
+      transform: scale(1.04);
+    }
+
+    .product-card .btn-small i {
+      font-size: 0.9rem;
     }
 
     /* card glow border animation */
-    .card::before {
+    .product-card::before {
       content: '';
       position: absolute;
       inset: -1px;
       border-radius: 28px;
       padding: 1px;
-      background: conic-gradient(from 0deg, transparent, #ffd70055, transparent, #ffd70055, transparent);
+      background: conic-gradient(from 0deg, transparent, #ffd70044, transparent, #ffd70044, transparent);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -373,7 +465,7 @@
       pointer-events: none;
     }
 
-    .card:hover::before {
+    .product-card:hover::before {
       opacity: 1;
       animation: spinGlow 4s linear infinite;
     }
@@ -387,13 +479,13 @@
     /* ----- footer ----- */
     footer {
       text-align: center;
-      padding: 50px 20px 30px;
+      padding: 40px 20px 30px;
       color: #888;
       font-size: 0.85rem;
       border-top: 1px solid #1f1f1f;
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
-      margin-top: 40px;
+      margin-top: 20px;
       letter-spacing: 0.5px;
       position: relative;
       z-index: 2;
@@ -417,8 +509,14 @@
         padding: 14px 28px;
         font-size: 0.9rem;
       }
-      .card {
-        padding: 30px 18px;
+      .carousel-track img {
+        height: 140px;
+      }
+      .product-card {
+        padding: 20px 14px;
+      }
+      .product-card img {
+        height: 130px;
       }
     }
   </style>
@@ -441,54 +539,81 @@
       </button>
     </div>
 
-    <!-- hero -->
+    <!-- hero + carousel -->
     <section class="hero">
       <h1>HYBRID <span class="accent">RIFT</span></h1>
-      <p class="tagline">Hybrid Rift is your solution</p>
-      <p>Optimize your PC · Dominate the game</p>
+      <p class="tagline">Rift is your solution</p>
+      <p>Undetected · Performance · Dominance</p>
+
+      <!-- sliding image carousel (stacked, slide to right) -->
+      <div class="carousel-wrap">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- images will be inserted by JS -->
+        </div>
+      </div>
+
       <div class="button-group">
-        <!-- DOWNLOAD BUTTON: triggers login if not authenticated -->
         <button class="btn neon" id="downloadBtn" onclick="handleDownload()">
           <i class="fas fa-download"></i> <span id="downloadLabel">LOGIN TO DOWNLOAD</span>
         </button>
-
-        <a class="btn gray" href="https://discord.gg/deQvzxnZgK" target="_blank">
+        <a class="btn gray" href="https://discord.gg/WBPZftYtvz" target="_blank">
           <i class="fab fa-discord"></i> DISCORD
         </a>
-        <a class="btn dark" href="/dashboard/">
-          <i class="fas fa-chart-simple"></i> DASHBOARD
+        <a class="btn dark" href="#products">
+          <i class="fas fa-cube"></i> PRODUCTS
         </a>
       </div>
     </section>
 
-    <!-- cards -->
-    <div class="container">
-      <div class="grid">
-
-        <div class="card">
-          <h2>RiftOS</h2>
-          <div class="price">FREE</div>
-          <p>Custom OS for peak performance and zero latency.</p>
+    <!-- products section (scrollable) -->
+    <section class="products-section" id="products">
+      <h2>⚡ PREMIUM CHEAT SOLUTIONS</h2>
+      <div class="product-grid">
+        <!-- product 1: SStack (from image) -->
+        <div class="product-card">
+          <img src="https://i.ibb.co/2M7N9xL/sstack-placeholder.png" alt="SStack" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=SStack'">
+          <h3>SStack</h3>
+          <span class="badge">fivem · cs2</span>
+          <div class="price">$25 / mo</div>
+          <p>Undetected AI aimbot, ESP, and radar. Built for competitive play.</p>
+          <button class="btn-small" onclick="handleDownload()"><i class="fas fa-cart-plus"></i> Get SStack</button>
         </div>
 
-        <div class="card">
-          <h2>Monthly Pro</h2>
-          <div class="price">$20 / mo</div>
-          <p>Full access + priority support and updates.</p>
+        <!-- product 2: Fortnite Slotted (from image) -->
+        <div class="product-card">
+          <img src="https://i.ibb.co/9hsx4Tp/fortnite-slotted.png" alt="Fortnite Slotted" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=Fortnite+Slotted'">
+          <h3>Fortnite Slotted</h3>
+          <span class="badge">fortnite</span>
+          <div class="price">$30 / mo</div>
+          <p>Slotted cheats with silent aim, wallhack, and skin changer.</p>
+          <button class="btn-small" onclick="handleDownload()"><i class="fas fa-cart-plus"></i> Get Slotted</button>
         </div>
 
-        <div class="card">
-          <h2>Lifetime</h2>
-          <div class="price">$50</div>
-          <p>One-time payment · lifetime access.</p>
+        <!-- product 3: HR (coming soon) -->
+        <div class="product-card">
+          <img src="https://i.ibb.co/4sZv3yM/hr-coming-soon.png" alt="HR" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=HR+%E2%80%A2+Coming+Soon'">
+          <h3>HR · Private</h3>
+          <span class="badge">coming soon</span>
+          <div class="price">––</div>
+          <p>Exclusive private cheat. Limited slots. Join Discord for updates.</p>
+          <a class="btn-small" href="https://discord.gg/WBPZftYtvz" target="_blank" style="text-decoration:none;"><i class="fab fa-discord"></i> Waitlist</a>
         </div>
 
+        <!-- product 4: extra / more services -->
+        <div class="product-card">
+          <img src="https://i.ibb.co/z7hP8wp/more-services.png" alt="More Services" onerror="this.src='https://via.placeholder.com/400x200/1a1a1a/ffd700?text=More+Services'">
+          <h3>More Services</h3>
+          <span class="badge">custom</span>
+          <div class="price">varies</div>
+          <p>Custom cheat development, spoofer, and loader solutions.</p>
+          <a class="btn-small" href="https://discord.gg/WBPZftYtvz" target="_blank" style="text-decoration:none;"><i class="fab fa-discord"></i> Contact</a>
+        </div>
       </div>
-    </div>
+    </section>
 
     <!-- footer -->
     <footer>
-      <i class="fas fa-bolt"></i> 2026 Hybrid Rift. All rights reserved. · Built for performance <i class="fas fa-fire"></i>
+      <i class="fas fa-bolt"></i> 2026 Hybrid Rift. All rights reserved. · Built for dominance <i class="fas fa-skull"></i>
     </footer>
 
   </div>
@@ -500,7 +625,37 @@
       "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
     );
 
-    // ----- check session state and update UI -----
+    // ----- image carousel: stack images and slide right -----
+    const imageUrls = [
+      "https://i.ibb.co/2M7N9xL/sstack-placeholder.png",
+      "https://i.ibb.co/9hsx4Tp/fortnite-slotted.png",
+      "https://i.ibb.co/4sZv3yM/hr-coming-soon.png",
+      "https://i.ibb.co/z7hP8wp/more-services.png"
+    ];
+
+    // fallback images if placeholder fails
+    const fallbacks = [
+      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=SStack",
+      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=Fortnite+Slotted",
+      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=HR+%E2%80%A2+Coming+Soon",
+      "https://via.placeholder.com/400x200/1a1a1a/ffd700?text=More+Services"
+    ];
+
+    const track = document.getElementById('carouselTrack');
+    if (track) {
+      // build carousel: show each image twice for seamless loop
+      let html = '';
+      for (let i = 0; i < imageUrls.length; i++) {
+        html += `<img src="${imageUrls[i]}" alt="slide" onerror="this.src='${fallbacks[i]}'">`;
+      }
+      // duplicate for seamless loop
+      for (let i = 0; i < imageUrls.length; i++) {
+        html += `<img src="${imageUrls[i]}" alt="slide" onerror="this.src='${fallbacks[i]}'" class="clone">`;
+      }
+      track.innerHTML = html;
+    }
+
+    // ----- session & login logic -----
     let currentUser = null;
 
     async function checkSession() {
@@ -508,9 +663,7 @@
       if (session?.user) {
         currentUser = session.user;
         const label = document.getElementById('downloadLabel');
-        if (label) {
-          label.textContent = 'DOWNLOAD RIFTOS';
-        }
+        if (label) label.textContent = 'DOWNLOAD NOW';
         const loginBtn = document.querySelector('.discord-login');
         if (loginBtn) {
           const name = session.user.user_metadata?.full_name || session.user.email || 'User';
@@ -519,9 +672,7 @@
       } else {
         currentUser = null;
         const label = document.getElementById('downloadLabel');
-        if (label) {
-          label.textContent = 'LOGIN TO DOWNLOAD';
-        }
+        if (label) label.textContent = 'LOGIN TO DOWNLOAD';
         const loginBtn = document.querySelector('.discord-login');
         if (loginBtn) {
           loginBtn.innerHTML = `<i class="fab fa-discord"></i> Login`;
@@ -529,7 +680,6 @@
       }
     }
 
-    // ----- Discord login -----
     async function login() {
       const { error } = await sb.auth.signInWithOAuth({
         provider: "discord",
@@ -537,33 +687,27 @@
           redirectTo: window.location.origin + "/dashboard/"
         }
       });
-
       if (error) {
         console.error(error);
         alert("Login error: " + error.message);
       }
     }
 
-    // ----- handle download with guard -----
     async function handleDownload() {
       const { data: { session } } = await sb.auth.getSession();
-
       if (!session?.user) {
-        const confirmLogin = confirm("You need to log in with Discord to download RiftOS. Log in now?");
+        const confirmLogin = confirm("You need to log in with Discord to download. Log in now?");
         if (confirmLogin) {
           await login();
         }
         return;
       }
-
-      // logged in → proceed with download (example link)
-      const downloadUrl = "https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906";
-      window.open(downloadUrl, '_blank');
+      // redirect to discord for product access
+      window.open("https://discord.gg/WBPZftYtvz", '_blank');
     }
 
-    // ----- init -----
+    // init
     checkSession();
-
     sb.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         checkSession();
@@ -573,7 +717,7 @@
       }
     });
 
-    console.log('Hybrid Rift · pro performance');
+    console.log('Hybrid Rift · cheat solutions');
   </script>
 
 </body>

@@ -143,7 +143,7 @@
       border-color: #fff3;
     }
 
-    /* ----- hero / carousel section ----- */
+    /* ----- hero section ----- */
     .hero {
       padding: 40px 20px 20px;
       text-align: center;
@@ -194,56 +194,99 @@
       letter-spacing: 0.5px;
     }
 
-    /* ----- sliding image carousel (stacked, slide to right) ----- */
-    .carousel-wrap {
-      max-width: 1000px;
-      margin: 30px auto 20px;
+    /* ----- slider (single image, swipe left/right) ----- */
+    .slider-container {
+      max-width: 900px;
+      margin: 30px auto 10px;
       padding: 0 20px;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px #ffd70015;
+      border: 1px solid #ffd70022;
     }
 
-    .carousel-track {
+    .slider-wrapper {
       display: flex;
-      gap: 28px;
-      animation: slideRight 22s infinite linear;
-      width: max-content;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      touch-action: pan-y;
     }
 
-    .carousel-track img {
-      height: 220px;
-      width: auto;
-      border-radius: 24px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px #ffd70022;
-      border: 1px solid #ffd70033;
-      transition: transform 0.3s, border-color 0.3s;
-      object-fit: cover;
+    .slider-wrapper img {
+      width: 100%;
       flex-shrink: 0;
-    }
-
-    .carousel-track img:hover {
-      transform: scale(1.04);
-      border-color: #ffd700aa;
-      box-shadow: 0 10px 50px rgba(255, 215, 0, 0.25);
-    }
-
-    @keyframes slideRight {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    /* pause on hover */
-    .carousel-wrap:hover .carousel-track {
-      animation-play-state: paused;
-    }
-
-    /* duplicate images for seamless loop */
-    .carousel-track .clone {
       display: block;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    /* slider navigation arrows */
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid #ffd70044;
+      color: #ffd700;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+      z-index: 5;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .slider-btn:hover {
+      background: #ffd700;
+      color: #0a0a0a;
+      border-color: #ffd700;
+      box-shadow: 0 0 30px #ffd70055;
+      transform: translateY(-50%) scale(1.08);
+    }
+
+    .slider-btn.prev {
+      left: 16px;
+    }
+
+    .slider-btn.next {
+      right: 16px;
+    }
+
+    /* dots indicator */
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding-bottom: 6px;
+    }
+
+    .slider-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #444;
+      cursor: pointer;
+      transition: 0.3s;
+      border: 1px solid #555;
+    }
+
+    .slider-dots span.active {
+      background: #ffd700;
+      border-color: #ffd700;
+      box-shadow: 0 0 16px #ffd70066;
+      transform: scale(1.2);
+    }
+
+    .slider-dots span:hover {
+      background: #ffd70088;
     }
 
     /* ----- button group ----- */
@@ -511,8 +554,16 @@
         padding: 14px 28px;
         font-size: 0.9rem;
       }
-      .carousel-track img {
-        height: 150px;
+      .slider-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+      .slider-btn.prev {
+        left: 8px;
+      }
+      .slider-btn.next {
+        right: 8px;
       }
       .product-card {
         padding: 20px 14px;
@@ -541,18 +592,21 @@
       </button>
     </div>
 
-    <!-- hero + carousel -->
+    <!-- hero + slider -->
     <section class="hero">
       <h1>HYBRID <span class="accent">RIFT</span></h1>
       <p class="tagline">Rift is your solution</p>
       <p>Undetected · Performance · Dominance</p>
 
-      <!-- sliding image carousel (stacked, slide to right) -->
-      <div class="carousel-wrap">
-        <div class="carousel-track" id="carouselTrack">
-          <!-- images will be inserted by JS -->
+      <!-- slider: single image with swipe left/right -->
+      <div class="slider-container">
+        <div class="slider-wrapper" id="sliderWrapper">
+          <!-- images inserted by JS -->
         </div>
+        <button class="slider-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
       </div>
+      <div class="slider-dots" id="sliderDots"></div>
 
       <div class="button-group">
         <button class="btn neon" id="downloadBtn" onclick="handleDownload()">
@@ -627,24 +681,89 @@
       "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
     );
 
-    // ----- image carousel: stack images and slide right -----
-    // using the two provided images, duplicated for seamless loop
-    const imageUrls = [
+    // ----- slider logic (single image, swipe left/right) -----
+    const sliderImages = [
       "https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536",
       "https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536"
     ];
 
-    const track = document.getElementById('carouselTrack');
-    if (track) {
-      let html = '';
-      // show each image twice for seamless loop
-      for (let rep = 0; rep < 2; rep++) {
-        for (let i = 0; i < imageUrls.length; i++) {
-          html += `<img src="${imageUrls[i]}" alt="slide">`;
-        }
-      }
-      track.innerHTML = html;
+    let currentIndex = 0;
+    const wrapper = document.getElementById('sliderWrapper');
+    const dotsContainer = document.getElementById('sliderDots');
+
+    // build slides
+    function buildSlider() {
+      wrapper.innerHTML = '';
+      sliderImages.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = 'slide';
+        wrapper.appendChild(img);
+      });
+      // build dots
+      dotsContainer.innerHTML = '';
+      sliderImages.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.dataset.index = i;
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      });
+      updateSlider();
     }
+
+    function updateSlider() {
+      wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+      const dots = dotsContainer.querySelectorAll('span');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    function goTo(index) {
+      if (index < 0) index = sliderImages.length - 1;
+      if (index >= sliderImages.length) index = 0;
+      currentIndex = index;
+      updateSlider();
+    }
+
+    function nextSlide() {
+      goTo(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      goTo(currentIndex - 1);
+    }
+
+    // event listeners for buttons
+    document.getElementById('nextBtn').addEventListener('click', nextSlide);
+    document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+    // keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // touch / swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const sliderContainer = document.querySelector('.slider-container');
+
+    sliderContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    sliderContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+      }
+    });
+
+    // init slider
+    buildSlider();
 
     // ----- session & login logic -----
     let currentUser = null;
@@ -693,7 +812,6 @@
         }
         return;
       }
-      // redirect to discord for product access
       window.open("https://discord.gg/WBPZftYtvz", '_blank');
     }
 

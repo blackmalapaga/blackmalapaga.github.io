@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eval Tweaks · Pro Performance</title>
+  <title>Hybrid Rift · Pro Performance</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
   </script>
@@ -23,7 +23,7 @@
       min-height: 100vh;
     }
 
-    /* ----- animated glow background ----- */
+    /* ----- animated glow background (neon yellow / black) ----- */
     .glow-bg {
       position: fixed;
       top: 0;
@@ -33,9 +33,9 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.10) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255, 60, 60, 0.05) 0%, transparent 60%);
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 60%);
       animation: breatheGlow 6s ease-in-out infinite alternate;
     }
 
@@ -50,12 +50,12 @@
       }
     }
 
-    /* floating orbs (extra) */
+    /* floating orbs - neon yellow / gold */
     .orb {
       position: fixed;
       border-radius: 50%;
       filter: blur(70px);
-      opacity: 0.3;
+      opacity: 0.25;
       z-index: 0;
       animation: floatOrb 14s infinite alternate ease-in-out;
       pointer-events: none;
@@ -63,7 +63,7 @@
     .orb1 {
       width: 400px;
       height: 400px;
-      background: #ff1a1a;
+      background: #ffd700;
       top: -100px;
       left: -100px;
       animation-duration: 16s;
@@ -71,7 +71,7 @@
     .orb2 {
       width: 500px;
       height: 500px;
-      background: #cc0000;
+      background: #e6b800;
       bottom: -150px;
       right: -100px;
       animation-duration: 20s;
@@ -80,12 +80,12 @@
     .orb3 {
       width: 300px;
       height: 300px;
-      background: #ff4d4d;
+      background: #ffcc00;
       top: 40%;
       left: 60%;
       animation-duration: 18s;
       animation-delay: -6s;
-      opacity: 0.15;
+      opacity: 0.12;
     }
 
     @keyframes floatOrb {
@@ -154,27 +154,27 @@
       font-size: clamp(3.2rem, 12vw, 5.6rem);
       font-weight: 800;
       letter-spacing: -1px;
-      background: linear-gradient(135deg, #ffffff 0%, #ffb3b3 80%);
+      background: linear-gradient(135deg, #ffffff 0%, #ffd700 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
+      text-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
       animation: titlePulse 3s infinite alternate;
     }
 
     @keyframes titlePulse {
       0% {
-        text-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
       }
       100% {
-        text-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
+        text-shadow: 0 0 60px rgba(255, 215, 0, 0.4);
       }
     }
 
     .hero .accent {
-      -webkit-text-fill-color: #ff1a1a;
+      -webkit-text-fill-color: #ffd700;
       background: none;
-      text-shadow: 0 0 60px #ff1a1a55;
+      text-shadow: 0 0 60px #ffd70055;
     }
 
     .hero p {
@@ -184,6 +184,15 @@
       margin-top: 12px;
       letter-spacing: 1px;
       backdrop-filter: blur(2px);
+    }
+
+    .hero .tagline {
+      font-size: 1.2rem;
+      color: #ffd700;
+      font-weight: 500;
+      letter-spacing: 2px;
+      margin-top: 6px;
+      opacity: 0.9;
     }
 
     .button-group {
@@ -225,17 +234,18 @@
       transform: translateY(-4px) scale(1.02);
     }
 
-    .btn.red {
-      background: #e60000;
-      color: #fff;
-      box-shadow: 0 0 30px #e6000066;
-      border-color: #ff333355;
+    .btn.neon {
+      background: #ffd700;
+      color: #0a0a0a;
+      box-shadow: 0 0 30px #ffd70066;
+      border-color: #ffed4a55;
+      font-weight: 800;
     }
 
-    .btn.red:hover {
-      background: #ff1a1a;
-      box-shadow: 0 0 60px #ff1a1aaa;
-      border-color: #ff6666;
+    .btn.neon:hover {
+      background: #ffe033;
+      box-shadow: 0 0 60px #ffd700aa;
+      border-color: #fff0a0;
     }
 
     .btn.gray {
@@ -251,18 +261,17 @@
       box-shadow: 0 0 30px #ffffff22;
     }
 
-    .btn.gold {
-      background: #d4a017;
-      color: #0a0a0a;
-      border-color: #f5c542;
-      box-shadow: 0 0 30px #d4a01755;
-      font-weight: 800;
+    .btn.dark {
+      background: #111;
+      color: #ffd700;
+      border: 1px solid #ffd70044;
+      box-shadow: 0 0 15px #ffd70022;
     }
 
-    .btn.gold:hover {
-      background: #e6b422;
-      box-shadow: 0 0 60px #d4a017aa;
-      border-color: #ffd966;
+    .btn.dark:hover {
+      background: #1a1a1a;
+      border-color: #ffd700aa;
+      box-shadow: 0 0 30px #ffd70044;
     }
 
     /* ----- cards section ----- */
@@ -285,7 +294,7 @@
       padding: 40px 28px;
       border-radius: 28px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 215, 0, 0.08);
       box-shadow: 0 20px 50px -10px #000000cc;
       transition: 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
       position: relative;
@@ -299,7 +308,7 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle at 30% 40%, rgba(255, 0, 0, 0.06), transparent 60%);
+      background: radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.06), transparent 60%);
       opacity: 0;
       transition: 0.5s;
       pointer-events: none;
@@ -307,8 +316,8 @@
 
     .card:hover {
       transform: translateY(-12px);
-      border-color: #ff333355;
-      box-shadow: 0 30px 70px -10px #ff000033, 0 0 40px #ff000015;
+      border-color: #ffd70055;
+      box-shadow: 0 30px 70px -10px #ffd70022, 0 0 40px #ffd70010;
       background: rgba(22, 22, 22, 0.8);
     }
 
@@ -330,11 +339,11 @@
     .card .price {
       font-size: 2.6rem;
       font-weight: 800;
-      color: #ff2a2a;
-      text-shadow: 0 0 30px #ff000066;
+      color: #ffd700;
+      text-shadow: 0 0 30px #ffd70066;
       margin: 12px 0 20px;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ff4d4d, #ff0000);
+      background: linear-gradient(135deg, #ffd700, #e6b800);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -354,7 +363,7 @@
       inset: -1px;
       border-radius: 28px;
       padding: 1px;
-      background: conic-gradient(from 0deg, transparent, #ff000055, transparent, #ff000055, transparent);
+      background: conic-gradient(from 0deg, transparent, #ffd70055, transparent, #ffd70055, transparent);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -379,7 +388,7 @@
     footer {
       text-align: center;
       padding: 50px 20px 30px;
-      color: #666;
+      color: #888;
       font-size: 0.85rem;
       border-top: 1px solid #1f1f1f;
       background: rgba(0, 0, 0, 0.4);
@@ -391,7 +400,7 @@
     }
 
     footer i {
-      color: #ff3333;
+      color: #ffd700;
       margin: 0 4px;
     }
 
@@ -434,18 +443,19 @@
 
     <!-- hero -->
     <section class="hero">
-      <h1>EVAL <span class="accent">TWEAKS</span></h1>
-      <p>Optimiza tu PC · Domina el juego</p>
+      <h1>HYBRID <span class="accent">RIFT</span></h1>
+      <p class="tagline">Hybrid Rift is your solution</p>
+      <p>Optimize your PC · Dominate the game</p>
       <div class="button-group">
-        <!-- DOWNLOAD BUTTON: now triggers login if not authenticated -->
-        <button class="btn gold" id="downloadBtn" onclick="handleDownload()">
-          <i class="fas fa-download"></i> <span id="downloadLabel">INICIAR SESIÓN PARA DESCARGAR</span>
+        <!-- DOWNLOAD BUTTON: triggers login if not authenticated -->
+        <button class="btn neon" id="downloadBtn" onclick="handleDownload()">
+          <i class="fas fa-download"></i> <span id="downloadLabel">LOGIN TO DOWNLOAD</span>
         </button>
 
-        <a class="btn gray" href="https://discord.gg/pFHrbTwTQA" target="_blank">
+        <a class="btn gray" href="https://discord.gg/deQvzxnZgK" target="_blank">
           <i class="fab fa-discord"></i> DISCORD
         </a>
-        <a class="btn gray" href="/dashboard/">
+        <a class="btn dark" href="/dashboard/">
           <i class="fas fa-chart-simple"></i> DASHBOARD
         </a>
       </div>
@@ -456,21 +466,21 @@
       <div class="grid">
 
         <div class="card">
-          <h2>EvalOS</h2>
+          <h2>RiftOS</h2>
           <div class="price">FREE</div>
-          <p>Sistema Operativo Customizado, para mejor perfomance y mejor rendimiento.</p>
+          <p>Custom OS for peak performance and zero latency.</p>
         </div>
 
         <div class="card">
-          <h2>Utilidad Monthly</h2>
-          <div class="price">$20 / month</div>
-          <p>Acceso completo + soporte prioritario</p>
+          <h2>Monthly Pro</h2>
+          <div class="price">$20 / mo</div>
+          <p>Full access + priority support and updates.</p>
         </div>
 
         <div class="card">
           <h2>Lifetime</h2>
           <div class="price">$50</div>
-          <p>Pago único · de por vida</p>
+          <p>One-time payment · lifetime access.</p>
         </div>
 
       </div>
@@ -478,7 +488,7 @@
 
     <!-- footer -->
     <footer>
-      <i class="fas fa-bolt"></i> © 2026 Eval Tweaks. All rights reserved. · Built for performance <i class="fas fa-fire"></i>
+      <i class="fas fa-bolt"></i> 2026 Hybrid Rift. All rights reserved. · Built for performance <i class="fas fa-fire"></i>
     </footer>
 
   </div>
@@ -499,21 +509,19 @@
         currentUser = session.user;
         const label = document.getElementById('downloadLabel');
         if (label) {
-          label.textContent = 'DESCARGAR EVAL-OS';
+          label.textContent = 'DOWNLOAD RIFTOS';
         }
-        // also update login button to show user
         const loginBtn = document.querySelector('.discord-login');
         if (loginBtn) {
-          const name = session.user.user_metadata?.full_name || session.user.email || 'Usuario';
+          const name = session.user.user_metadata?.full_name || session.user.email || 'User';
           loginBtn.innerHTML = `<i class="fab fa-discord"></i> ${name}`;
         }
       } else {
         currentUser = null;
         const label = document.getElementById('downloadLabel');
         if (label) {
-          label.textContent = 'INICIAR SESIÓN PARA DESCARGAR';
+          label.textContent = 'LOGIN TO DOWNLOAD';
         }
-        // reset login button
         const loginBtn = document.querySelector('.discord-login');
         if (loginBtn) {
           loginBtn.innerHTML = `<i class="fab fa-discord"></i> Login`;
@@ -538,19 +546,17 @@
 
     // ----- handle download with guard -----
     async function handleDownload() {
-      // re-check session in case it changed
       const { data: { session } } = await sb.auth.getSession();
 
       if (!session?.user) {
-        // not logged in → prompt and trigger login
-        const confirmLogin = confirm("🔐 Necesitas iniciar sesión con Discord para descargar Eval-OS. ¿Quieres iniciar sesión ahora?");
+        const confirmLogin = confirm("You need to log in with Discord to download RiftOS. Log in now?");
         if (confirmLogin) {
           await login();
         }
         return;
       }
 
-      // logged in → proceed with download
+      // logged in → proceed with download (example link)
       const downloadUrl = "https://drive.usercontent.google.com/download?id=1x-f6slTyjTuq1soC0Qd2i-3MM7GfRDI6&export=download&authuser=0&confirm=t&uuid=a893661d-d6c0-4735-8067-8c15e7728f53&at=AAINaIID-vws_-0HaoZL-1IUw7RO:1782004859906";
       window.open(downloadUrl, '_blank');
     }
@@ -558,7 +564,6 @@
     // ----- init -----
     checkSession();
 
-    // listen for auth changes (if user logs in from another tab)
     sb.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         checkSession();
@@ -568,7 +573,7 @@
       }
     });
 
-    console.log('🔥 Eval Tweaks · pro performance');
+    console.log('Hybrid Rift · pro performance');
   </script>
 
 </body>

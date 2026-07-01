@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hybrid Rift · Cheat Solutions</title>
+  <title>Hybrid Rift · Status</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
   </script>
@@ -33,9 +33,9 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 60%);
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 60%);
       animation: breatheGlow 6s ease-in-out infinite alternate;
     }
 
@@ -50,12 +50,12 @@
       }
     }
 
-    /* floating orbs - neon yellow / gold */
+    /* floating orbs - subtle */
     .orb {
       position: fixed;
       border-radius: 50%;
       filter: blur(70px);
-      opacity: 0.25;
+      opacity: 0.15;
       z-index: 0;
       animation: floatOrb 14s infinite alternate ease-in-out;
       pointer-events: none;
@@ -77,16 +77,6 @@
       animation-duration: 20s;
       animation-delay: -3s;
     }
-    .orb3 {
-      width: 300px;
-      height: 300px;
-      background: #ffcc00;
-      top: 40%;
-      left: 60%;
-      animation-duration: 18s;
-      animation-delay: -6s;
-      opacity: 0.12;
-    }
 
     @keyframes floatOrb {
       0% {
@@ -104,472 +94,375 @@
       backdrop-filter: blur(2px);
     }
 
-    /* ----- header / login ----- */
-    .top-bar {
+    /* ----- navigation bar (top) ----- */
+    .navbar {
       display: flex;
-      justify-content: flex-end;
-      padding: 24px 40px;
-      position: relative;
-      z-index: 10;
-    }
-
-    .discord-login {
-      background: rgba(88, 101, 242, 0.9);
-      backdrop-filter: blur(6px);
-      border: none;
-      padding: 12px 28px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 1rem;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(88, 101, 242, 0.3);
-      transition: 0.25s ease;
-      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      letter-spacing: 0.3px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 18px 40px;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #1f1f1f;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .discord-login i {
-      font-size: 1.2rem;
-    }
-
-    .discord-login:hover {
-      transform: scale(1.05);
-      background: #5865F2;
-      box-shadow: 0 0 40px #5865f2aa;
-      border-color: #fff3;
-    }
-
-    /* ----- hero section ----- */
-    .hero {
-      padding: 40px 20px 20px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero h1 {
-      font-size: clamp(3.2rem, 12vw, 5.6rem);
+    .navbar .brand {
+      font-size: 1.5rem;
       font-weight: 800;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
       background: linear-gradient(135deg, #ffffff 0%, #ffd700 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
-      animation: titlePulse 3s infinite alternate;
     }
 
-    @keyframes titlePulse {
-      0% {
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
-      }
-      100% {
-        text-shadow: 0 0 60px rgba(255, 215, 0, 0.4);
-      }
-    }
-
-    .hero .accent {
-      -webkit-text-fill-color: #ffd700;
-      background: none;
-      text-shadow: 0 0 60px #ffd70055;
-    }
-
-    .hero .tagline {
-      font-size: 1.3rem;
-      color: #ffd700;
-      font-weight: 500;
-      letter-spacing: 2px;
-      margin-top: 4px;
-      opacity: 0.9;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      font-weight: 300;
-      color: #ccc;
-      margin-top: 8px;
-      letter-spacing: 0.5px;
-    }
-
-    /* ----- slider (single image, swipe left/right) ----- */
-    .slider-container {
-      max-width: 900px;
-      margin: 30px auto 10px;
-      padding: 0 20px;
-      position: relative;
-      overflow: hidden;
-      border-radius: 28px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px #ffd70015;
-      border: 1px solid #ffd70022;
-    }
-
-    .slider-wrapper {
+    .navbar .nav-links {
       display: flex;
-      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      touch-action: pan-y;
-    }
-
-    .slider-wrapper img {
-      width: 100%;
-      flex-shrink: 0;
-      display: block;
-      height: auto;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-    }
-
-    /* slider navigation arrows */
-    .slider-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(8px);
-      border: 1px solid #ffd70044;
-      color: #ffd700;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3rem;
-      display: flex;
+      gap: 32px;
       align-items: center;
-      justify-content: center;
-      transition: 0.3s;
-      z-index: 5;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
     }
 
-    .slider-btn:hover {
-      background: #ffd700;
-      color: #0a0a0a;
-      border-color: #ffd700;
-      box-shadow: 0 0 30px #ffd70055;
-      transform: translateY(-50%) scale(1.08);
-    }
-
-    .slider-btn.prev {
-      left: 16px;
-    }
-
-    .slider-btn.next {
-      right: 16px;
-    }
-
-    /* dots indicator */
-    .slider-dots {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 16px;
-      padding-bottom: 6px;
-    }
-
-    .slider-dots span {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #444;
-      cursor: pointer;
-      transition: 0.3s;
-      border: 1px solid #555;
-    }
-
-    .slider-dots span.active {
-      background: #ffd700;
-      border-color: #ffd700;
-      box-shadow: 0 0 16px #ffd70066;
-      transform: scale(1.2);
-    }
-
-    .slider-dots span:hover {
-      background: #ffd70088;
-    }
-
-    /* ----- button group ----- */
-    .button-group {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin: 30px 0 20px;
-    }
-
-    .btn {
-      padding: 18px 40px;
-      border-radius: 60px;
-      font-weight: 700;
+    .navbar .nav-links a {
+      color: #aaa;
       text-decoration: none;
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      transition: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.3s;
+      letter-spacing: 0.3px;
       position: relative;
-      overflow: hidden;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-      cursor: pointer;
     }
 
-    .btn::before {
+    .navbar .nav-links a::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.03);
-      transition: 0.4s;
-      border-radius: 60px;
-    }
-
-    .btn:hover {
-      transform: translateY(-4px) scale(1.02);
-    }
-
-    .btn.neon {
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
       background: #ffd700;
-      color: #0a0a0a;
-      box-shadow: 0 0 30px #ffd70066;
-      border-color: #ffed4a55;
-      font-weight: 800;
+      transition: 0.3s;
     }
 
-    .btn.neon:hover {
-      background: #ffe033;
-      box-shadow: 0 0 60px #ffd700aa;
-      border-color: #fff0a0;
+    .navbar .nav-links a:hover {
+      color: #fff;
     }
 
-    .btn.gray {
-      background: rgba(30, 30, 30, 0.8);
-      backdrop-filter: blur(8px);
-      color: #f0f0f0;
-      border: 1px solid #444;
+    .navbar .nav-links a:hover::after {
+      width: 100%;
     }
 
-    .btn.gray:hover {
-      background: #2a2a2a;
-      border-color: #888;
-      box-shadow: 0 0 30px #ffffff22;
-    }
-
-    .btn.dark {
-      background: #111;
+    .navbar .nav-links a.active {
       color: #ffd700;
-      border: 1px solid #ffd70044;
-      box-shadow: 0 0 15px #ffd70022;
     }
 
-    .btn.dark:hover {
-      background: #1a1a1a;
-      border-color: #ffd700aa;
-      box-shadow: 0 0 30px #ffd70044;
+    .navbar .nav-links a.active::after {
+      width: 100%;
     }
 
-    /* ----- products section (scrollable) ----- */
-    .products-section {
-      max-width: 1200px;
-      margin: 40px auto 60px;
+    .navbar .discord-btn {
+      background: rgba(88, 101, 242, 0.9);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .navbar .discord-btn:hover {
+      transform: scale(1.04);
+      background: #5865F2;
+      box-shadow: 0 0 30px #5865f266;
+    }
+
+    /* hamburger for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 2px;
+      background: #fff;
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+
+    /* ----- hero / status section ----- */
+    .status-section {
+      max-width: 900px;
+      margin: 60px auto 40px;
       padding: 0 24px;
     }
 
-    .products-section h2 {
-      font-size: 2.2rem;
+    .status-section h1 {
+      font-size: 2.8rem;
       font-weight: 700;
-      text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 8px;
       letter-spacing: -0.5px;
-      background: linear-gradient(to right, #fff, #ffd700);
+      background: linear-gradient(135deg, #ffffff 0%, #ffd700 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 35px 30px;
+    .status-section .subtitle {
+      color: #888;
+      font-size: 1rem;
+      font-weight: 300;
+      margin-bottom: 40px;
+      letter-spacing: 0.5px;
     }
 
-    .product-card {
-      background: rgba(18, 18, 18, 0.8);
+    .status-card {
+      background: rgba(18, 18, 18, 0.85);
       backdrop-filter: blur(10px);
-      padding: 30px 20px 25px;
-      border-radius: 28px;
-      text-align: center;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-      box-shadow: 0 20px 50px -10px #000000cc;
-      transition: 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .product-card:hover {
-      transform: translateY(-10px);
-      border-color: #ffd70055;
-      box-shadow: 0 30px 70px -10px #ffd70022, 0 0 40px #ffd70010;
-      background: rgba(24, 24, 24, 0.85);
-    }
-
-    .product-card img {
-      width: 100%;
-      height: 170px;
-      object-fit: cover;
-      border-radius: 16px;
-      border: 1px solid #ffd70022;
-      margin-bottom: 18px;
+      border-radius: 24px;
+      padding: 40px 36px;
+      border: 1px solid #1f1f1f;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
       transition: 0.3s;
     }
 
-    .product-card:hover img {
-      border-color: #ffd70088;
-      box-shadow: 0 0 30px #ffd70022;
+    .status-card:hover {
+      border-color: #ffd70033;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px #ffd70008;
     }
 
-    .product-card h3 {
-      font-size: 1.5rem;
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #1f1f1f;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .status-header .product-name {
+      font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 8px;
       color: #fff;
       letter-spacing: -0.3px;
     }
 
-    .product-card .badge {
-      display: inline-block;
-      background: #ffd700;
-      color: #0a0a0a;
-      font-weight: 700;
-      font-size: 0.75rem;
-      padding: 4px 16px;
-      border-radius: 40px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .product-card .price {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #ffd700;
-      text-shadow: 0 0 30px #ffd70044;
-      margin: 8px 0 12px;
-    }
-
-    .product-card p {
-      color: #b0b0b0;
-      font-weight: 300;
-      line-height: 1.5;
+    .status-header .product-name small {
       font-size: 0.9rem;
+      color: #888;
+      font-weight: 400;
+      margin-left: 8px;
     }
 
-    .product-card .btn-small {
-      margin-top: 16px;
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      background: #ffd700;
-      color: #0a0a0a;
-      border: none;
-      cursor: pointer;
-      transition: 0.25s;
+    .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 0 20px #ffd70033;
-      text-decoration: none;
+      padding: 6px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .product-card .btn-small:hover {
-      background: #ffe033;
-      box-shadow: 0 0 40px #ffd70066;
-      transform: scale(1.04);
+    .status-badge.developing {
+      background: #ffd70022;
+      color: #ffd700;
+      border: 1px solid #ffd70044;
     }
 
-    .product-card .btn-small i {
-      font-size: 0.9rem;
+    .status-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulseDot 1.5s infinite;
     }
 
-    /* card glow border animation */
-    .product-card::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 28px;
-      padding: 1px;
-      background: conic-gradient(from 0deg, transparent, #ffd70044, transparent, #ffd70044, transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: 0.8s;
-      pointer-events: none;
+    .status-badge.developing .dot {
+      background: #ffd700;
     }
 
-    .product-card:hover::before {
-      opacity: 1;
-      animation: spinGlow 4s linear infinite;
-    }
-
-    @keyframes spinGlow {
-      to {
-        transform: rotate(360deg);
+    @keyframes pulseDot {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
       }
+      50% {
+        opacity: 0.4;
+        transform: scale(0.8);
+      }
+    }
+
+    .status-details {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 40px;
+    }
+
+    .status-details .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .status-details .detail-item .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .status-details .detail-item .value {
+      font-size: 1rem;
+      color: #ddd;
+      font-weight: 400;
+    }
+
+    .status-details .detail-item .value.highlight {
+      color: #ffd700;
+    }
+
+    .status-details .detail-item .value.mono {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    /* divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #ffd70033, transparent);
+      margin: 30px 0 20px;
+    }
+
+    .status-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 8px;
+    }
+
+    .status-footer .last-updated {
+      color: #666;
+      font-size: 0.8rem;
+      letter-spacing: 0.3px;
+    }
+
+    .status-footer .last-updated span {
+      color: #888;
+    }
+
+    .status-footer .view-log {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: 0.3s;
+      border: 1px solid #2a2a2a;
+      padding: 6px 18px;
+      border-radius: 40px;
+    }
+
+    .status-footer .view-log:hover {
+      color: #ffd700;
+      border-color: #ffd70044;
     }
 
     /* ----- footer ----- */
     footer {
       text-align: center;
       padding: 40px 20px 30px;
-      color: #888;
-      font-size: 0.85rem;
-      border-top: 1px solid #1f1f1f;
-      background: rgba(0, 0, 0, 0.4);
+      color: #555;
+      font-size: 0.8rem;
+      border-top: 1px solid #1a1a1a;
+      background: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(4px);
-      margin-top: 20px;
+      margin-top: 40px;
       letter-spacing: 0.5px;
       position: relative;
       z-index: 2;
     }
 
-    footer i {
-      color: #ffd700;
-      margin: 0 4px;
-    }
-
     /* responsive */
-    @media (max-width: 600px) {
-      .top-bar {
-        justify-content: center;
-        padding: 16px;
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 14px 20px;
+        flex-wrap: wrap;
       }
-      .hero h1 {
-        font-size: 2.8rem;
+
+      .hamburger {
+        display: flex;
       }
-      .btn {
-        padding: 14px 28px;
-        font-size: 0.9rem;
+
+      .navbar .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 0 10px;
+        border-top: 1px solid #1f1f1f;
+        margin-top: 12px;
       }
-      .slider-btn {
-        width: 36px;
-        height: 36px;
+
+      .navbar .nav-links.open {
+        display: flex;
+      }
+
+      .navbar .nav-links a {
         font-size: 1rem;
       }
-      .slider-btn.prev {
-        left: 8px;
+
+      .status-section h1 {
+        font-size: 2.2rem;
       }
-      .slider-btn.next {
-        right: 8px;
+
+      .status-card {
+        padding: 28px 20px;
       }
-      .product-card {
-        padding: 20px 14px;
+
+      .status-header {
+        flex-direction: column;
+        align-items: flex-start;
       }
-      .product-card img {
-        height: 140px;
+
+      .status-details {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .status-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar .brand {
+        font-size: 1.2rem;
+      }
+      .status-section h1 {
+        font-size: 1.8rem;
+      }
+      .status-header .product-name {
+        font-size: 1.4rem;
       }
     }
   </style>
@@ -580,96 +473,99 @@
   <div class="glow-bg"></div>
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
 
   <!-- main content -->
   <div class="content">
 
-    <!-- top bar with login -->
-    <div class="top-bar">
-      <button class="discord-login" onclick="login()">
-        <i class="fab fa-discord"></i> Login
+    <!-- navigation bar -->
+    <nav class="navbar">
+      <div class="brand">HYBRID RIFT</div>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
-    </div>
 
-    <!-- hero + slider -->
-    <section class="hero">
-      <h1>HYBRID <span class="accent">RIFT</span></h1>
-      <p class="tagline">Rift is your solution</p>
-      <p>Undetected · Performance · Dominance</p>
-
-      <!-- slider: single image with swipe left/right -->
-      <div class="slider-container">
-        <div class="slider-wrapper" id="sliderWrapper">
-          <!-- images inserted by JS -->
-        </div>
-        <button class="slider-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-        <button class="slider-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-      </div>
-      <div class="slider-dots" id="sliderDots"></div>
-
-      <div class="button-group">
-        <button class="btn neon" id="downloadBtn" onclick="handleDownload()">
-          <i class="fas fa-download"></i> <span id="downloadLabel">LOGIN TO DOWNLOAD</span>
+      <div class="nav-links" id="navLinks">
+        <a href="#" class="active">Status</a>
+        <a href="#">Products</a>
+        <a href="#">Support</a>
+        <button class="discord-btn" onclick="login()">
+          <i class="fab fa-discord"></i> Login
         </button>
-        <a class="btn gray" href="https://discord.gg/WBPZftYtvz" target="_blank">
-          <i class="fab fa-discord"></i> DISCORD
-        </a>
-        <a class="btn dark" href="#products">
-          <i class="fas fa-cube"></i> PRODUCTS
-        </a>
       </div>
-    </section>
+    </nav>
 
-    <!-- products section (scrollable) -->
-    <section class="products-section" id="products">
-      <h2>⚡ PREMIUM CHEAT SOLUTIONS</h2>
-      <div class="product-grid">
-        <!-- product 1: SStack -->
-        <div class="product-card">
-          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536" alt="SStack">
-          <h3>SStack</h3>
-          <span class="badge">fivem · cs2</span>
-          <div class="price">$25 / mo</div>
-          <p>Undetected AI aimbot, ESP, and radar. Built for competitive play.</p>
-          <button class="btn-small" onclick="handleDownload()"><i class="fas fa-cart-plus"></i> Get SStack</button>
+    <!-- status section -->
+    <section class="status-section">
+      <h1>System Status</h1>
+      <p class="subtitle">Real-time product status and development updates</p>
+
+      <div class="status-card">
+        <div class="status-header">
+          <div class="product-name">
+            Fortnite Slotted
+            <small>v2.4.1</small>
+          </div>
+          <div class="status-badge developing">
+            <span class="dot"></span>
+            Developing
+          </div>
         </div>
 
-        <!-- product 2: Fortnite Slotted -->
-        <div class="product-card">
-          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536" alt="Fortnite Slotted">
-          <h3>Fortnite Slotted</h3>
-          <span class="badge">fortnite</span>
-          <div class="price">$30 / mo</div>
-          <p>Slotted cheats with silent aim, wallhack, and skin changer.</p>
-          <button class="btn-small" onclick="handleDownload()"><i class="fas fa-cart-plus"></i> Get Slotted</button>
+        <div class="status-details">
+          <div class="detail-item">
+            <span class="label">Status</span>
+            <span class="value highlight">In Development</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Last Update</span>
+            <span class="value">2026-06-30 14:32 UTC</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Last Issues</span>
+            <span class="value mono">null</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Stability</span>
+            <span class="value">Testing Phase</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Detection Risk</span>
+            <span class="value" style="color: #ffd700;">Low</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">ETA</span>
+            <span class="value">Q3 2026</span>
+          </div>
         </div>
 
-        <!-- product 3: HR (coming soon) -->
-        <div class="product-card">
-          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536" alt="HR">
-          <h3>HR · Private</h3>
-          <span class="badge">coming soon</span>
-          <div class="price">––</div>
-          <p>Exclusive private cheat. Limited slots. Join Discord for updates.</p>
-          <a class="btn-small" href="https://discord.gg/WBPZftYtvz" target="_blank" style="text-decoration:none;"><i class="fab fa-discord"></i> Waitlist</a>
-        </div>
+        <div class="divider"></div>
 
-        <!-- product 4: more services -->
-        <div class="product-card">
-          <img src="https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536" alt="More Services">
-          <h3>More Services</h3>
-          <span class="badge">custom</span>
-          <div class="price">varies</div>
-          <p>Custom cheat development, spoofer, and loader solutions.</p>
-          <a class="btn-small" href="https://discord.gg/WBPZftYtvz" target="_blank" style="text-decoration:none;"><i class="fab fa-discord"></i> Contact</a>
+        <div class="status-footer">
+          <div class="last-updated">
+            <i class="fas fa-clock" style="color:#555; margin-right:6px;"></i>
+            Last checked: <span id="timestamp">just now</span>
+          </div>
+          <a href="#" class="view-log">
+            <i class="fas fa-code" style="margin-right:6px;"></i> View Changelog
+          </a>
         </div>
+      </div>
+
+      <!-- additional info: no other products yet -->
+      <div style="margin-top: 24px; padding: 16px 20px; background: rgba(18,18,18,0.4); border-radius: 16px; border: 1px solid #1a1a1a;">
+        <p style="color: #666; font-size: 0.85rem; letter-spacing: 0.3px;">
+          <i class="fas fa-info-circle" style="color:#444; margin-right:8px;"></i>
+          Additional products and status updates will appear here as they become available.
+        </p>
       </div>
     </section>
 
     <!-- footer -->
     <footer>
-      <i class="fas fa-bolt"></i> 2026 Hybrid Rift. All rights reserved. · Built for dominance <i class="fas fa-skull"></i>
+      <i class="fas fa-bolt" style="color:#555;"></i> 2026 Hybrid Rift. All rights reserved.
     </footer>
 
   </div>
@@ -681,89 +577,30 @@
       "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
     );
 
-    // ----- slider logic (single image, swipe left/right) -----
-    const sliderImages = [
-      "https://media.discordapp.net/attachments/1521711800733798500/1521711833688314027/Gemini_Generated_Image_i8486si8486si848.png?ex=6a45d415&is=6a448295&hm=9d46d824f4d78cd578ebb2ccdf797072049afdc2da150d62e41e42f560d82d0e&=&format=webp&quality=lossless&width=960&height=536",
-      "https://media.discordapp.net/attachments/1521711800733798500/1521711834074185769/Gemini_Generated_Image_br69ulbr69ulbr69.png?ex=6a45d415&is=6a448295&hm=87276175bfc6722868b9c044dbb0c4868aaf686fc884624317a28bc5b685ddba&=&format=webp&quality=lossless&width=960&height=536"
-    ];
+    // ----- hamburger toggle -----
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
 
-    let currentIndex = 0;
-    const wrapper = document.getElementById('sliderWrapper');
-    const dotsContainer = document.getElementById('sliderDots');
-
-    // build slides
-    function buildSlider() {
-      wrapper.innerHTML = '';
-      sliderImages.forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = 'slide';
-        wrapper.appendChild(img);
-      });
-      // build dots
-      dotsContainer.innerHTML = '';
-      sliderImages.forEach((_, i) => {
-        const dot = document.createElement('span');
-        dot.dataset.index = i;
-        dot.addEventListener('click', () => goTo(i));
-        dotsContainer.appendChild(dot);
-      });
-      updateSlider();
-    }
-
-    function updateSlider() {
-      wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
-      const dots = dotsContainer.querySelectorAll('span');
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentIndex);
-      });
-    }
-
-    function goTo(index) {
-      if (index < 0) index = sliderImages.length - 1;
-      if (index >= sliderImages.length) index = 0;
-      currentIndex = index;
-      updateSlider();
-    }
-
-    function nextSlide() {
-      goTo(currentIndex + 1);
-    }
-
-    function prevSlide() {
-      goTo(currentIndex - 1);
-    }
-
-    // event listeners for buttons
-    document.getElementById('nextBtn').addEventListener('click', nextSlide);
-    document.getElementById('prevBtn').addEventListener('click', prevSlide);
-
-    // keyboard support
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') nextSlide();
-      if (e.key === 'ArrowLeft') prevSlide();
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
     });
 
-    // touch / swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const sliderContainer = document.querySelector('.slider-container');
-
-    sliderContainer.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
+    // close on link click (mobile)
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+      });
     });
 
-    sliderContainer.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 40) {
-        if (diff > 0) nextSlide();
-        else prevSlide();
-      }
-    });
-
-    // init slider
-    buildSlider();
+    // ----- timestamp update -----
+    function updateTimestamp() {
+      const now = new Date();
+      const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      const timeStr = now.toLocaleTimeString('en-US', options);
+      document.getElementById('timestamp').textContent = timeStr + ' UTC';
+    }
+    updateTimestamp();
+    setInterval(updateTimestamp, 30000);
 
     // ----- session & login logic -----
     let currentUser = null;
@@ -772,18 +609,14 @@
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
         currentUser = session.user;
-        const label = document.getElementById('downloadLabel');
-        if (label) label.textContent = 'DOWNLOAD NOW';
-        const loginBtn = document.querySelector('.discord-login');
+        const loginBtn = document.querySelector('.discord-btn');
         if (loginBtn) {
           const name = session.user.user_metadata?.full_name || session.user.email || 'User';
           loginBtn.innerHTML = `<i class="fab fa-discord"></i> ${name}`;
         }
       } else {
         currentUser = null;
-        const label = document.getElementById('downloadLabel');
-        if (label) label.textContent = 'LOGIN TO DOWNLOAD';
-        const loginBtn = document.querySelector('.discord-login');
+        const loginBtn = document.querySelector('.discord-btn');
         if (loginBtn) {
           loginBtn.innerHTML = `<i class="fab fa-discord"></i> Login`;
         }
@@ -803,17 +636,8 @@
       }
     }
 
-    async function handleDownload() {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session?.user) {
-        const confirmLogin = confirm("You need to log in with Discord to download. Log in now?");
-        if (confirmLogin) {
-          await login();
-        }
-        return;
-      }
-      window.open("https://discord.gg/WBPZftYtvz", '_blank');
-    }
+    // make login function globally accessible
+    window.login = login;
 
     // init
     checkSession();
@@ -826,7 +650,7 @@
       }
     });
 
-    console.log('Hybrid Rift · cheat solutions');
+    console.log('Hybrid Rift · Status page');
   </script>
 
 </body>

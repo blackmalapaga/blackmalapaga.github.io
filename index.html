@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hybrid Rift · Status</title>
+  <title>Hybrid Rift · Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
   </script>
@@ -16,14 +16,14 @@
     }
 
     body {
-      background: #0b0b0b;
+      background: #0a0a0a;
       font-family: 'Inter', sans-serif;
       color: #fff;
       overflow-x: hidden;
       min-height: 100vh;
     }
 
-    /* ----- animated glow background (neon yellow / black) ----- */
+    /* ----- animated glow background ----- */
     .glow-bg {
       position: fixed;
       top: 0;
@@ -33,9 +33,9 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.05) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 60%);
+        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.02) 0%, transparent 60%);
       animation: breatheGlow 6s ease-in-out infinite alternate;
     }
 
@@ -50,32 +50,32 @@
       }
     }
 
-    /* floating orbs - subtle */
+    /* floating orbs */
     .orb {
       position: fixed;
       border-radius: 50%;
-      filter: blur(70px);
-      opacity: 0.15;
+      filter: blur(80px);
+      opacity: 0.12;
       z-index: 0;
       animation: floatOrb 14s infinite alternate ease-in-out;
       pointer-events: none;
     }
     .orb1 {
-      width: 400px;
-      height: 400px;
-      background: #ffd700;
-      top: -100px;
-      left: -100px;
-      animation-duration: 16s;
-    }
-    .orb2 {
       width: 500px;
       height: 500px;
+      background: #ffd700;
+      top: -150px;
+      left: -100px;
+      animation-duration: 18s;
+    }
+    .orb2 {
+      width: 600px;
+      height: 600px;
       background: #e6b800;
-      bottom: -150px;
+      bottom: -200px;
       right: -100px;
-      animation-duration: 20s;
-      animation-delay: -3s;
+      animation-duration: 22s;
+      animation-delay: -4s;
     }
 
     @keyframes floatOrb {
@@ -83,7 +83,7 @@
         transform: translate(0, 0) scale(1);
       }
       100% {
-        transform: translate(60px, 40px) scale(1.2);
+        transform: translate(80px, 50px) scale(1.3);
       }
     }
 
@@ -91,36 +91,36 @@
     .content {
       position: relative;
       z-index: 2;
-      backdrop-filter: blur(2px);
     }
 
-    /* ----- navigation bar (top) ----- */
+    /* ----- navigation bar (clean, minimal) ----- */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 40px;
-      background: rgba(10, 10, 10, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid #1f1f1f;
+      padding: 16px 48px;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
     .navbar .brand {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
       background: linear-gradient(135deg, #ffffff 0%, #ffd700 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-decoration: none;
     }
 
     .navbar .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 28px;
       align-items: center;
     }
 
@@ -128,21 +128,22 @@
       color: #aaa;
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.95rem;
-      transition: 0.3s;
+      font-size: 0.9rem;
+      transition: 0.25s ease;
       letter-spacing: 0.3px;
       position: relative;
+      padding: 4px 0;
     }
 
     .navbar .nav-links a::after {
       content: '';
       position: absolute;
-      bottom: -4px;
+      bottom: -2px;
       left: 0;
       width: 0;
       height: 2px;
       background: #ffd700;
-      transition: 0.3s;
+      transition: 0.3s ease;
     }
 
     .navbar .nav-links a:hover {
@@ -161,13 +162,13 @@
       width: 100%;
     }
 
-    .navbar .discord-btn {
-      background: rgba(88, 101, 242, 0.9);
+    .navbar .nav-links .login-btn {
+      background: rgba(88, 101, 242, 0.85);
       border: none;
-      padding: 10px 24px;
+      padding: 8px 22px;
       border-radius: 40px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #fff;
       cursor: pointer;
       transition: 0.25s ease;
@@ -177,13 +178,13 @@
       border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .navbar .discord-btn:hover {
+    .navbar .nav-links .login-btn:hover {
       transform: scale(1.04);
       background: #5865F2;
-      box-shadow: 0 0 30px #5865f266;
+      box-shadow: 0 0 30px #5865f255;
     }
 
-    /* hamburger for mobile */
+    /* hamburger */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -195,22 +196,121 @@
     }
 
     .hamburger span {
-      width: 28px;
+      width: 26px;
       height: 2px;
-      background: #fff;
+      background: #ccc;
       transition: 0.3s;
       border-radius: 2px;
     }
 
-    /* ----- hero / status section ----- */
-    .status-section {
-      max-width: 900px;
-      margin: 60px auto 40px;
-      padding: 0 24px;
+    /* ----- hero section (home) ----- */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 40px 60px;
+      text-align: center;
     }
 
-    .status-section h1 {
-      font-size: 2.8rem;
+    .hero .badge {
+      display: inline-block;
+      background: rgba(255, 215, 0, 0.12);
+      color: #ffd700;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 215, 0, 0.15);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 10vw, 5.2rem);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      background: linear-gradient(135deg, #ffffff 0%, #ffd700 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .hero .sub {
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: #999;
+      letter-spacing: 0.5px;
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .hero .sub strong {
+      color: #ffd700;
+      font-weight: 600;
+    }
+
+    .hero .cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero .cta-group .btn {
+      padding: 14px 36px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .hero .cta-group .btn-primary {
+      background: #ffd700;
+      color: #0a0a0a;
+      box-shadow: 0 0 30px #ffd70044;
+    }
+
+    .hero .cta-group .btn-primary:hover {
+      background: #ffe033;
+      box-shadow: 0 0 50px #ffd70066;
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .hero .cta-group .btn-secondary {
+      background: rgba(30, 30, 30, 0.8);
+      color: #eee;
+      border: 1px solid #333;
+    }
+
+    .hero .cta-group .btn-secondary:hover {
+      background: #2a2a2a;
+      border-color: #ffd70044;
+      transform: translateY(-3px);
+    }
+
+    /* ----- status section (hidden by default, shown when clicked) ----- */
+    .status-section {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 0 40px;
+    }
+
+    .status-section.visible {
+      display: block;
+    }
+
+    .status-section h2 {
+      font-size: 2rem;
       font-weight: 700;
       margin-bottom: 8px;
       letter-spacing: -0.5px;
@@ -222,25 +322,19 @@
 
     .status-section .subtitle {
       color: #888;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 300;
-      margin-bottom: 40px;
-      letter-spacing: 0.5px;
+      margin-bottom: 32px;
+      letter-spacing: 0.3px;
     }
 
     .status-card {
       background: rgba(18, 18, 18, 0.85);
       backdrop-filter: blur(10px);
       border-radius: 24px;
-      padding: 40px 36px;
-      border: 1px solid #1f1f1f;
+      padding: 36px 32px;
+      border: 1px solid #1a1a1a;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-      transition: 0.3s;
-    }
-
-    .status-card:hover {
-      border-color: #ffd70033;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px #ffd70008;
     }
 
     .status-header {
@@ -248,21 +342,21 @@
       justify-content: space-between;
       align-items: center;
       padding-bottom: 20px;
-      border-bottom: 1px solid #1f1f1f;
+      border-bottom: 1px solid #1a1a1a;
       flex-wrap: wrap;
       gap: 12px;
     }
 
     .status-header .product-name {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #fff;
       letter-spacing: -0.3px;
     }
 
     .status-header .product-name small {
-      font-size: 0.9rem;
-      color: #888;
+      font-size: 0.8rem;
+      color: #777;
       font-weight: 400;
       margin-left: 8px;
     }
@@ -274,27 +368,24 @@
       padding: 6px 18px;
       border-radius: 40px;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .status-badge.developing {
-      background: #ffd70022;
+      background: rgba(255, 215, 0, 0.12);
       color: #ffd700;
-      border: 1px solid #ffd70044;
+      border: 1px solid rgba(255, 215, 0, 0.2);
     }
 
     .status-badge .dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       display: inline-block;
-      animation: pulseDot 1.5s infinite;
-    }
-
-    .status-badge.developing .dot {
       background: #ffd700;
+      animation: pulseDot 1.5s infinite;
     }
 
     @keyframes pulseDot {
@@ -303,53 +394,52 @@
         transform: scale(1);
       }
       50% {
-        opacity: 0.4;
-        transform: scale(0.8);
+        opacity: 0.3;
+        transform: scale(0.7);
       }
     }
 
-    .status-details {
-      margin-top: 24px;
+    .status-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px 40px;
+      gap: 18px 32px;
+      margin-top: 22px;
     }
 
-    .status-details .detail-item {
+    .status-grid .item {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
-    .status-details .detail-item .label {
-      font-size: 0.75rem;
+    .status-grid .item .label {
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       color: #666;
       font-weight: 600;
     }
 
-    .status-details .detail-item .value {
-      font-size: 1rem;
+    .status-grid .item .value {
+      font-size: 0.95rem;
       color: #ddd;
       font-weight: 400;
     }
 
-    .status-details .detail-item .value.highlight {
+    .status-grid .item .value.highlight {
       color: #ffd700;
     }
 
-    .status-details .detail-item .value.mono {
+    .status-grid .item .value.mono {
       font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-      color: #aaa;
+      font-size: 0.85rem;
+      color: #999;
     }
 
-    /* divider */
-    .divider {
+    .status-divider {
       height: 1px;
-      background: linear-gradient(to right, transparent, #ffd70033, transparent);
-      margin: 30px 0 20px;
+      background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.15), transparent);
+      margin: 24px 0 18px;
     }
 
     .status-footer {
@@ -358,50 +448,88 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
-      padding-top: 8px;
     }
 
-    .status-footer .last-updated {
+    .status-footer .timestamp {
       color: #666;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       letter-spacing: 0.3px;
     }
 
-    .status-footer .last-updated span {
-      color: #888;
+    .status-footer .timestamp i {
+      margin-right: 6px;
+      color: #555;
     }
 
-    .status-footer .view-log {
+    .status-footer .changelog-link {
       color: #888;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       transition: 0.3s;
       border: 1px solid #2a2a2a;
-      padding: 6px 18px;
+      padding: 5px 18px;
       border-radius: 40px;
     }
 
-    .status-footer .view-log:hover {
+    .status-footer .changelog-link:hover {
       color: #ffd700;
       border-color: #ffd70044;
+    }
+
+    .status-note {
+      margin-top: 20px;
+      padding: 14px 20px;
+      background: rgba(18, 18, 18, 0.4);
+      border-radius: 14px;
+      border: 1px solid #161616;
+    }
+
+    .status-note p {
+      color: #666;
+      font-size: 0.82rem;
+      letter-spacing: 0.3px;
+    }
+
+    .status-note p i {
+      margin-right: 8px;
+      color: #444;
     }
 
     /* ----- footer ----- */
     footer {
       text-align: center;
-      padding: 40px 20px 30px;
-      color: #555;
-      font-size: 0.8rem;
-      border-top: 1px solid #1a1a1a;
+      padding: 40px 20px 28px;
+      color: #444;
+      font-size: 0.78rem;
+      border-top: 1px solid #141414;
       background: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(4px);
-      margin-top: 40px;
-      letter-spacing: 0.5px;
+      margin-top: 20px;
+      letter-spacing: 0.3px;
       position: relative;
       z-index: 2;
     }
 
-    /* responsive */
+    footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    footer .footer-links a {
+      color: #555;
+      text-decoration: none;
+      font-size: 0.78rem;
+      transition: 0.3s;
+    }
+
+    footer .footer-links a:hover {
+      color: #ffd700;
+    }
+
+    /* ----- responsive ----- */
     @media (max-width: 768px) {
       .navbar {
         padding: 14px 20px;
@@ -416,10 +544,10 @@
         display: none;
         width: 100%;
         flex-direction: column;
-        gap: 16px;
-        padding: 20px 0 10px;
-        border-top: 1px solid #1f1f1f;
-        margin-top: 12px;
+        gap: 14px;
+        padding: 18px 0 8px;
+        border-top: 1px solid #1a1a1a;
+        margin-top: 10px;
       }
 
       .navbar .nav-links.open {
@@ -427,15 +555,31 @@
       }
 
       .navbar .nav-links a {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        width: 100%;
+        text-align: center;
       }
 
-      .status-section h1 {
-        font-size: 2.2rem;
+      .navbar .nav-links .login-btn {
+        width: 100%;
+        justify-content: center;
       }
 
-      .status-card {
-        padding: 28px 20px;
+      .hero {
+        padding: 50px 20px 40px;
+      }
+
+      .hero h1 {
+        font-size: 2.6rem;
+      }
+
+      .status-section {
+        padding: 0 20px;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
       }
 
       .status-header {
@@ -443,33 +587,33 @@
         align-items: flex-start;
       }
 
-      .status-details {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
       .status-footer {
         flex-direction: column;
         align-items: flex-start;
       }
+
+      .status-card {
+        padding: 24px 18px;
+      }
     }
 
     @media (max-width: 480px) {
-      .navbar .brand {
-        font-size: 1.2rem;
+      .hero h1 {
+        font-size: 2rem;
       }
-      .status-section h1 {
-        font-size: 1.8rem;
+      .hero .sub {
+        font-size: 1rem;
       }
-      .status-header .product-name {
-        font-size: 1.4rem;
+      .hero .cta-group .btn {
+        padding: 12px 24px;
+        font-size: 0.85rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- animated background layers -->
+  <!-- animated background -->
   <div class="glow-bg"></div>
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
@@ -479,7 +623,7 @@
 
     <!-- navigation bar -->
     <nav class="navbar">
-      <div class="brand">HYBRID RIFT</div>
+      <a href="#" class="brand" id="homeLink">HYBRID RIFT</a>
 
       <button class="hamburger" id="hamburger" aria-label="Toggle menu">
         <span></span>
@@ -488,18 +632,38 @@
       </button>
 
       <div class="nav-links" id="navLinks">
-        <a href="#" class="active">Status</a>
-        <a href="#">Products</a>
-        <a href="#">Support</a>
-        <button class="discord-btn" onclick="login()">
-          <i class="fab fa-discord"></i> Login
+        <a href="#" class="active" data-page="home">Home</a>
+        <a href="#" data-page="status">Status</a>
+        <a href="#" data-page="resell">Resell</a>
+        <a href="#" data-page="terms">Terms & Privacy</a>
+        <a href="#" data-page="about">About</a>
+        <button class="login-btn" onclick="login()">
+          <i class="fab fa-discord"></i> Log in
         </button>
       </div>
     </nav>
 
-    <!-- status section -->
-    <section class="status-section">
-      <h1>System Status</h1>
+    <!-- HOME section -->
+    <section id="homeSection" class="hero">
+      <div class="badge">Next-Gen Performance</div>
+      <h1>Rift is your solution</h1>
+      <p class="sub">
+        Undetected, reliable, and built for <strong>competitive dominance</strong>.
+        Hybrid Rift delivers the tools you need to stay ahead.
+      </p>
+      <div class="cta-group">
+        <a href="#" class="btn btn-primary" onclick="switchPage('status')">
+          <i class="fas fa-arrow-right"></i> View Status
+        </a>
+        <a href="https://discord.gg/WBPZftYtvz" target="_blank" class="btn btn-secondary">
+          <i class="fab fa-discord"></i> Join Discord
+        </a>
+      </div>
+    </section>
+
+    <!-- STATUS section (hidden by default) -->
+    <section id="statusSection" class="status-section">
+      <h2>System Status</h2>
       <p class="subtitle">Real-time product status and development updates</p>
 
       <div class="status-card">
@@ -514,50 +678,49 @@
           </div>
         </div>
 
-        <div class="status-details">
-          <div class="detail-item">
+        <div class="status-grid">
+          <div class="item">
             <span class="label">Status</span>
             <span class="value highlight">In Development</span>
           </div>
-          <div class="detail-item">
+          <div class="item">
             <span class="label">Last Update</span>
             <span class="value">2026-06-30 14:32 UTC</span>
           </div>
-          <div class="detail-item">
+          <div class="item">
             <span class="label">Last Issues</span>
             <span class="value mono">null</span>
           </div>
-          <div class="detail-item">
+          <div class="item">
             <span class="label">Stability</span>
             <span class="value">Testing Phase</span>
           </div>
-          <div class="detail-item">
+          <div class="item">
             <span class="label">Detection Risk</span>
             <span class="value" style="color: #ffd700;">Low</span>
           </div>
-          <div class="detail-item">
+          <div class="item">
             <span class="label">ETA</span>
             <span class="value">Q3 2026</span>
           </div>
         </div>
 
-        <div class="divider"></div>
+        <div class="status-divider"></div>
 
         <div class="status-footer">
-          <div class="last-updated">
-            <i class="fas fa-clock" style="color:#555; margin-right:6px;"></i>
+          <div class="timestamp">
+            <i class="fas fa-clock"></i>
             Last checked: <span id="timestamp">just now</span>
           </div>
-          <a href="#" class="view-log">
+          <a href="#" class="changelog-link">
             <i class="fas fa-code" style="margin-right:6px;"></i> View Changelog
           </a>
         </div>
       </div>
 
-      <!-- additional info: no other products yet -->
-      <div style="margin-top: 24px; padding: 16px 20px; background: rgba(18,18,18,0.4); border-radius: 16px; border: 1px solid #1a1a1a;">
-        <p style="color: #666; font-size: 0.85rem; letter-spacing: 0.3px;">
-          <i class="fas fa-info-circle" style="color:#444; margin-right:8px;"></i>
+      <div class="status-note">
+        <p>
+          <i class="fas fa-info-circle"></i>
           Additional products and status updates will appear here as they become available.
         </p>
       </div>
@@ -565,60 +728,139 @@
 
     <!-- footer -->
     <footer>
-      <i class="fas fa-bolt" style="color:#555;"></i> 2026 Hybrid Rift. All rights reserved.
+      <div class="footer-links">
+        <a href="#" data-page="home">Home</a>
+        <a href="#" data-page="status">Status</a>
+        <a href="#" data-page="resell">Resell</a>
+        <a href="#" data-page="terms">Terms & Privacy</a>
+        <a href="#" data-page="about">About</a>
+      </div>
+      <span><i class="fas fa-bolt" style="color:#444;"></i> 2026 Hybrid Rift. All rights reserved.</span>
     </footer>
 
   </div>
 
   <script>
-    // Supabase client (public)
+    // Supabase client
     const sb = window.supabase.createClient(
       "https://rgdkdflkviigwdtuodjy.supabase.co",
       "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
     );
 
-    // ----- hamburger toggle -----
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
+    // ----- page switching -----
+    const homeSection = document.getElementById('homeSection');
+    const statusSection = document.getElementById('statusSection');
+    const navLinks = document.querySelectorAll('.nav-links a[data-page]');
+    const footerLinks = document.querySelectorAll('.footer-links a[data-page]');
 
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
+    function switchPage(page) {
+      // hide all sections
+      homeSection.style.display = 'none';
+      statusSection.classList.remove('visible');
+      statusSection.style.display = 'none';
+
+      // show selected
+      if (page === 'home') {
+        homeSection.style.display = 'block';
+      } else if (page === 'status') {
+        statusSection.style.display = 'block';
+        statusSection.classList.add('visible');
+        // scroll to status
+        setTimeout(() => {
+          statusSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else {
+        // other pages: show home with a message
+        homeSection.style.display = 'block';
+        // update subtitle temporarily
+        const sub = homeSection.querySelector('.sub');
+        const originalText = sub.innerHTML;
+        const pageNames = {
+          'resell': 'Resell',
+          'terms': 'Terms & Privacy',
+          'about': 'About'
+        };
+        sub.innerHTML = `<span style="color:#ffd700;">${pageNames[page] || page}</span> page — coming soon.`;
+        setTimeout(() => {
+          sub.innerHTML = originalText;
+        }, 3000);
+      }
+
+      // update nav active state
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.page === page);
+      });
+      footerLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.page === page);
+      });
+
+      // close mobile menu
+      document.getElementById('navLinks').classList.remove('open');
+    }
+
+    // nav click handlers
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchPage(link.dataset.page);
+      });
     });
 
-    // close on link click (mobile)
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
+    footerLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchPage(link.dataset.page);
       });
+    });
+
+    // home link click
+    document.getElementById('homeLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      switchPage('home');
+    });
+
+    // make switchPage globally accessible
+    window.switchPage = switchPage;
+
+    // ----- hamburger toggle -----
+    const hamburger = document.getElementById('hamburger');
+    const navLinksContainer = document.getElementById('navLinks');
+
+    hamburger.addEventListener('click', () => {
+      navLinksContainer.classList.toggle('open');
     });
 
     // ----- timestamp update -----
     function updateTimestamp() {
       const now = new Date();
-      const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      const timeStr = now.toLocaleTimeString('en-US', options);
+      const timeStr = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
       document.getElementById('timestamp').textContent = timeStr + ' UTC';
     }
     updateTimestamp();
     setInterval(updateTimestamp, 30000);
 
-    // ----- session & login logic -----
+    // ----- session & login -----
     let currentUser = null;
 
     async function checkSession() {
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
         currentUser = session.user;
-        const loginBtn = document.querySelector('.discord-btn');
+        const loginBtn = document.querySelector('.login-btn');
         if (loginBtn) {
           const name = session.user.user_metadata?.full_name || session.user.email || 'User';
           loginBtn.innerHTML = `<i class="fab fa-discord"></i> ${name}`;
         }
       } else {
         currentUser = null;
-        const loginBtn = document.querySelector('.discord-btn');
+        const loginBtn = document.querySelector('.login-btn');
         if (loginBtn) {
-          loginBtn.innerHTML = `<i class="fab fa-discord"></i> Login`;
+          loginBtn.innerHTML = `<i class="fab fa-discord"></i> Log in`;
         }
       }
     }
@@ -636,7 +878,6 @@
       }
     }
 
-    // make login function globally accessible
     window.login = login;
 
     // init
@@ -650,7 +891,7 @@
       }
     });
 
-    console.log('Hybrid Rift · Status page');
+    console.log('Hybrid Rift · Home & Status');
   </script>
 
 </body>

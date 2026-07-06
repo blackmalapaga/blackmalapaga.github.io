@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eval Tokens · Fortnite matchmaker</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * {
       margin: 0;
@@ -97,7 +98,22 @@
       display: inline-block;
     }
 
-    /* AUTH */
+    .sync-status {
+      color: #4caf50;
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+    }
+    .sync-status.offline {
+      color: #ff4444;
+    }
+    .sync-status .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     .auth-bar {
       display: flex;
       flex-wrap: wrap;
@@ -151,7 +167,6 @@
       font-weight: 500;
     }
 
-    /* CREATE MATCH */
     .create-section {
       background: rgba(0, 0, 0, 0.6);
       border-radius: 2rem;
@@ -224,7 +239,6 @@
     }
     .btn-create:active { transform: translateY(3px); box-shadow: 0 2px 0 #6a4f0a; }
 
-    /* MATCH GRID */
     .match-header {
       display: flex;
       justify-content: space-between;
@@ -379,7 +393,6 @@
     }
     .empty-state i { font-size: 2.5rem; color: #b8860b; margin-bottom: 0.5rem; display: block; }
 
-    /* CHAT */
     .chat-panel {
       margin-top: 2rem;
       border-top: 1px solid #2a2a2a;
@@ -451,7 +464,6 @@
     .match-actions .call-staff-btn { border-color: #ff4444; color: #ff4444; }
     .match-actions .call-staff-btn:hover { background: #ff4444; color: #0b0b0b; }
 
-    /* PROOF UPLOAD */
     .proof-section {
       background: #0a0a0a;
       border-radius: 1.5rem;
@@ -514,7 +526,6 @@
       color: #888;
     }
 
-    /* STAFF RESOLUTION PANEL */
     .staff-panel {
       background: #0a0a0a;
       border-radius: 1.5rem;
@@ -617,7 +628,6 @@
 </head>
 <body>
 <div class="glass-card" id="app">
-  <!-- HEADER -->
   <div class="header">
     <div class="logo">
       <h1>Eval Tokens <span>fortnite</span></h1>
@@ -628,16 +638,15 @@
     </div>
   </div>
 
-  <!-- AUTH -->
   <div class="auth-bar" id="authBar">
     <input type="text" id="regUser" placeholder="username" value="player1">
     <input type="password" id="regPass" placeholder="password" value="123">
     <button id="registerBtn">register</button>
     <button id="loginBtn">login</button>
     <span class="auth-status" id="authStatus"><i class="fas fa-circle" style="color:#555;font-size:0.6rem;"></i> guest</span>
+    <span class="sync-status" id="syncStatus"><i class="fas fa-cloud"></i> connected</span>
   </div>
 
-  <!-- CREATE MATCH -->
   <div class="create-section">
     <div class="form-row">
       <div class="form-group">
@@ -657,19 +666,18 @@
     <div style="margin-top:0.6rem; font-size:0.8rem; color:#666; display:flex; gap:20px; flex-wrap:wrap;">
       <span><i class="fas fa-info-circle" style="color:#d4af37;"></i> winner takes pot</span>
       <span><i class="fas fa-lock" style="color:#d4af37;"></i> tokens locked</span>
+      <span><i class="fas fa-users" style="color:#d4af37;"></i> <span id="matchCountDisplay">0</span> active matches</span>
     </div>
   </div>
 
-  <!-- MATCH LIST -->
   <div class="match-header">
     <h2><i class="fas fa-gamepad"></i> live matches</h2>
     <span class="match-count" id="matchCount">0 matches</span>
   </div>
   <div class="match-grid" id="matchGrid">
-    <div class="empty-state"><i class="fas fa-skull"></i><span>no matches — create one</span></div>
+    <div class="empty-state"><i class="fas fa-skull"></i><span>loading matches...</span></div>
   </div>
 
-  <!-- CHAT PANEL -->
   <div class="chat-panel" id="chatPanel" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
       <span style="color:#d4af37; font-weight:500;">match chat · <span id="chatMatchId">#</span></span>
@@ -681,7 +689,6 @@
       <button id="sendChatBtn">send</button>
     </div>
 
-    <!-- PROOF UPLOAD SECTION -->
     <div class="proof-section" id="proofSection">
       <label><i class="fas fa-image"></i> Upload proof of your win (screenshot):</label>
       <input type="file" id="proofFile" accept="image/*">
@@ -698,7 +705,6 @@
       <button class="call-staff-btn" id="callStaffBtn"><i class="fas fa-exclamation-triangle"></i> Call Staff</button>
     </div>
 
-    <!-- STAFF RESOLUTION PANEL -->
     <div class="staff-panel" id="staffPanel">
       <h3><i class="fas fa-shield-alt"></i> Staff Resolution</h3>
       <div class="staff-info" id="staffInfo">
@@ -719,12 +725,30 @@
 
 <script>
   (function() {
-    // ---------- HARDCODED WEBHOOK ----------
+    // ============================================================
+    // SUPABASE CREDENTIALS (YOUR PROVIDED INFO)
+    // ============================================================
+    const SUPABASE_URL = 'https://rgdkdflkviigwdtuodjy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip';
+    // ============================================================
+
     const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1523567476669943888/FSCD4PnVSuTHl80EsFmCK03cvTPeXo8Eww2rtuKcaeH9NfhpVMZSf5n_W5-xmrJIrAqk';
 
-    // ---------- HARDCODED STAFF ACCOUNT ----------
     const STAFF_USERNAME = 'EvalStaff';
     const STAFF_PASSWORD = 'Evaltweaks50sdkdgeneratedkeypasswordcanthaveaccess111';
+
+    // ---------- SUPABASE CLIENT ----------
+    let supabase = null;
+    let isSupabaseConnected = false;
+
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      isSupabaseConnected = true;
+      console.log('✅ Supabase connected');
+    } catch (e) {
+      console.error('❌ Supabase connection failed:', e);
+      isSupabaseConnected = false;
+    }
 
     // ---------- STATE ----------
     let matches = [];
@@ -737,6 +761,7 @@
     // DOM refs
     const matchGrid = document.getElementById('matchGrid');
     const matchCount = document.getElementById('matchCount');
+    const matchCountDisplay = document.getElementById('matchCountDisplay');
     const totalTokenDisplay = document.getElementById('totalTokenDisplay');
     const matchType = document.getElementById('matchType');
     const entryFee = document.getElementById('entryFee');
@@ -748,6 +773,7 @@
     const registerBtn = document.getElementById('registerBtn');
     const loginBtn = document.getElementById('loginBtn');
     const staffBadge = document.getElementById('staffBadge');
+    const syncStatus = document.getElementById('syncStatus');
 
     const chatPanel = document.getElementById('chatPanel');
     const chatMessagesDiv = document.getElementById('chatMessages');
@@ -800,31 +826,192 @@
     }
 
     function updateStats() {
+      const activeMatches = matches.filter(m => !m.ended && !m.voided);
       let total = 0;
-      matches.forEach(m => { if (!m.voided) total += m.entryFee * 2; });
+      activeMatches.forEach(m => { total += m.entryFee * 2; });
       totalTokenDisplay.textContent = formatToken(total);
-      matchCount.textContent = matches.length + ' match' + (matches.length !== 1 ? 'es' : '');
+      matchCount.textContent = activeMatches.length + ' match' + (activeMatches.length !== 1 ? 'es' : '');
+      if (matchCountDisplay) {
+        matchCountDisplay.textContent = activeMatches.length;
+      }
     }
 
+    // ---------- SUPABASE OPERATIONS ----------
+    async function loadMatchesFromSupabase() {
+      if (!isSupabaseConnected) {
+        console.warn('Supabase not connected');
+        return false;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('matches')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          matches = data.map(m => ({
+            id: m.id,
+            type: m.type,
+            entryFee: m.entry_fee,
+            creator: m.creator,
+            createdAt: m.created_at,
+            status: m.status,
+            wins: m.wins || [],
+            losses: m.losses || [],
+            dispute: m.dispute || false,
+            ended: m.ended || false,
+            voided: m.voided || false,
+            resolved: m.resolved || false,
+            proofSubmitted: m.proof_submitted || false,
+            resolution: m.resolution || null
+          }));
+          renderMatches();
+          syncStatus.textContent = '✅ synced';
+          syncStatus.className = 'sync-status';
+          return true;
+        }
+      } catch (e) {
+        console.error('Error loading matches from Supabase:', e);
+        syncStatus.textContent = '❌ error';
+        syncStatus.className = 'sync-status offline';
+      }
+      return false;
+    }
+
+    async function saveMatchToSupabase(match) {
+      if (!isSupabaseConnected) return false;
+
+      try {
+        const { error } = await supabase
+          .from('matches')
+          .upsert({
+            id: match.id,
+            type: match.type,
+            entry_fee: match.entryFee,
+            creator: match.creator,
+            created_at: match.createdAt,
+            status: match.status || 'open',
+            wins: match.wins || [],
+            losses: match.losses || [],
+            dispute: match.dispute || false,
+            ended: match.ended || false,
+            voided: match.voided || false,
+            resolved: match.resolved || false,
+            proof_submitted: match.proofSubmitted || false,
+            resolution: match.resolution || null
+          }, { onConflict: 'id' });
+
+        if (error) throw error;
+        return true;
+      } catch (e) {
+        console.error('Error saving match to Supabase:', e);
+        return false;
+      }
+    }
+
+    async function saveChatMessageToSupabase(matchId, message) {
+      if (!isSupabaseConnected) return false;
+
+      try {
+        const { error } = await supabase
+          .from('chat_messages')
+          .insert({
+            match_id: matchId,
+            username: message.user || 'system',
+            text: message.text,
+            system: message.system || false,
+            dispute: message.dispute || false,
+            staff: message.staff || false,
+            created_at: message.time || Date.now()
+          });
+
+        if (error) throw error;
+        return true;
+      } catch (e) {
+        console.error('Error saving chat to Supabase:', e);
+        return false;
+      }
+    }
+
+    async function loadChatMessagesFromSupabase(matchId) {
+      if (!isSupabaseConnected) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('chat_messages')
+          .select('*')
+          .eq('match_id', matchId)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          chatMessages[matchId] = data.map(m => ({
+            user: m.username,
+            text: m.text,
+            system: m.system || false,
+            dispute: m.dispute || false,
+            staff: m.staff || false,
+            time: m.created_at
+          }));
+          if (activeMatchId === matchId) {
+            renderChatMessages(matchId);
+          }
+        }
+      } catch (e) {
+        console.error('Error loading chat from Supabase:', e);
+      }
+    }
+
+    // ---------- SUBSCRIPTION FOR REAL-TIME UPDATES ----------
+    function subscribeToMatches() {
+      if (!isSupabaseConnected) return;
+
+      const channel = supabase
+        .channel('matches_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'matches'
+          },
+          async (payload) => {
+            console.log('Match update received:', payload);
+            await loadMatchesFromSupabase();
+          }
+        )
+        .subscribe((status) => {
+          console.log('Subscription status:', status);
+          if (status === 'SUBSCRIBED') {
+            syncStatus.textContent = '🔄 live';
+            syncStatus.className = 'sync-status';
+          }
+        });
+    }
+
+    // ---------- RENDER ----------
     function renderMatches() {
-      if (matches.length === 0) {
-        matchGrid.innerHTML = `<div class="empty-state"><i class="fas fa-skull"></i><span>no matches — create one</span></div>`;
+      const activeMatches = matches.filter(m => !m.ended && !m.voided);
+      
+      if (activeMatches.length === 0) {
+        matchGrid.innerHTML = `<div class="empty-state"><i class="fas fa-skull"></i><span>no active matches — create one</span></div>`;
         updateStats();
         return;
       }
+      
       let html = '';
-      matches.forEach(m => {
+      activeMatches.forEach(m => {
         const pot = formatToken(m.entryFee * 2);
         const user = m.creator || 'unknown';
-        const isEnded = m.ended || false;
         const isDispute = m.dispute || false;
-        const isVoided = m.voided || false;
         let statusText = 'open';
         let statusColor = '#d4af37';
         let extraClass = '';
-        if (isVoided) { statusText = 'voided'; statusColor = '#666'; }
-        else if (isEnded) { statusText = 'ended'; statusColor = '#666'; }
-        else if (isDispute) { statusText = 'dispute'; statusColor = '#ff4444'; extraClass = 'dispute'; }
+        if (isDispute) { statusText = 'dispute'; statusColor = '#ff4444'; extraClass = 'dispute'; }
 
         const disputeTag = isDispute ? `<div class="dispute-tag"><i class="fas fa-exclamation-triangle"></i> DISPUTE</div>` : '';
 
@@ -832,13 +1019,13 @@
           <div class="match-card ${extraClass}" data-id="${m.id}">
             <div class="match-title">
               <span class="mode-badge"><i class="fas fa-crosshairs"></i> ${m.type.toUpperCase()}</span>
-              <span class="token-pot"><i class="fas fa-coins"></i> ${isVoided ? 'VOIDED' : pot}</span>
+              <span class="token-pot"><i class="fas fa-coins"></i> ${pot}</span>
             </div>
             <div class="match-details">
               <div><i class="fas fa-user"></i> creator: <strong style="color:white;">${user}</strong></div>
               <div style="display:flex; flex-wrap:wrap; gap:6px 12px; margin-top:4px;">
                 <span><i class="fas fa-ticket-alt"></i> entry: <span class="entry-fee">${formatToken(m.entryFee)} tokens</span></span>
-                ${!isVoided ? `<span><i class="fas fa-trophy"></i> winner takes ${pot}</span>` : ''}
+                <span><i class="fas fa-trophy"></i> winner takes ${pot}</span>
               </div>
               ${disputeTag}
               <div class="fortnite-user"><i class="fab fa-fort-awesome"></i> ${user}</div>
@@ -848,7 +1035,7 @@
               <span><i class="far fa-clock"></i> ${new Date(m.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
               <span class="status ${isDispute ? 'dispute-status' : ''}"><i class="fas fa-circle" style="color:${statusColor};font-size:0.6rem;"></i> ${statusText}</span>
             </div>
-            ${!isEnded && !isVoided ? `<button class="join-match-btn" style="margin-top:10px; background:#1a1a1a; border:1px solid #b8860b; color:#f0e6d0; border-radius:40px; padding:0.3rem 0; cursor:pointer; width:100%;">join & chat</button>` : ''}
+            <button class="join-match-btn" style="margin-top:10px; background:#1a1a1a; border:1px solid #b8860b; color:#f0e6d0; border-radius:40px; padding:0.3rem 0; cursor:pointer; width:100%;">join & chat</button>
           </div>
         `;
       });
@@ -873,10 +1060,14 @@
       activeMatchId = matchId;
       chatPanel.style.display = 'block';
       chatMatchId.textContent = matchId.substring(0, 8);
-      if (!chatMessages[matchId]) chatMessages[matchId] = [];
-      renderChatMessages(matchId);
+      
+      if (!chatMessages[matchId]) {
+        chatMessages[matchId] = [];
+        loadChatMessagesFromSupabase(matchId);
+      } else {
+        renderChatMessages(matchId);
+      }
 
-      // Show staff panel if staff
       const match = matches.find(m => m.id === matchId);
       if (isStaff && match && match.dispute) {
         showStaffPanel(match);
@@ -886,8 +1077,10 @@
 
       const msgs = chatMessages[matchId];
       if (!msgs.some(m => m.system && m.text.includes('joined'))) {
-        msgs.push({ system: true, text: `${loggedInUser} joined the match`, time: Date.now() });
+        const joinMsg = { system: true, text: `${loggedInUser} joined the match`, time: Date.now() };
+        msgs.push(joinMsg);
         renderChatMessages(matchId);
+        saveChatMessageToSupabase(matchId, joinMsg);
       }
     }
 
@@ -904,18 +1097,22 @@
       chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
     }
 
-    function sendChatMessage() {
+    async function sendChatMessage() {
       if (!activeMatchId || !loggedInUser) return alert('login and join a match');
       const text = chatInput.value.trim();
       if (!text) return;
+      
+      const msg = { user: loggedInUser, text: text, time: Date.now() };
       const msgs = chatMessages[activeMatchId] || [];
-      msgs.push({ user: loggedInUser, text: text, time: Date.now() });
+      msgs.push(msg);
       chatMessages[activeMatchId] = msgs;
       renderChatMessages(activeMatchId);
       chatInput.value = '';
+      
+      await saveChatMessageToSupabase(activeMatchId, msg);
     }
 
-    // ---------- PROOF & STAFF CALL ----------
+    // ---------- PROOF & STAFF ----------
     function showProofSection() {
       if (!activeMatchId) return alert('join a match first');
       const match = matches.find(m => m.id === activeMatchId);
@@ -939,19 +1136,22 @@
       const file = proofFileInput.files[0];
       if (!file) return alert('Please select a proof image');
 
-      // Read file as base64 for webhook
       const reader = new FileReader();
       reader.onload = async function(e) {
-        const proofData = e.target.result; // base64
-        proofFile = proofData;
+        const proofData = e.target.result;
 
-        // Add to chat
         const msgs = chatMessages[activeMatchId] || [];
-        msgs.push({ system: true, dispute: true, text: `⚠️ ${loggedInUser} called STAFF with proof!` });
+        const staffMsg = { system: true, dispute: true, text: `⚠️ ${loggedInUser} called STAFF with proof!` };
+        msgs.push(staffMsg);
         chatMessages[activeMatchId] = msgs;
         renderChatMessages(activeMatchId);
+        await saveChatMessageToSupabase(activeMatchId, staffMsg);
 
-        // Send webhook
+        match.dispute = true;
+        match.proofSubmitted = true;
+        await saveMatchToSupabase(match);
+        await loadMatchesFromSupabase();
+
         const webhookData = {
           event: 'staff_call',
           matchId: match.id,
@@ -961,18 +1161,12 @@
           calledBy: loggedInUser,
           wins: match.wins || [],
           losses: match.losses || [],
-          proof: proofData.substring(0, 200) + '...', // truncated for display
-          proofFull: proofData,
+          proof: proofData.substring(0, 200) + '...',
           chatLog: chatMessages[match.id] || [],
           timestamp: new Date().toISOString()
         };
         await sendWebhook(webhookData);
 
-        // Mark as dispute
-        match.dispute = true;
-        renderMatches();
-
-        // If staff is logged in, show staff panel
         if (isStaff) {
           showStaffPanel(match);
         }
@@ -980,13 +1174,11 @@
         proofSection.classList.remove('show');
         proofFileInput.value = '';
         proofFile = null;
-
         alert('Staff notified! They will review the proof.');
       };
       reader.readAsDataURL(file);
     }
 
-    // ---------- STAFF PANEL ----------
     function showStaffPanel(match) {
       if (!isStaff) return;
       staffPanel.classList.add('show');
@@ -1006,11 +1198,14 @@
       match.resolution = resolution;
 
       const msgs = chatMessages[matchId] || [];
-      msgs.push({ system: true, staff: true, text: `👑 STAFF RESOLUTION: ${resolution}` });
+      const resMsg = { system: true, staff: true, text: `👑 STAFF RESOLUTION: ${resolution}` };
+      msgs.push(resMsg);
       chatMessages[matchId] = msgs;
       renderChatMessages(matchId);
+      await saveChatMessageToSupabase(matchId, resMsg);
 
-      // Send webhook
+      await saveMatchToSupabase(match);
+
       const webhookData = {
         event: 'staff_resolution',
         matchId: match.id,
@@ -1024,7 +1219,7 @@
       await sendWebhook(webhookData);
 
       staffPanel.classList.remove('show');
-      renderMatches();
+      await loadMatchesFromSupabase();
       alert(`Match resolved: ${resolution}`);
     }
 
@@ -1037,12 +1232,16 @@
       if (!match.wins) match.wins = [];
       if (!match.losses) match.losses = [];
       if (match.wins.includes(loggedInUser)) return alert('you already voted win');
+      
       match.wins.push(loggedInUser);
       const msgs = chatMessages[activeMatchId] || [];
-      msgs.push({ system: true, text: `${loggedInUser} voted WIN` });
+      const voteMsg = { system: true, text: `${loggedInUser} voted WIN` };
+      msgs.push(voteMsg);
       chatMessages[activeMatchId] = msgs;
       renderChatMessages(activeMatchId);
-      checkDispute(match);
+      await saveChatMessageToSupabase(activeMatchId, voteMsg);
+      await saveMatchToSupabase(match);
+      await checkDispute(match);
     }
 
     async function handleLose() {
@@ -1053,12 +1252,16 @@
       if (!match.losses) match.losses = [];
       if (!match.wins) match.wins = [];
       if (match.losses.includes(loggedInUser)) return alert('already voted loss');
+      
       match.losses.push(loggedInUser);
       const msgs = chatMessages[activeMatchId] || [];
-      msgs.push({ system: true, text: `${loggedInUser} voted LOSS` });
+      const voteMsg = { system: true, text: `${loggedInUser} voted LOSS` };
+      msgs.push(voteMsg);
       chatMessages[activeMatchId] = msgs;
       renderChatMessages(activeMatchId);
-      checkDispute(match);
+      await saveChatMessageToSupabase(activeMatchId, voteMsg);
+      await saveMatchToSupabase(match);
+      await checkDispute(match);
     }
 
     async function checkDispute(match) {
@@ -1066,14 +1269,16 @@
       const losses = match.losses || [];
       if (wins.length > 0 && losses.length > 0) {
         match.dispute = true;
-        renderMatches();
+        await saveMatchToSupabase(match);
+        await loadMatchesFromSupabase();
 
         const msgs = chatMessages[match.id] || [];
-        msgs.push({ system: true, dispute: true, text: `⚠️ DISPUTE detected! Both teams claimed win. Staff will review.` });
+        const disputeMsg = { system: true, dispute: true, text: `⚠️ DISPUTE detected! Both teams claimed win. Staff will review.` };
+        msgs.push(disputeMsg);
         chatMessages[match.id] = msgs;
         renderChatMessages(match.id);
+        await saveChatMessageToSupabase(match.id, disputeMsg);
 
-        // Send webhook
         const webhookData = {
           event: 'dispute',
           matchId: match.id,
@@ -1088,7 +1293,6 @@
         await sendWebhook(webhookData);
 
         alert('Dispute detected! Staff have been notified.');
-
         if (isStaff) {
           showStaffPanel(match);
         }
@@ -1103,9 +1307,12 @@
 
       match.ended = true;
       const msgs = chatMessages[activeMatchId] || [];
-      msgs.push({ system: true, text: `${loggedInUser} ended the match.` });
+      const endMsg = { system: true, text: `${loggedInUser} ended the match.` };
+      msgs.push(endMsg);
       chatMessages[activeMatchId] = msgs;
       renderChatMessages(activeMatchId);
+      await saveChatMessageToSupabase(activeMatchId, endMsg);
+      await saveMatchToSupabase(match);
 
       const webhookData = {
         event: 'match_ended',
@@ -1124,54 +1331,73 @@
       activeMatchId = null;
       chatPanel.style.display = 'none';
       staffPanel.classList.remove('show');
-      renderMatches();
+      await loadMatchesFromSupabase();
       alert('Match ended.');
     }
 
     // ---------- AUTH ----------
-    function registerUser() {
+    async function registerUser() {
       const u = regUser.value.trim();
       const p = regPass.value.trim();
       if (!u || !p) return alert('enter username and password');
-      const users = JSON.parse(localStorage.getItem('evalUsers') || '{}');
-      if (users[u]) return alert('user already exists');
-      users[u] = p;
-      localStorage.setItem('evalUsers', JSON.stringify(users));
-      alert('registered! login now.');
+
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .insert({ username: u, password: p, created_at: Date.now() });
+
+        if (error) {
+          if (error.code === '23505') {
+            return alert('user already exists');
+          }
+          throw error;
+        }
+        alert('registered! login now.');
+      } catch (e) {
+        console.error('Registration error:', e);
+        alert('Registration failed: ' + e.message);
+      }
     }
 
-    function loginUser() {
+    async function loginUser() {
       const u = regUser.value.trim();
       const p = regPass.value.trim();
       if (!u || !p) return alert('enter credentials');
 
-      // Check staff account
       if (u === STAFF_USERNAME && p === STAFF_PASSWORD) {
         isStaff = true;
         loggedInUser = u;
         staffBadge.classList.add('show');
         authStatus.innerHTML = `<i class="fas fa-circle" style="color:#ff4444;font-size:0.6rem;"></i> <strong style="color:#ff4444;">STAFF</strong>`;
         fortniteUser.value = u;
-        // Show staff panel for any disputed matches
-        matches.forEach(m => {
-          if (m.dispute && !m.ended) {
-            // If staff is viewing a disputed match
-          }
-        });
         alert('Staff logged in! You can resolve disputes.');
         return true;
       }
 
-      const users = JSON.parse(localStorage.getItem('evalUsers') || '{}');
-      if (users[u] && users[u] === p) {
-        isStaff = false;
-        loggedInUser = u;
-        staffBadge.classList.remove('show');
-        authStatus.innerHTML = `<i class="fas fa-circle" style="color:#d4af37;font-size:0.6rem;"></i> ${u}`;
-        fortniteUser.value = u;
-        return true;
-      } else {
-        alert('invalid credentials');
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('username', u)
+          .eq('password', p)
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          isStaff = false;
+          loggedInUser = u;
+          staffBadge.classList.remove('show');
+          authStatus.innerHTML = `<i class="fas fa-circle" style="color:#d4af37;font-size:0.6rem;"></i> ${u}`;
+          fortniteUser.value = u;
+          return true;
+        } else {
+          alert('invalid credentials');
+          return false;
+        }
+      } catch (e) {
+        console.error('Login error:', e);
+        alert('Login failed: ' + e.message);
         return false;
       }
     }
@@ -1180,6 +1406,7 @@
     async function createMatch() {
       if (!loggedInUser) return alert('please login first');
       if (isStaff) return alert('Staff cannot create matches');
+      
       const type = matchType.value;
       let fee = parseFloat(entryFee.value);
       if (isNaN(fee) || fee <= 0) return alert('valid entry fee');
@@ -1201,36 +1428,37 @@
         ended: false,
         voided: false,
         resolved: false,
-        proofSubmitted: false
+        proofSubmitted: false,
+        resolution: null
       };
-      matches.unshift(newMatch);
-      chatMessages[newMatch.id] = [{ system: true, text: `match created by ${user}` }];
-      renderMatches();
 
-      const webhookData = {
-        event: 'match_created',
-        matchId: matchId,
-        matchType: type,
-        entryFee: fee,
-        creator: user,
-        timestamp: new Date().toISOString()
-      };
-      await sendWebhook(webhookData);
-
-      if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
+      const saved = await saveMatchToSupabase(newMatch);
+      if (saved) {
+        await loadMatchesFromSupabase();
+        const webhookData = {
+          event: 'match_created',
+          matchId: matchId,
+          matchType: type,
+          entryFee: fee,
+          creator: user,
+          timestamp: new Date().toISOString()
+        };
+        await sendWebhook(webhookData);
+        
+        if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
+        alert('Match created!');
+      } else {
+        alert('Failed to create match. Check Supabase connection.');
+      }
     }
 
     // ---------- INIT ----------
-    function init() {
-      // Seed matches
-      const now = Date.now();
-      matches = [
-        { id: 'seed1', type: '2v2', entryFee: 0.50, creator: 'Ninja_Elite', createdAt: now-120000, status:'open', wins:[], losses:[], dispute:false, ended:false, voided:false, resolved:false, proofSubmitted:false },
-        { id: 'seed2', type: '1v1', entryFee: 1.25, creator: 'SniperWolf', createdAt: now-350000, status:'open', wins:[], losses:[], dispute:false, ended:false, voided:false, resolved:false, proofSubmitted:false },
-        { id: 'seed3', type: '3v3', entryFee: 0.75, creator: 'Bugha_22', createdAt: now-700000, status:'open', wins:[], losses:[], dispute:false, ended:false, voided:false, resolved:false, proofSubmitted:false }
-      ];
-      matches.forEach(m => { chatMessages[m.id] = [{ system: true, text: `match ready` }]; });
-      renderMatches();
+    async function init() {
+      // Load matches from Supabase
+      await loadMatchesFromSupabase();
+      
+      // Subscribe to real-time updates
+      subscribeToMatches();
 
       // Event listeners
       createBtn.addEventListener('click', createMatch);
@@ -1238,7 +1466,11 @@
       loginBtn.addEventListener('click', loginUser);
       sendChatBtn.addEventListener('click', sendChatMessage);
       chatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendChatMessage(); });
-      closeChatBtn.addEventListener('click', () => { chatPanel.style.display = 'none'; activeMatchId = null; staffPanel.classList.remove('show'); });
+      closeChatBtn.addEventListener('click', () => { 
+        chatPanel.style.display = 'none'; 
+        activeMatchId = null; 
+        staffPanel.classList.remove('show'); 
+      });
       winBtn.addEventListener('click', handleWin);
       loseBtn.addEventListener('click', handleLose);
       endMatchBtn.addEventListener('click', endMatch);
@@ -1246,7 +1478,6 @@
       cancelProofBtn.addEventListener('click', cancelProof);
       submitProofBtn.addEventListener('click', submitProof);
 
-      // Staff resolution buttons
       resolveSplit.addEventListener('click', () => {
         if (activeMatchId) resolveMatch(activeMatchId, 'Split tokens 50/50');
       });
@@ -1264,12 +1495,26 @@
         }
       });
 
-      // Auto-login demo
-      const users = JSON.parse(localStorage.getItem('evalUsers') || '{}');
-      if (!users['player1']) { users['player1'] = '123'; localStorage.setItem('evalUsers', JSON.stringify(users)); }
+      // Auto-login demo if no users exist
+      try {
+        const { data } = await supabase.from('users').select('*').limit(1);
+        if (!data || data.length === 0) {
+          await supabase.from('users').insert({ 
+            username: 'player1', 
+            password: '123', 
+            created_at: Date.now() 
+          });
+        }
+      } catch (e) {
+        console.log('Auto user creation skipped:', e);
+      }
+
       regUser.value = 'player1';
       regPass.value = '123';
-      loginUser();
+      await loginUser();
+
+      console.log('✅ Eval Tokens initialized with Supabase!');
+      console.log('📊 Active matches:', matches.length);
     }
 
     init();

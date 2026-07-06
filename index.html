@@ -35,6 +35,7 @@
       max-width: 1400px;
       width: 100%;
       transition: all 0.25s ease;
+      position: relative;
     }
 
     .header {
@@ -106,13 +107,6 @@
     .sync-status.offline {
       color: #ff4444;
     }
-    .sync-status .fa-spinner {
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
 
     .webhook-status {
       font-size: 0.7rem;
@@ -182,6 +176,54 @@
     .auth-status strong {
       color: #d4af37;
       font-weight: 500;
+    }
+
+    /* STAFF JOIN SECTION */
+    .staff-join-section {
+      background: #0f0f0f;
+      border: 1px solid #ff4444;
+      border-radius: 60px;
+      padding: 0.5rem 1.5rem;
+      display: none;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .staff-join-section.show {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .staff-join-section label {
+      color: #ff4444;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .staff-join-section input {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      color: white;
+      outline: none;
+      min-width: 200px;
+      flex: 1;
+    }
+    .staff-join-section input:focus {
+      border-color: #ff4444;
+    }
+    .staff-join-section button {
+      background: #ff4444;
+      border: none;
+      border-radius: 40px;
+      padding: 0.5rem 1.6rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .staff-join-section button:hover {
+      background: #ff6666;
+      transform: scale(1.02);
     }
 
     .create-section {
@@ -425,33 +467,107 @@
     }
     .empty-state i { font-size: 2.5rem; color: #b8860b; margin-bottom: 0.5rem; display: block; }
 
-    .chat-panel {
-      margin-top: 2rem;
-      border-top: 1px solid #2a2a2a;
-      padding-top: 1.5rem;
+    /* STAFF MATCH UI - Full page takeover */
+    .staff-match-ui {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0b0b0b;
+      z-index: 1000;
+      padding: 2rem;
+      overflow-y: auto;
     }
-    .chat-box {
+    .staff-match-ui.show {
+      display: block;
+    }
+    .staff-match-ui .staff-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ff4444;
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+    .staff-match-ui .staff-header h2 {
+      color: #ff4444;
+      font-size: 2rem;
+    }
+    .staff-match-ui .staff-header .staff-match-id {
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .staff-match-ui .staff-close-btn {
+      background: #1a1a1a;
+      border: 1px solid #ff4444;
+      color: #ff4444;
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .staff-match-ui .staff-close-btn:hover {
+      background: #ff4444;
+      color: #0b0b0b;
+    }
+
+    .staff-match-ui .staff-match-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      background: #111;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 2rem;
+    }
+    .staff-match-ui .staff-match-info .info-item {
+      color: #ccc;
+    }
+    .staff-match-ui .staff-match-info .info-item .label {
+      color: #888;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+    .staff-match-ui .staff-match-info .info-item .value {
+      color: white;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    .staff-match-ui .staff-chat-section {
       background: #0c0c0c;
       border-radius: 1.5rem;
       border: 1px solid #2a2a2a;
-      padding: 1rem 1.2rem;
-      max-height: 200px;
-      overflow-y: auto;
-      margin-bottom: 0.8rem;
-      color: #ddd;
-      font-size: 0.9rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
     }
-    .chat-box .msg { padding: 0.2rem 0; border-bottom: 1px solid #1a1a1a; }
-    .chat-box .msg strong { color: #d4af37; }
-    .chat-box .msg.system { color: #888; font-style: italic; }
-    .chat-box .msg.dispute { color: #ff6b6b; font-weight: 500; }
-    .chat-box .msg.staff { color: #ff4444; font-weight: 600; }
-    .chat-input-row {
+    .staff-match-ui .staff-chat-section h3 {
+      color: #d4af37;
+      margin-bottom: 1rem;
+    }
+    .staff-match-ui .staff-chat-box {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .staff-match-ui .staff-chat-box .msg {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #1a1a1a;
+      color: #ddd;
+    }
+    .staff-match-ui .staff-chat-box .msg strong { color: #d4af37; }
+    .staff-match-ui .staff-chat-box .msg.system { color: #888; font-style: italic; }
+    .staff-match-ui .staff-chat-box .msg.dispute { color: #ff6b6b; }
+    .staff-match-ui .staff-chat-box .msg.staff { color: #ff4444; font-weight: 600; }
+
+    .staff-match-ui .staff-chat-input {
       display: flex;
       gap: 0.8rem;
-      flex-wrap: wrap;
     }
-    .chat-input-row input {
+    .staff-match-ui .staff-chat-input input {
       flex: 1;
       background: #141414;
       border: 1px solid #2a2a2a;
@@ -460,193 +576,44 @@
       color: white;
       outline: none;
     }
-    .chat-input-row input:focus { border-color: #b8860b; }
-    .chat-input-row button {
+    .staff-match-ui .staff-chat-input input:focus { border-color: #ff4444; }
+    .staff-match-ui .staff-chat-input button {
       background: #1a1a1a;
-      border: 1px solid #b8860b;
+      border: 1px solid #ff4444;
       color: #f0e6d0;
       padding: 0.5rem 1.6rem;
       border-radius: 40px;
       cursor: pointer;
       transition: 0.15s;
     }
-    .chat-input-row button:hover { background: #b8860b; color: #0b0b0b; }
+    .staff-match-ui .staff-chat-input button:hover { background: #ff4444; color: #0b0b0b; }
 
-    .match-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .match-actions button {
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      color: #ddd;
-      padding: 0.4rem 1.6rem;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: 0.15s;
-      font-weight: 500;
-    }
-    .match-actions button:hover { border-color: #b8860b; color: #d4af37; }
-    .match-actions .win-btn { border-color: #b8860b; color: #d4af37; }
-    .match-actions .lose-btn { border-color: #5a5a5a; color: #aaa; }
-    .match-actions .end-btn { border-color: #5a3a0a; color: #b8860b; }
-    .match-actions .call-staff-btn { border-color: #ff4444; color: #ff4444; }
-    .match-actions .call-staff-btn:hover { background: #ff4444; color: #0b0b0b; }
-
-    .proof-section {
-      background: #0a0a0a;
-      border-radius: 1.5rem;
-      border: 1px solid #2a2a2a;
-      padding: 1rem 1.5rem;
-      margin-top: 1rem;
-      display: none;
-    }
-    .proof-section.show {
-      display: block;
-    }
-    .proof-section label {
-      color: #ddd;
-      font-size: 0.85rem;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    .proof-section input[type="file"] {
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 40px;
-      padding: 0.5rem 1rem;
-      color: white;
-      width: 100%;
-      cursor: pointer;
-    }
-    .proof-section input[type="file"]::file-selector-button {
-      background: #1a1a1a;
-      border: 1px solid #b8860b;
-      color: #f0e6d0;
-      padding: 0.3rem 1.2rem;
-      border-radius: 40px;
-      cursor: pointer;
-      margin-right: 1rem;
-    }
-    .proof-section input[type="file"]::file-selector-button:hover {
-      background: #b8860b;
-      color: #0b0b0b;
-    }
-    .proof-section .proof-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 0.8rem;
-    }
-    .proof-section .proof-actions button {
-      padding: 0.4rem 1.6rem;
-      border-radius: 40px;
-      border: 1px solid #b8860b;
-      background: #1a1a1a;
-      color: #f0e6d0;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .proof-section .proof-actions button:hover {
-      background: #b8860b;
-      color: #0b0b0b;
-    }
-    .proof-section .proof-actions .cancel-proof {
-      border-color: #5a5a5a;
-      color: #888;
-    }
-
-    .staff-panel {
-      background: #0a0a0a;
-      border-radius: 1.5rem;
-      border: 2px solid #ff4444;
-      padding: 1.5rem;
-      margin-top: 1rem;
-      display: none;
-    }
-    .staff-panel.show {
-      display: block;
-    }
-    .staff-panel h3 {
-      color: #ff4444;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .staff-panel .staff-info {
-      color: #ccc;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      padding: 0.8rem;
-      background: #111;
-      border-radius: 1rem;
-      border: 1px solid #2a2a2a;
-    }
-    .staff-panel .staff-info .label {
-      color: #888;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-    }
-    .staff-panel .staff-info .value {
-      color: white;
-      font-weight: 500;
-    }
-    .staff-panel .staff-actions {
+    .staff-match-ui .staff-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.8rem;
+      gap: 1rem;
     }
-    .staff-panel .staff-actions button {
-      padding: 0.6rem 1.8rem;
+    .staff-match-ui .staff-actions button {
+      padding: 0.7rem 2rem;
       border-radius: 40px;
       border: 1px solid #2a2a2a;
       background: #141414;
       color: #ddd;
       cursor: pointer;
-      transition: 0.15s;
       font-weight: 600;
+      transition: 0.15s;
       flex: 1;
       min-width: 150px;
     }
-    .staff-panel .staff-actions button:hover {
-      transform: scale(1.02);
-    }
-    .staff-panel .staff-actions .resolve-split {
-      border-color: #d4af37;
-      color: #d4af37;
-    }
-    .staff-panel .staff-actions .resolve-split:hover {
-      background: #d4af37;
-      color: #0b0b0b;
-    }
-    .staff-panel .staff-actions .resolve-team1 {
-      border-color: #4caf50;
-      color: #4caf50;
-    }
-    .staff-panel .staff-actions .resolve-team1:hover {
-      background: #4caf50;
-      color: #0b0b0b;
-    }
-    .staff-panel .staff-actions .resolve-team2 {
-      border-color: #2196f3;
-      color: #2196f3;
-    }
-    .staff-panel .staff-actions .resolve-team2:hover {
-      background: #2196f3;
-      color: #0b0b0b;
-    }
-    .staff-panel .staff-actions .resolve-void {
-      border-color: #ff4444;
-      color: #ff4444;
-    }
-    .staff-panel .staff-actions .resolve-void:hover {
-      background: #ff4444;
-      color: #0b0b0b;
-    }
+    .staff-match-ui .staff-actions button:hover { transform: scale(1.02); }
+    .staff-match-ui .staff-actions .resolve-split { border-color: #d4af37; color: #d4af37; }
+    .staff-match-ui .staff-actions .resolve-split:hover { background: #d4af37; color: #0b0b0b; }
+    .staff-match-ui .staff-actions .resolve-team1 { border-color: #4caf50; color: #4caf50; }
+    .staff-match-ui .staff-actions .resolve-team1:hover { background: #4caf50; color: #0b0b0b; }
+    .staff-match-ui .staff-actions .resolve-team2 { border-color: #2196f3; color: #2196f3; }
+    .staff-match-ui .staff-actions .resolve-team2:hover { background: #2196f3; color: #0b0b0b; }
+    .staff-match-ui .staff-actions .resolve-void { border-color: #ff4444; color: #ff4444; }
+    .staff-match-ui .staff-actions .resolve-void:hover { background: #ff4444; color: #0b0b0b; }
 
     @media (max-width: 700px) {
       .glass-card { padding: 1.5rem; }
@@ -655,6 +622,8 @@
       .logo h1 { font-size: 1.8rem; }
       .auth-bar { flex-direction: column; align-items: stretch; }
       .match-grid { grid-template-columns: 1fr; }
+      .staff-match-ui { padding: 1rem; }
+      .staff-match-ui .staff-match-info { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -679,6 +648,13 @@
     <span class="sync-status" id="syncStatus"><i class="fas fa-cloud"></i> connected</span>
     <button class="btn-test-webhook" id="testWebhookBtn"><i class="fas fa-bolt"></i> Test Webhook</button>
     <span class="webhook-status" id="webhookStatus">⚪ idle</span>
+  </div>
+
+  <!-- Staff Join Section -->
+  <div class="staff-join-section" id="staffJoinSection">
+    <label><i class="fas fa-key"></i> Staff Join Match:</label>
+    <input type="text" id="staffJoinInput" placeholder="Enter match ID...">
+    <button id="staffJoinBtn"><i class="fas fa-sign-in-alt"></i> Join Match</button>
   </div>
 
   <div class="create-section">
@@ -712,6 +688,7 @@
     <div class="empty-state"><i class="fas fa-skull"></i><span>loading matches...</span></div>
   </div>
 
+  <!-- Regular Chat Panel -->
   <div class="chat-panel" id="chatPanel" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
       <span style="color:#d4af37; font-weight:500;">match chat · <span id="chatMatchId">#</span></span>
@@ -738,22 +715,62 @@
       <button class="end-btn" id="endMatchBtn">end match</button>
       <button class="call-staff-btn" id="callStaffBtn"><i class="fas fa-exclamation-triangle"></i> Call Staff</button>
     </div>
+  </div>
+</div>
 
-    <div class="staff-panel" id="staffPanel">
-      <h3><i class="fas fa-shield-alt"></i> Staff Resolution</h3>
-      <div class="staff-info" id="staffInfo">
-        <div><span class="label">Match ID:</span> <span class="value" id="staffMatchId">-</span></div>
-        <div><span class="label">Teams:</span> <span class="value" id="staffTeams">-</span></div>
-        <div><span class="label">Votes:</span> <span class="value" id="staffVotes">-</span></div>
-        <div><span class="label">Proof:</span> <span class="value" id="staffProof">-</span></div>
-      </div>
-      <div class="staff-actions">
-        <button class="resolve-split" id="resolveSplit"><i class="fas fa-arrows-left-right"></i> Split Tokens (50/50)</button>
-        <button class="resolve-team1" id="resolveTeam1"><i class="fas fa-crown"></i> Award Team 1</button>
-        <button class="resolve-team2" id="resolveTeam2"><i class="fas fa-crown"></i> Award Team 2</button>
-        <button class="resolve-void" id="resolveVoid"><i class="fas fa-ban"></i> Void Match</button>
-      </div>
+<!-- STAFF MATCH UI - Full Page Takeover -->
+<div class="staff-match-ui" id="staffMatchUI">
+  <div class="staff-header">
+    <div>
+      <h2><i class="fas fa-shield-alt"></i> Staff Match View</h2>
+      <div class="staff-match-id" id="staffUIMatchId">Match ID: -</div>
     </div>
+    <button class="staff-close-btn" id="staffUICloseBtn"><i class="fas fa-times"></i> Close</button>
+  </div>
+
+  <div class="staff-match-info" id="staffUIMatchInfo">
+    <div class="info-item">
+      <div class="label">Format</div>
+      <div class="value" id="staffUIFormat">-</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Entry Fee</div>
+      <div class="value" id="staffUIEntryFee">-</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Creator</div>
+      <div class="value" id="staffUICreator">-</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Status</div>
+      <div class="value" id="staffUIStatus">-</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Wins</div>
+      <div class="value" id="staffUIWins">-</div>
+    </div>
+    <div class="info-item">
+      <div class="label">Losses</div>
+      <div class="value" id="staffUILosses">-</div>
+    </div>
+  </div>
+
+  <div class="staff-chat-section">
+    <h3><i class="fas fa-comments"></i> Match Chat</h3>
+    <div class="staff-chat-box" id="staffUIChatBox">
+      <div class="msg system">Loading chat...</div>
+    </div>
+    <div class="staff-chat-input">
+      <input type="text" id="staffUIChatInput" placeholder="Type a message...">
+      <button id="staffUISendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+    </div>
+  </div>
+
+  <div class="staff-actions">
+    <button class="resolve-split" id="staffUIResolveSplit"><i class="fas fa-arrows-left-right"></i> Split Tokens (50/50)</button>
+    <button class="resolve-team1" id="staffUIResolveTeam1"><i class="fas fa-crown"></i> Award Team 1</button>
+    <button class="resolve-team2" id="staffUIResolveTeam2"><i class="fas fa-crown"></i> Award Team 2</button>
+    <button class="resolve-void" id="staffUIResolveVoid"><i class="fas fa-ban"></i> Void Match</button>
   </div>
 </div>
 
@@ -767,7 +784,7 @@
     // ============================================================
 
     // ============================================================
-    // DISCORD WEBHOOK - REPLACE WITH YOUR ACTUAL WEBHOOK URL
+    // DISCORD WEBHOOK
     // ============================================================
     const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1523567476669943888/FSCD4PnVSuTHl80EsFmCK03cvTPeXo8Eww2rtuKcaeH9NfhpVMZSf5n_W5-xmrJIrAqk';
     // ============================================================
@@ -794,6 +811,7 @@
     let activeMatchId = null;
     let chatMessages = {};
     let isStaff = false;
+    let staffActiveMatchId = null;
 
     // DOM refs
     const matchGrid = document.getElementById('matchGrid');
@@ -812,6 +830,9 @@
     const staffBadge = document.getElementById('staffBadge');
     const syncStatus = document.getElementById('syncStatus');
     const webhookStatus = document.getElementById('webhookStatus');
+    const staffJoinSection = document.getElementById('staffJoinSection');
+    const staffJoinInput = document.getElementById('staffJoinInput');
+    const staffJoinBtn = document.getElementById('staffJoinBtn');
 
     const chatPanel = document.getElementById('chatPanel');
     const chatMessagesDiv = document.getElementById('chatMessages');
@@ -830,15 +851,23 @@
     const submitProofBtn = document.getElementById('submitProofBtn');
     const cancelProofBtn = document.getElementById('cancelProofBtn');
 
-    const staffPanel = document.getElementById('staffPanel');
-    const staffMatchId = document.getElementById('staffMatchId');
-    const staffTeams = document.getElementById('staffTeams');
-    const staffVotes = document.getElementById('staffVotes');
-    const staffProof = document.getElementById('staffProof');
-    const resolveSplit = document.getElementById('resolveSplit');
-    const resolveTeam1 = document.getElementById('resolveTeam1');
-    const resolveTeam2 = document.getElementById('resolveTeam2');
-    const resolveVoid = document.getElementById('resolveVoid');
+    // Staff UI
+    const staffMatchUI = document.getElementById('staffMatchUI');
+    const staffUIMatchId = document.getElementById('staffUIMatchId');
+    const staffUIFormat = document.getElementById('staffUIFormat');
+    const staffUIEntryFee = document.getElementById('staffUIEntryFee');
+    const staffUICreator = document.getElementById('staffUICreator');
+    const staffUIStatus = document.getElementById('staffUIStatus');
+    const staffUIWins = document.getElementById('staffUIWins');
+    const staffUILosses = document.getElementById('staffUILosses');
+    const staffUIChatBox = document.getElementById('staffUIChatBox');
+    const staffUIChatInput = document.getElementById('staffUIChatInput');
+    const staffUISendBtn = document.getElementById('staffUISendBtn');
+    const staffUICloseBtn = document.getElementById('staffUICloseBtn');
+    const staffUIResolveSplit = document.getElementById('staffUIResolveSplit');
+    const staffUIResolveTeam1 = document.getElementById('staffUIResolveTeam1');
+    const staffUIResolveTeam2 = document.getElementById('staffUIResolveTeam2');
+    const staffUIResolveVoid = document.getElementById('staffUIResolveVoid');
 
     // ---------- WEBHOOK ----------
     async function sendWebhook(data) {
@@ -1017,6 +1046,39 @@
       }
     }
 
+    async function loadChatMessagesFromSupabase(matchId) {
+      if (!isSupabaseConnected) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('chat_messages')
+          .select('*')
+          .eq('match_id', matchId)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          chatMessages[matchId] = data.map(m => ({
+            user: m.username,
+            text: m.text,
+            system: m.system || false,
+            dispute: m.dispute || false,
+            staff: m.staff || false,
+            time: m.created_at
+          }));
+          if (activeMatchId === matchId) {
+            renderChatMessages(matchId);
+          }
+          if (staffActiveMatchId === matchId) {
+            renderStaffUIChat(matchId);
+          }
+        }
+      } catch (e) {
+        console.error('Error loading chat from Supabase:', e);
+      }
+    }
+
     // ---------- RENDER ----------
     function renderMatches() {
       const activeMatches = matches.filter(m => !m.ended && !m.voided);
@@ -1074,12 +1136,17 @@
           if (!match) return alert('match not found');
           if (!loggedInUser) return alert('please login first');
           if (match.ended || match.voided) return alert('this match is no longer active');
-          openChat(match.id);
+          
+          if (isStaff) {
+            openStaffMatchUI(id);
+          } else {
+            openChat(id);
+          }
         });
       });
     }
 
-    // ---------- CHAT ----------
+    // ---------- REGULAR CHAT ----------
     function openChat(matchId) {
       activeMatchId = matchId;
       chatPanel.style.display = 'block';
@@ -1087,15 +1154,9 @@
       
       if (!chatMessages[matchId]) {
         chatMessages[matchId] = [];
+        loadChatMessagesFromSupabase(matchId);
       }
       renderChatMessages(matchId);
-
-      const match = matches.find(m => m.id === matchId);
-      if (isStaff && match && match.dispute) {
-        showStaffPanel(match);
-      } else {
-        staffPanel.classList.remove('show');
-      }
 
       const msgs = chatMessages[matchId];
       if (!msgs.some(m => m.system && m.text.includes('joined'))) {
@@ -1157,9 +1218,10 @@
       const file = proofFileInput.files[0];
       if (!file) return alert('Please select a proof image');
 
+      // Read file as base64 for Discord attachment
       const reader = new FileReader();
       reader.onload = async function(e) {
-        const proofData = e.target.result;
+        const proofData = e.target.result; // base64
 
         const msgs = chatMessages[activeMatchId] || [];
         const staffMsg = { system: true, dispute: true, text: `⚠️ ${loggedInUser} called STAFF with proof!` };
@@ -1173,7 +1235,7 @@
         await saveMatchToSupabase(match);
         await loadMatchesFromSupabase();
 
-        // Send Discord embed
+        // Send to Discord with image attachment
         const embed = {
           title: '🚨 STAFF CALLED - DISPUTE',
           color: 0xff4444,
@@ -1184,21 +1246,50 @@
             { name: 'Creator', value: match.creator, inline: true },
             { name: 'Called By', value: loggedInUser, inline: true },
             { name: 'Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
-            { name: 'Losses', value: (match.losses || []).join(', ') || 'None', inline: true },
-            { name: 'Proof', value: '📷 Image attached below (base64)', inline: false }
+            { name: 'Losses', value: (match.losses || []).join(', ') || 'None', inline: true }
           ],
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          image: {
+            url: 'attachment://proof.png'
+          }
         };
 
-        const webhookData = {
-          embeds: [embed],
-          content: `🔔 **STAFF ALERT** - A player has called for staff intervention in match **${match.id.substring(0,8)}**`
-        };
-        
-        await sendWebhook(webhookData);
+        // Convert base64 to blob for attachment
+        const base64Data = proofData.split(',')[1];
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: 'image/png' });
+
+        const formData = new FormData();
+        formData.append('payload_json', JSON.stringify({
+          content: `🔔 **STAFF ALERT** - A player has called for staff intervention in match **${match.id.substring(0,8)}**`,
+          embeds: [embed]
+        }));
+        formData.append('file', blob, 'proof.png');
+
+        try {
+          const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            body: formData
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          webhookStatus.textContent = '✅ sent!';
+          webhookStatus.className = 'webhook-status success';
+          setTimeout(() => {
+            webhookStatus.textContent = '⚪ idle';
+            webhookStatus.className = 'webhook-status';
+          }, 5000);
+        } catch (error) {
+          console.error('Webhook with image failed:', error);
+          webhookStatus.textContent = '❌ failed';
+          webhookStatus.className = 'webhook-status fail';
+        }
 
         if (isStaff) {
-          showStaffPanel(match);
+          openStaffMatchUI(match.id);
         }
 
         proofSection.classList.remove('show');
@@ -1208,30 +1299,88 @@
       reader.readAsDataURL(file);
     }
 
-    function showStaffPanel(match) {
-      if (!isStaff) return;
-      staffPanel.classList.add('show');
-      staffMatchId.textContent = match.id;
-      staffTeams.textContent = `${match.type} · Creator: ${match.creator}`;
-      staffVotes.textContent = `Wins: ${(match.wins || []).join(', ') || 'none'} | Losses: ${(match.losses || []).join(', ') || 'none'}`;
-      staffProof.textContent = match.proofSubmitted ? '📷 Proof submitted' : 'No proof yet';
+    // ---------- STAFF MATCH UI (Full Page) ----------
+    function openStaffMatchUI(matchId) {
+      const match = matches.find(m => m.id === matchId);
+      if (!match) {
+        alert('Match not found');
+        return;
+      }
+
+      staffActiveMatchId = matchId;
+      staffMatchUI.classList.add('show');
+
+      // Update info
+      staffUIMatchId.textContent = `Match ID: ${matchId}`;
+      staffUIFormat.textContent = match.type;
+      staffUIEntryFee.textContent = `${formatToken(match.entryFee)} tokens`;
+      staffUICreator.textContent = match.creator;
+      staffUIStatus.textContent = match.dispute ? '⚠️ DISPUTE' : '🟢 Open';
+      staffUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
+      staffUIWins.textContent = (match.wins || []).join(', ') || 'None';
+      staffUILosses.textContent = (match.losses || []).join(', ') || 'None';
+
+      // Load chat
+      if (!chatMessages[matchId]) {
+        chatMessages[matchId] = [];
+        loadChatMessagesFromSupabase(matchId);
+      }
+      renderStaffUIChat(matchId);
+
+      // Auto-join message
+      const msgs = chatMessages[matchId];
+      if (!msgs.some(m => m.system && m.text.includes('Staff joined'))) {
+        const joinMsg = { system: true, staff: true, text: `👑 Staff ${loggedInUser} joined the match`, time: Date.now() };
+        msgs.push(joinMsg);
+        renderStaffUIChat(matchId);
+        saveChatMessageToSupabase(matchId, joinMsg);
+      }
+    }
+
+    function renderStaffUIChat(matchId) {
+      const msgs = chatMessages[matchId] || [];
+      staffUIChatBox.innerHTML = msgs.map(m => {
+        let className = 'msg';
+        if (m.system) className += ' system';
+        if (m.dispute) className += ' dispute';
+        if (m.staff) className += ' staff';
+        if (m.system) return `<div class="${className}">${m.text}</div>`;
+        return `<div class="${className}"><strong>${m.user}</strong> ${m.text}</div>`;
+      }).join('');
+      staffUIChatBox.scrollTop = staffUIChatBox.scrollHeight;
+    }
+
+    async function sendStaffChatMessage() {
+      if (!staffActiveMatchId || !loggedInUser) return alert('No match active');
+      const text = staffUIChatInput.value.trim();
+      if (!text) return;
+      
+      const msg = { user: loggedInUser, text: text, time: Date.now(), staff: isStaff };
+      const msgs = chatMessages[staffActiveMatchId] || [];
+      msgs.push(msg);
+      chatMessages[staffActiveMatchId] = msgs;
+      renderStaffUIChat(staffActiveMatchId);
+      staffUIChatInput.value = '';
+      
+      await saveChatMessageToSupabase(staffActiveMatchId, msg);
     }
 
     // ---------- STAFF RESOLUTIONS ----------
-    async function resolveMatch(matchId, resolution) {
-      const match = matches.find(m => m.id === matchId);
-      if (!match) return;
+    async function resolveStaffMatch(resolution) {
+      if (!staffActiveMatchId) return alert('No match active');
+      const match = matches.find(m => m.id === staffActiveMatchId);
+      if (!match) return alert('Match not found');
 
       match.ended = true;
       match.resolved = true;
       match.resolution = resolution;
 
-      const msgs = chatMessages[matchId] || [];
+      const msgs = chatMessages[staffActiveMatchId] || [];
       const resMsg = { system: true, staff: true, text: `👑 STAFF RESOLUTION: ${resolution}` };
       msgs.push(resMsg);
-      chatMessages[matchId] = msgs;
-      renderChatMessages(matchId);
-      await saveChatMessageToSupabase(matchId, resMsg);
+      chatMessages[staffActiveMatchId] = msgs;
+      renderStaffUIChat(staffActiveMatchId);
+      await saveChatMessageToSupabase(staffActiveMatchId, resMsg);
 
       await saveMatchToSupabase(match);
 
@@ -1250,7 +1399,8 @@
 
       await sendWebhook({ embeds: [embed] });
 
-      staffPanel.classList.remove('show');
+      staffMatchUI.classList.remove('show');
+      staffActiveMatchId = null;
       await loadMatchesFromSupabase();
       alert(`Match resolved: ${resolution}`);
     }
@@ -1329,7 +1479,7 @@
 
         alert('Dispute detected! Staff have been notified.');
         if (isStaff) {
-          showStaffPanel(match);
+          openStaffMatchUI(match.id);
         }
       }
     }
@@ -1365,7 +1515,6 @@
 
       activeMatchId = null;
       chatPanel.style.display = 'none';
-      staffPanel.classList.remove('show');
       await loadMatchesFromSupabase();
       alert('Match ended.');
     }
@@ -1403,9 +1552,10 @@
         isStaff = true;
         loggedInUser = u;
         staffBadge.classList.add('show');
+        staffJoinSection.classList.add('show');
         authStatus.innerHTML = `<i class="fas fa-circle" style="color:#ff4444;font-size:0.6rem;"></i> <strong style="color:#ff4444;">STAFF</strong>`;
         fortniteUser.value = u;
-        alert('Staff logged in! You can resolve disputes.');
+        alert('Staff logged in! You can join any match by ID.');
         return true;
       }
 
@@ -1423,6 +1573,7 @@
           isStaff = false;
           loggedInUser = u;
           staffBadge.classList.remove('show');
+          staffJoinSection.classList.remove('show');
           authStatus.innerHTML = `<i class="fas fa-circle" style="color:#d4af37;font-size:0.6rem;"></i> ${u}`;
           fortniteUser.value = u;
           return true;
@@ -1471,6 +1622,10 @@
       if (saved) {
         await loadMatchesFromSupabase();
         
+        // Creator automatically joins
+        chatMessages[matchId] = [{ system: true, text: `Match created by ${user}` }];
+        await saveChatMessageToSupabase(matchId, { system: true, text: `Match created by ${user}` });
+        
         const embed = {
           title: '🎮 New Match Created',
           color: 0xd4af37,
@@ -1487,18 +1642,38 @@
         await sendWebhook({ embeds: [embed] });
         
         if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
-        alert('Match created!');
+        alert('Match created! You are automatically joined.');
+        
+        // Auto-open chat for creator
+        openChat(matchId);
       } else {
         alert('Failed to create match. Check Supabase connection.');
       }
     }
 
+    // ---------- STAFF JOIN BY ID ----------
+    async function staffJoinMatch() {
+      if (!isStaff) return alert('You must be logged in as staff');
+      const matchId = staffJoinInput.value.trim();
+      if (!matchId) return alert('Please enter a match ID');
+
+      const match = matches.find(m => m.id === matchId);
+      if (!match) {
+        // Try to load from Supabase
+        await loadMatchesFromSupabase();
+        const matchReload = matches.find(m => m.id === matchId);
+        if (!matchReload) return alert('Match not found. Please check the ID.');
+        openStaffMatchUI(matchReload.id);
+      } else {
+        openStaffMatchUI(match.id);
+      }
+      staffJoinInput.value = '';
+    }
+
     // ---------- INIT ----------
     async function init() {
-      // Load matches from Supabase
       await loadMatchesFromSupabase();
       
-      // Subscribe to real-time updates
       if (isSupabaseConnected) {
         supabase
           .channel('matches_changes')
@@ -1512,6 +1687,18 @@
             async (payload) => {
               console.log('Match update received:', payload);
               await loadMatchesFromSupabase();
+              if (staffActiveMatchId) {
+                const match = matches.find(m => m.id === staffActiveMatchId);
+                if (match) {
+                  staffUIFormat.textContent = match.type;
+                  staffUIEntryFee.textContent = `${formatToken(match.entryFee)} tokens`;
+                  staffUICreator.textContent = match.creator;
+                  staffUIStatus.textContent = match.dispute ? '⚠️ DISPUTE' : '🟢 Open';
+                  staffUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
+                  staffUIWins.textContent = (match.wins || []).join(', ') || 'None';
+                  staffUILosses.textContent = (match.losses || []).join(', ') || 'None';
+                }
+              }
             }
           )
           .subscribe();
@@ -1526,7 +1713,6 @@
       closeChatBtn.addEventListener('click', () => { 
         chatPanel.style.display = 'none'; 
         activeMatchId = null; 
-        staffPanel.classList.remove('show'); 
       });
       winBtn.addEventListener('click', handleWin);
       loseBtn.addEventListener('click', handleLose);
@@ -1535,25 +1721,24 @@
       cancelProofBtn.addEventListener('click', cancelProof);
       submitProofBtn.addEventListener('click', submitProof);
       testWebhookBtn.addEventListener('click', testWebhook);
+      
+      // Staff join
+      staffJoinBtn.addEventListener('click', staffJoinMatch);
+      staffJoinInput.addEventListener('keypress', e => { if(e.key === 'Enter') staffJoinMatch(); });
 
-      resolveSplit.addEventListener('click', () => {
-        if (activeMatchId) resolveMatch(activeMatchId, 'Split tokens 50/50');
+      // Staff UI events
+      staffUISendBtn.addEventListener('click', sendStaffChatMessage);
+      staffUIChatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendStaffChatMessage(); });
+      staffUICloseBtn.addEventListener('click', () => {
+        staffMatchUI.classList.remove('show');
+        staffActiveMatchId = null;
       });
-      resolveTeam1.addEventListener('click', () => {
-        if (activeMatchId) resolveMatch(activeMatchId, 'Team 1 awarded tokens');
-      });
-      resolveTeam2.addEventListener('click', () => {
-        if (activeMatchId) resolveMatch(activeMatchId, 'Team 2 awarded tokens');
-      });
-      resolveVoid.addEventListener('click', () => {
-        if (activeMatchId) {
-          const match = matches.find(m => m.id === activeMatchId);
-          if (match) match.voided = true;
-          resolveMatch(activeMatchId, 'Match voided - tokens returned');
-        }
-      });
+      staffUIResolveSplit.addEventListener('click', () => resolveStaffMatch('Split tokens 50/50'));
+      staffUIResolveTeam1.addEventListener('click', () => resolveStaffMatch('Team 1 awarded tokens'));
+      staffUIResolveTeam2.addEventListener('click', () => resolveStaffMatch('Team 2 awarded tokens'));
+      staffUIResolveVoid.addEventListener('click', () => resolveStaffMatch('Match voided - tokens returned'));
 
-      // Auto-login demo
+      // Auto-login
       try {
         const { data } = await supabase.from('users').select('*').limit(1);
         if (!data || data.length === 0) {
@@ -1573,6 +1758,7 @@
 
       console.log('✅ Eval Tokens initialized with Supabase!');
       console.log('📊 Active matches:', matches.length);
+      console.log('🔑 Staff login: EvalStaff / Evaltweaks50sdkdgeneratedkeypasswordcanthaveaccess111');
     }
 
     init();

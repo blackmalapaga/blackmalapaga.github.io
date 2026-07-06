@@ -1,575 +1,1279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eval Tokens · Fortnite matchmaker</title>
-    <!-- Font Awesome (icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Tokens · Fortnite matchmaker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
 
-        body {
-            background: #0f0f0f;
-            background-image: radial-gradient(circle at 20% 30%, #1a2a1a, #050505 80%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-        }
+    body {
+      background: #0b0b0b;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      background-image: radial-gradient(circle at 30% 20%, #1a1a1a, #000000 90%);
+    }
 
-        .glass-card {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid #2e7d32;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px #1e4a22 inset;
-            border-radius: 2.5rem;
-            padding: 2.2rem 2.5rem;
-            max-width: 1300px;
-            width: 100%;
-            transition: all 0.2s ease;
-        }
+    .glass-card {
+      background: rgba(10, 10, 10, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #b8860b;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 0 1px #d4af37 inset, 0 0 20px rgba(184, 134, 11, 0.15);
+      border-radius: 2.8rem;
+      padding: 2.2rem 2.5rem;
+      max-width: 1400px;
+      width: 100%;
+      transition: all 0.25s ease;
+    }
 
-        /* header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 2.2rem;
-            border-bottom: 2px solid #2e7d32;
-            padding-bottom: 0.8rem;
-        }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.2rem;
+      border-bottom: 1px solid #b8860b;
+      padding-bottom: 0.8rem;
+    }
 
-        .logo h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: white;
-            text-shadow: 0 0 10px #2e7d32, 0 0 20px #1e4a22;
-        }
-        .logo span {
-            color: #66bb6a;
-            background: #1a2a1a;
-            padding: 0.1rem 0.8rem;
-            border-radius: 40px;
-            font-size: 1rem;
-            margin-left: 10px;
-            border: 1px solid #388e3c;
-        }
-        .token-badge {
-            background: #1e2a1e;
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            color: #b9f6ca;
-            border: 1px solid #388e3c;
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .token-badge i {
-            color: #66bb6a;
-        }
+    .logo h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(184, 134, 11, 0.4);
+    }
+    .logo span {
+      color: #d4af37;
+      background: #1a1a1a;
+      padding: 0.1rem 1rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      margin-left: 12px;
+      border: 1px solid #b8860b;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
 
-        /* create match form */
-        .create-section {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 2rem;
-            padding: 1.8rem 2rem;
-            margin-bottom: 2.8rem;
-            border: 1px solid #2a5e2a;
-            box-shadow: 0 8px 0 #0a1a0a;
-        }
+    .token-badge {
+      background: #121212;
+      padding: 0.4rem 1.6rem;
+      border-radius: 60px;
+      color: #f0e6d0;
+      border: 1px solid #b8860b;
+      font-weight: 500;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 10px rgba(184, 134, 11, 0.1);
+    }
+    .token-badge i {
+      color: #d4af37;
+    }
 
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.2rem 1.5rem;
-            align-items: flex-end;
-        }
+    .staff-badge {
+      background: #1a0a0a;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid #ff4444;
+      color: #ff4444;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: none;
+    }
+    .staff-badge.show {
+      display: inline-block;
+    }
 
-        .form-group {
-            flex: 1 0 160px;
-            min-width: 130px;
-        }
-        .form-group label {
-            display: block;
-            color: #b0d0b0;
-            font-weight: 500;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.3rem;
-        }
-        .form-group input, 
-        .form-group select {
-            width: 100%;
-            background: #1a1f1a;
-            border: 1px solid #2e5a2e;
-            border-radius: 40px;
-            padding: 0.7rem 1.2rem;
-            color: white;
-            font-weight: 500;
-            font-size: 0.95rem;
-            outline: none;
-            transition: 0.2s;
-        }
-        .form-group input:focus, 
-        .form-group select:focus {
-            border-color: #66bb6a;
-            box-shadow: 0 0 0 2px #1e4a22;
-        }
-        .form-group input::placeholder {
-            color: #6a7a6a;
-            font-weight: 400;
-        }
+    /* AUTH */
+    .auth-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      align-items: center;
+      background: #0f0f0f;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 2rem;
+    }
+    .auth-bar input {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      color: white;
+      font-weight: 400;
+      outline: none;
+      transition: 0.2s;
+      min-width: 140px;
+    }
+    .auth-bar input:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2);
+    }
+    .auth-bar button {
+      background: #1a1a1a;
+      border: 1px solid #b8860b;
+      color: #f0e6d0;
+      padding: 0.5rem 1.6rem;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      font-size: 0.9rem;
+    }
+    .auth-bar button:hover {
+      background: #b8860b;
+      color: #0b0b0b;
+      border-color: #d4af37;
+      box-shadow: 0 0 16px rgba(184, 134, 11, 0.2);
+    }
+    .auth-status {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+    }
+    .auth-status strong {
+      color: #d4af37;
+      font-weight: 500;
+    }
 
-        .btn-create {
-            background: #1e4a22;
-            border: none;
-            border-radius: 60px;
-            padding: 0.7rem 2.2rem;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            border: 1px solid #388e3c;
-            box-shadow: 0 4px 0 #0a2a0a;
-            flex: 0 0 auto;
-            margin-left: auto;
-        }
-        .btn-create i {
-            color: #a5d6a7;
-        }
-        .btn-create:hover {
-            background: #2e6a32;
-            transform: scale(1.01);
-            border-color: #66bb6a;
-            box-shadow: 0 6px 0 #0a2a0a;
-        }
-        .btn-create:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #0a2a0a;
-        }
+    /* CREATE MATCH */
+    .create-section {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 2rem;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2.8rem;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 8px 0 #0a0a0a;
+    }
 
-        /* match list */
-        .match-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 1.5rem;
-            color: #c8e6c9;
-            flex-wrap: wrap;
-        }
-        .match-header h2 {
-            font-weight: 600;
-            font-size: 1.7rem;
-            color: white;
-            letter-spacing: -0.3px;
-        }
-        .match-header h2 i {
-            color: #66bb6a;
-            margin-right: 10px;
-        }
-        .match-count {
-            background: #1e2e1e;
-            padding: 0.2rem 1rem;
-            border-radius: 40px;
-            border: 1px solid #2e7d32;
-            font-size: 0.9rem;
-        }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem 1.5rem;
+      align-items: flex-end;
+    }
 
-        .match-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.8rem;
-        }
+    .form-group {
+      flex: 1 0 160px;
+      min-width: 130px;
+    }
+    .form-group label {
+      display: block;
+      color: #bbbbbb;
+      font-weight: 400;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 0.3rem;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 40px;
+      padding: 0.7rem 1.2rem;
+      color: white;
+      font-weight: 400;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.15);
+    }
 
-        .match-card {
-            background: rgba(10, 20, 10, 0.7);
-            backdrop-filter: blur(4px);
-            border: 1px solid #2a5e2a;
-            border-radius: 2rem;
-            padding: 1.5rem 1.2rem 1.2rem;
-            transition: 0.15s ease;
-            box-shadow: 0 6px 0 #0a1a0a;
-            display: flex;
-            flex-direction: column;
-        }
-        .match-card:hover {
-            border-color: #4caf50;
-            box-shadow: 0 8px 0 #0a1a0a, 0 0 10px #1e4a22;
-            transform: translateY(-3px);
-        }
+    .btn-create {
+      background: #b8860b;
+      border: none;
+      border-radius: 60px;
+      padding: 0.7rem 2.6rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #0b0b0b;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid #d4af37;
+      box-shadow: 0 4px 0 #6a4f0a;
+      flex: 0 0 auto;
+      margin-left: auto;
+    }
+    .btn-create i { color: #0b0b0b; }
+    .btn-create:hover {
+      background: #d4af37;
+      transform: scale(1.01);
+      box-shadow: 0 6px 0 #6a4f0a;
+    }
+    .btn-create:active { transform: translateY(3px); box-shadow: 0 2px 0 #6a4f0a; }
 
-        .match-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
-        }
-        .match-title .mode-badge {
-            background: #1e3a1e;
-            padding: 0.2rem 0.9rem;
-            border-radius: 30px;
-            color: #a5d6a7;
-            font-weight: 600;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            border: 1px solid #2e7d32;
-        }
-        .match-title .token-pot {
-            background: #0f2a0f;
-            border-radius: 30px;
-            padding: 0.2rem 0.9rem;
-            color: #b9f6ca;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border: 1px solid #388e3c;
-        }
-        .match-title .token-pot i {
-            margin-right: 4px;
-            color: #66bb6a;
-        }
+    /* MATCH GRID */
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.5rem;
+      color: #ccc;
+      flex-wrap: wrap;
+    }
+    .match-header h2 {
+      font-weight: 500;
+      font-size: 1.8rem;
+      color: white;
+      letter-spacing: -0.3px;
+    }
+    .match-header h2 i { color: #d4af37; margin-right: 12px; }
+    .match-count {
+      background: #121212;
+      padding: 0.2rem 1.4rem;
+      border-radius: 40px;
+      border: 1px solid #2a2a2a;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
 
-        .match-details {
-            margin: 0.5rem 0 0.8rem;
-            color: #cfdfcf;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            flex: 1;
-        }
-        .match-details i {
-            width: 20px;
-            color: #66bb6a;
-        }
-        .match-details .entry-fee {
-            background: #1a2a1a;
-            display: inline-block;
-            padding: 0.1rem 0.8rem;
-            border-radius: 20px;
-            border: 1px solid #2e7d32;
-            font-weight: 600;
-            color: #b9f6ca;
-            margin-top: 4px;
-        }
-        .fortnite-user {
-            background: #111e11;
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            border: 1px solid #2a5a2a;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            color: #c8e6c9;
-            margin-top: 6px;
-        }
-        .fortnite-user i {
-            color: #81c784;
-        }
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+    }
 
-        .match-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #1e3a1e;
-            padding-top: 0.8rem;
-            margin-top: 0.7rem;
-            color: #8aaa8a;
-            font-size: 0.8rem;
-        }
-        .match-footer .status {
-            color: #a5d6a7;
-            background: #0f2a0f;
-            padding: 0.1rem 0.9rem;
-            border-radius: 30px;
-            border: 1px solid #2e7d32;
-        }
-        .match-footer .status i {
-            margin-right: 4px;
-        }
+    .match-card {
+      background: rgba(16, 16, 16, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid #2a2a2a;
+      border-radius: 2rem;
+      padding: 1.6rem 1.4rem 1.2rem;
+      transition: 0.2s ease;
+      box-shadow: 0 6px 0 #0a0a0a;
+      display: flex;
+      flex-direction: column;
+    }
+    .match-card:hover {
+      border-color: #b8860b;
+      box-shadow: 0 8px 0 #0a0a0a, 0 0 20px rgba(184, 134, 11, 0.1);
+      transform: translateY(-4px);
+    }
+    .match-card.dispute {
+      border-color: #ff4444;
+      box-shadow: 0 0 20px rgba(255, 68, 68, 0.15);
+    }
 
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: #6a8a6a;
-            padding: 2.5rem 0;
-            font-size: 1.1rem;
-            border: 1px dashed #2a5a2a;
-            border-radius: 3rem;
-            background: rgba(0, 0, 0, 0.2);
-        }
-        .empty-state i {
-            font-size: 2.2rem;
-            color: #2e7d32;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
+    .match-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .match-title .mode-badge {
+      background: #1a1a1a;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      color: #d4af37;
+      font-weight: 500;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      border: 1px solid #b8860b;
+    }
+    .match-title .token-pot {
+      background: #0f0f0f;
+      border-radius: 30px;
+      padding: 0.2rem 1rem;
+      color: #f0e6d0;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid #b8860b;
+    }
+    .match-title .token-pot i { margin-right: 6px; color: #d4af37; }
 
-        /* responsive */
-        @media (max-width: 650px) {
-            .glass-card { padding: 1.5rem; }
-            .form-row { flex-direction: column; align-items: stretch; }
-            .btn-create { margin-left: 0; justify-content: center; }
-            .logo h1 { font-size: 1.8rem; }
-        }
-    </style>
+    .match-details {
+      margin: 0.5rem 0 0.8rem;
+      color: #c8c8c8;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      flex: 1;
+    }
+    .match-details i { width: 22px; color: #d4af37; }
+    .match-details .entry-fee {
+      background: #141414;
+      display: inline-block;
+      padding: 0.1rem 1rem;
+      border-radius: 20px;
+      border: 1px solid #2a2a2a;
+      font-weight: 500;
+      color: #f0e6d0;
+      margin-top: 4px;
+    }
+    .match-details .dispute-tag {
+      color: #ff4444;
+      font-weight: 600;
+      background: #1a0a0a;
+      padding: 0.1rem 1rem;
+      border-radius: 20px;
+      border: 1px solid #ff4444;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    .fortnite-user {
+      background: #0f0f0f;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      border: 1px solid #2a2a2a;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #ddd;
+      margin-top: 6px;
+    }
+    .fortnite-user i { color: #d4af37; }
+
+    .match-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1a1a1a;
+      padding-top: 0.8rem;
+      margin-top: 0.7rem;
+      color: #777;
+      font-size: 0.8rem;
+    }
+    .match-footer .status {
+      color: #d4af37;
+      background: #0f0f0f;
+      padding: 0.1rem 1rem;
+      border-radius: 30px;
+      border: 1px solid #b8860b;
+    }
+    .match-footer .status.dispute-status {
+      color: #ff4444;
+      border-color: #ff4444;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #555;
+      padding: 3rem 0;
+      font-size: 1.1rem;
+      border: 1px dashed #2a2a2a;
+      border-radius: 3rem;
+      background: rgba(0,0,0,0.2);
+    }
+    .empty-state i { font-size: 2.5rem; color: #b8860b; margin-bottom: 0.5rem; display: block; }
+
+    /* CHAT */
+    .chat-panel {
+      margin-top: 2rem;
+      border-top: 1px solid #2a2a2a;
+      padding-top: 1.5rem;
+    }
+    .chat-box {
+      background: #0c0c0c;
+      border-radius: 1.5rem;
+      border: 1px solid #2a2a2a;
+      padding: 1rem 1.2rem;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 0.8rem;
+      color: #ddd;
+      font-size: 0.9rem;
+    }
+    .chat-box .msg { padding: 0.2rem 0; border-bottom: 1px solid #1a1a1a; }
+    .chat-box .msg strong { color: #d4af37; }
+    .chat-box .msg.system { color: #888; font-style: italic; }
+    .chat-box .msg.dispute { color: #ff6b6b; font-weight: 500; }
+    .chat-box .msg.staff { color: #ff4444; font-weight: 600; }
+    .chat-input-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .chat-input-row input {
+      flex: 1;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 40px;
+      padding: 0.6rem 1.2rem;
+      color: white;
+      outline: none;
+    }
+    .chat-input-row input:focus { border-color: #b8860b; }
+    .chat-input-row button {
+      background: #1a1a1a;
+      border: 1px solid #b8860b;
+      color: #f0e6d0;
+      padding: 0.5rem 1.6rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .chat-input-row button:hover { background: #b8860b; color: #0b0b0b; }
+
+    .match-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .match-actions button {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      color: #ddd;
+      padding: 0.4rem 1.6rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.15s;
+      font-weight: 500;
+    }
+    .match-actions button:hover { border-color: #b8860b; color: #d4af37; }
+    .match-actions .win-btn { border-color: #b8860b; color: #d4af37; }
+    .match-actions .lose-btn { border-color: #5a5a5a; color: #aaa; }
+    .match-actions .end-btn { border-color: #5a3a0a; color: #b8860b; }
+    .match-actions .call-staff-btn { border-color: #ff4444; color: #ff4444; }
+    .match-actions .call-staff-btn:hover { background: #ff4444; color: #0b0b0b; }
+
+    /* PROOF UPLOAD */
+    .proof-section {
+      background: #0a0a0a;
+      border-radius: 1.5rem;
+      border: 1px solid #2a2a2a;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .proof-section.show {
+      display: block;
+    }
+    .proof-section label {
+      color: #ddd;
+      font-size: 0.85rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .proof-section input[type="file"] {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      color: white;
+      width: 100%;
+      cursor: pointer;
+    }
+    .proof-section input[type="file"]::file-selector-button {
+      background: #1a1a1a;
+      border: 1px solid #b8860b;
+      color: #f0e6d0;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+    .proof-section input[type="file"]::file-selector-button:hover {
+      background: #b8860b;
+      color: #0b0b0b;
+    }
+    .proof-section .proof-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+    .proof-section .proof-actions button {
+      padding: 0.4rem 1.6rem;
+      border-radius: 40px;
+      border: 1px solid #b8860b;
+      background: #1a1a1a;
+      color: #f0e6d0;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .proof-section .proof-actions button:hover {
+      background: #b8860b;
+      color: #0b0b0b;
+    }
+    .proof-section .proof-actions .cancel-proof {
+      border-color: #5a5a5a;
+      color: #888;
+    }
+
+    /* STAFF RESOLUTION PANEL */
+    .staff-panel {
+      background: #0a0a0a;
+      border-radius: 1.5rem;
+      border: 2px solid #ff4444;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .staff-panel.show {
+      display: block;
+    }
+    .staff-panel h3 {
+      color: #ff4444;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .staff-panel .staff-info {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      background: #111;
+      border-radius: 1rem;
+      border: 1px solid #2a2a2a;
+    }
+    .staff-panel .staff-info .label {
+      color: #888;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .staff-panel .staff-info .value {
+      color: white;
+      font-weight: 500;
+    }
+    .staff-panel .staff-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .staff-panel .staff-actions button {
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      border: 1px solid #2a2a2a;
+      background: #141414;
+      color: #ddd;
+      cursor: pointer;
+      transition: 0.15s;
+      font-weight: 600;
+      flex: 1;
+      min-width: 150px;
+    }
+    .staff-panel .staff-actions button:hover {
+      transform: scale(1.02);
+    }
+    .staff-panel .staff-actions .resolve-split {
+      border-color: #d4af37;
+      color: #d4af37;
+    }
+    .staff-panel .staff-actions .resolve-split:hover {
+      background: #d4af37;
+      color: #0b0b0b;
+    }
+    .staff-panel .staff-actions .resolve-team1 {
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+    .staff-panel .staff-actions .resolve-team1:hover {
+      background: #4caf50;
+      color: #0b0b0b;
+    }
+    .staff-panel .staff-actions .resolve-team2 {
+      border-color: #2196f3;
+      color: #2196f3;
+    }
+    .staff-panel .staff-actions .resolve-team2:hover {
+      background: #2196f3;
+      color: #0b0b0b;
+    }
+    .staff-panel .staff-actions .resolve-void {
+      border-color: #ff4444;
+      color: #ff4444;
+    }
+    .staff-panel .staff-actions .resolve-void:hover {
+      background: #ff4444;
+      color: #0b0b0b;
+    }
+
+    @media (max-width: 700px) {
+      .glass-card { padding: 1.5rem; }
+      .form-row { flex-direction: column; align-items: stretch; }
+      .btn-create { margin-left: 0; justify-content: center; }
+      .logo h1 { font-size: 1.8rem; }
+      .auth-bar { flex-direction: column; align-items: stretch; }
+      .match-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <div class="glass-card" id="app">
-        <!-- header -->
-        <div class="header">
-            <div class="logo">
-                <h1>🎯 Eval Tokens <span>beta</span></h1>
-            </div>
-            <div class="token-badge">
-                <i class="fas fa-coins"></i> token pool: <span id="totalTokenDisplay">0.00</span>
-            </div>
-        </div>
+<div class="glass-card" id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <h1>Eval Tokens <span>fortnite</span></h1>
+    </div>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <span class="staff-badge" id="staffBadge"><i class="fas fa-shield-alt"></i> STAFF</span>
+      <div class="token-badge"><i class="fas fa-coins"></i> pool: <span id="totalTokenDisplay">0.00</span></div>
+    </div>
+  </div>
 
-        <!-- create match -->
-        <div class="create-section">
-            <div class="form-row">
-                <div class="form-group">
-                    <label><i class="fas fa-user-friends"></i> format</label>
-                    <select id="matchType">
-                        <option value="1v1">1v1</option>
-                        <option value="2v2" selected>2v2</option>
-                        <option value="3v3">3v3</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-ticket-alt"></i> entry fee (tokens)</label>
-                    <input type="number" id="entryFee" placeholder="e.g. 0.50" step="0.01" min="0.01" value="0.50">
-                </div>
-                <div class="form-group" style="flex: 2;">
-                    <label><i class="fas fa-user"></i> your fortnite user</label>
-                    <input type="text" id="fortniteUser" placeholder="Epic display name..." value="Vortex_77">
-                </div>
-                <button class="btn-create" id="createMatchBtn"><i class="fas fa-plus-circle"></i> create match</button>
-            </div>
-            <div style="margin-top: 0.6rem; font-size: 0.8rem; color: #5a7a5a; display: flex; gap: 16px; flex-wrap: wrap;">
-                <span><i class="fas fa-info-circle" style="color: #388e3c;"></i> winner gets 0.50 from both duos (2v2)</span>
-                <span><i class="fas fa-coins" style="color: #66bb6a;"></i> tokens are locked in the match</span>
-            </div>
-        </div>
+  <!-- AUTH -->
+  <div class="auth-bar" id="authBar">
+    <input type="text" id="regUser" placeholder="username" value="player1">
+    <input type="password" id="regPass" placeholder="password" value="123">
+    <button id="registerBtn">register</button>
+    <button id="loginBtn">login</button>
+    <span class="auth-status" id="authStatus"><i class="fas fa-circle" style="color:#555;font-size:0.6rem;"></i> guest</span>
+  </div>
 
-        <!-- match list -->
-        <div class="match-header">
-            <h2><i class="fas fa-gamepad"></i> live matches</h2>
-            <span class="match-count" id="matchCount">0 matches</span>
-        </div>
+  <!-- CREATE MATCH -->
+  <div class="create-section">
+    <div class="form-row">
+      <div class="form-group">
+        <label>format</label>
+        <select id="matchType"><option value="1v1">1v1</option><option value="2v2" selected>2v2</option><option value="3v3">3v3</option></select>
+      </div>
+      <div class="form-group">
+        <label>entry fee (tokens)</label>
+        <input type="number" id="entryFee" placeholder="0.50" step="0.01" min="0.01" value="0.50">
+      </div>
+      <div class="form-group" style="flex:2;">
+        <label>your fortnite user</label>
+        <input type="text" id="fortniteUser" placeholder="Epic name" value="Vortex_77">
+      </div>
+      <button class="btn-create" id="createMatchBtn"><i class="fas fa-plus"></i> create match</button>
+    </div>
+    <div style="margin-top:0.6rem; font-size:0.8rem; color:#666; display:flex; gap:20px; flex-wrap:wrap;">
+      <span><i class="fas fa-info-circle" style="color:#d4af37;"></i> winner takes pot</span>
+      <span><i class="fas fa-lock" style="color:#d4af37;"></i> tokens locked</span>
+    </div>
+  </div>
 
-        <div class="match-grid" id="matchGrid">
-            <!-- dynamic cards injected here -->
-            <div class="empty-state">
-                <i class="fas fa-ghost"></i>
-                <span>no matches yet — create one above</span>
-            </div>
-        </div>
+  <!-- MATCH LIST -->
+  <div class="match-header">
+    <h2><i class="fas fa-gamepad"></i> live matches</h2>
+    <span class="match-count" id="matchCount">0 matches</span>
+  </div>
+  <div class="match-grid" id="matchGrid">
+    <div class="empty-state"><i class="fas fa-skull"></i><span>no matches — create one</span></div>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div class="chat-panel" id="chatPanel" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+      <span style="color:#d4af37; font-weight:500;">match chat · <span id="chatMatchId">#</span></span>
+      <button id="closeChatBtn" style="background:none; border:1px solid #2a2a2a; color:#888; border-radius:40px; padding:0.2rem 1.2rem; cursor:pointer;">close</button>
+    </div>
+    <div class="chat-box" id="chatMessages"><div class="msg system">system: join the match to chat</div></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="type message...">
+      <button id="sendChatBtn">send</button>
     </div>
 
-    <script>
-        (function() {
-            // ---------- state ----------
-            let matches = [];  // each: { id, type, entryFee, creator, createdAt, status }
+    <!-- PROOF UPLOAD SECTION -->
+    <div class="proof-section" id="proofSection">
+      <label><i class="fas fa-image"></i> Upload proof of your win (screenshot):</label>
+      <input type="file" id="proofFile" accept="image/*">
+      <div class="proof-actions">
+        <button id="submitProofBtn"><i class="fas fa-check"></i> Submit proof & call staff</button>
+        <button class="cancel-proof" id="cancelProofBtn">Cancel</button>
+      </div>
+    </div>
 
-            // DOM refs
-            const matchGrid = document.getElementById('matchGrid');
-            const matchCount = document.getElementById('matchCount');
-            const totalTokenDisplay = document.getElementById('totalTokenDisplay');
+    <div class="match-actions">
+      <button class="win-btn" id="winBtn"><i class="fas fa-trophy"></i> we won</button>
+      <button class="lose-btn" id="loseBtn"><i class="fas fa-flag"></i> we lost</button>
+      <button class="end-btn" id="endMatchBtn">end match</button>
+      <button class="call-staff-btn" id="callStaffBtn"><i class="fas fa-exclamation-triangle"></i> Call Staff</button>
+    </div>
 
-            const matchType = document.getElementById('matchType');
-            const entryFee = document.getElementById('entryFee');
-            const fortniteUser = document.getElementById('fortniteUser');
-            const createBtn = document.getElementById('createMatchBtn');
+    <!-- STAFF RESOLUTION PANEL -->
+    <div class="staff-panel" id="staffPanel">
+      <h3><i class="fas fa-shield-alt"></i> Staff Resolution</h3>
+      <div class="staff-info" id="staffInfo">
+        <div><span class="label">Match ID:</span> <span class="value" id="staffMatchId">-</span></div>
+        <div><span class="label">Teams:</span> <span class="value" id="staffTeams">-</span></div>
+        <div><span class="label">Votes:</span> <span class="value" id="staffVotes">-</span></div>
+        <div><span class="label">Proof:</span> <span class="value" id="staffProof">-</span></div>
+      </div>
+      <div class="staff-actions">
+        <button class="resolve-split" id="resolveSplit"><i class="fas fa-arrows-left-right"></i> Split Tokens (50/50)</button>
+        <button class="resolve-team1" id="resolveTeam1"><i class="fas fa-crown"></i> Award Team 1</button>
+        <button class="resolve-team2" id="resolveTeam2"><i class="fas fa-crown"></i> Award Team 2</button>
+        <button class="resolve-void" id="resolveVoid"><i class="fas fa-ban"></i> Void Match</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-            // helpers
-            function formatToken(val) {
-                return Number(val).toFixed(2);
-            }
+<script>
+  (function() {
+    // ---------- HARDCODED WEBHOOK ----------
+    const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1523567476669943888/FSCD4PnVSuTHl80EsFmCK03cvTPeXo8Eww2rtuKcaeH9NfhpVMZSf5n_W5-xmrJIrAqk';
 
-            function updateStats() {
-                // total token pool = sum of entryFee * 2 (because each player pays entry, but we display as "pot" per match)
-                // for simplicity: total tokens = sum of all entry fees * 2 (as if both sides pay)
-                // but we want to show "token pool" as total tokens in all matches
-                let total = 0;
-                matches.forEach(m => {
-                    total += m.entryFee * 2;  // both sides contribute
-                });
-                totalTokenDisplay.textContent = formatToken(total);
+    // ---------- HARDCODED STAFF ACCOUNT ----------
+    const STAFF_USERNAME = 'EvalStaff';
+    const STAFF_PASSWORD = 'Evaltweaks50sdkdgeneratedkeypasswordcanthaveaccess111';
 
-                // match count
-                matchCount.textContent = matches.length + ' match' + (matches.length !== 1 ? 'es' : '');
-            }
+    // ---------- STATE ----------
+    let matches = [];
+    let loggedInUser = null;
+    let activeMatchId = null;
+    let chatMessages = {};
+    let isStaff = false;
+    let proofFile = null;
 
-            function renderMatches() {
-                if (matches.length === 0) {
-                    matchGrid.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-ghost"></i>
-                            <span>no matches yet — create one above</span>
-                        </div>
-                    `;
-                    updateStats();
-                    return;
-                }
+    // DOM refs
+    const matchGrid = document.getElementById('matchGrid');
+    const matchCount = document.getElementById('matchCount');
+    const totalTokenDisplay = document.getElementById('totalTokenDisplay');
+    const matchType = document.getElementById('matchType');
+    const entryFee = document.getElementById('entryFee');
+    const fortniteUser = document.getElementById('fortniteUser');
+    const createBtn = document.getElementById('createMatchBtn');
+    const authStatus = document.getElementById('authStatus');
+    const regUser = document.getElementById('regUser');
+    const regPass = document.getElementById('regPass');
+    const registerBtn = document.getElementById('registerBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const staffBadge = document.getElementById('staffBadge');
 
-                let html = '';
-                matches.forEach((match, index) => {
-                    // determine mode label
-                    const modeLabel = match.type.toUpperCase();
-                    // entry fee per player
-                    const fee = formatToken(match.entryFee);
-                    // total pot = fee * 2 (for 2 players) but we show as "pot"
-                    const pot = formatToken(match.entryFee * 2);
+    const chatPanel = document.getElementById('chatPanel');
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendChatBtn = document.getElementById('sendChatBtn');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    const chatMatchId = document.getElementById('chatMatchId');
+    const winBtn = document.getElementById('winBtn');
+    const loseBtn = document.getElementById('loseBtn');
+    const endMatchBtn = document.getElementById('endMatchBtn');
+    const callStaffBtn = document.getElementById('callStaffBtn');
 
-                    // fortnite user: use the creator's name, or fallback
-                    const user = match.creator || 'unknown';
+    const proofSection = document.getElementById('proofSection');
+    const proofFileInput = document.getElementById('proofFile');
+    const submitProofBtn = document.getElementById('submitProofBtn');
+    const cancelProofBtn = document.getElementById('cancelProofBtn');
 
-                    html += `
-                        <div class="match-card" data-id="${match.id}">
-                            <div class="match-title">
-                                <span class="mode-badge"><i class="fas fa-crosshairs"></i> ${modeLabel}</span>
-                                <span class="token-pot"><i class="fas fa-coins"></i> ${pot}</span>
-                            </div>
-                            <div class="match-details">
-                                <div><i class="fas fa-user"></i> creator: <strong style="color:white;">${user}</strong></div>
-                                <div style="display:flex; flex-wrap:wrap; gap: 6px 12px; margin-top: 4px;">
-                                    <span><i class="fas fa-ticket-alt"></i> entry: <span class="entry-fee">${fee} tokens</span></span>
-                                    <span><i class="fas fa-trophy"></i> winner takes ${pot}</span>
-                                </div>
-                                <div class="fortnite-user">
-                                    <i class="fab fa-fort-awesome"></i> ${user}
-                                </div>
-                            </div>
-                            <div class="match-footer">
-                                <span><i class="far fa-clock"></i> ${new Date(match.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
-                                <span class="status"><i class="fas fa-circle" style="color: #66bb6a; font-size: 0.6rem;"></i> open</span>
-                            </div>
-                        </div>
-                    `;
-                });
+    const staffPanel = document.getElementById('staffPanel');
+    const staffMatchId = document.getElementById('staffMatchId');
+    const staffTeams = document.getElementById('staffTeams');
+    const staffVotes = document.getElementById('staffVotes');
+    const staffProof = document.getElementById('staffProof');
+    const resolveSplit = document.getElementById('resolveSplit');
+    const resolveTeam1 = document.getElementById('resolveTeam1');
+    const resolveTeam2 = document.getElementById('resolveTeam2');
+    const resolveVoid = document.getElementById('resolveVoid');
 
-                matchGrid.innerHTML = html;
-                updateStats();
-            }
+    // ---------- WEBHOOK ----------
+    async function sendWebhook(data) {
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        console.log('Webhook sent:', data);
+        return true;
+      } catch (error) {
+        console.error('Webhook failed:', error);
+        return false;
+      }
+    }
 
-            // create match
-            function createMatch() {
-                // get values
-                const type = matchType.value;
-                let fee = parseFloat(entryFee.value);
-                if (isNaN(fee) || fee <= 0) {
-                    alert('Please enter a valid entry fee (e.g. 0.50)');
-                    return;
-                }
-                // cap to 2 decimals
-                fee = Math.round(fee * 100) / 100;
+    // ---------- HELPERS ----------
+    function formatToken(v) { return Number(v).toFixed(2); }
 
-                let user = fortniteUser.value.trim();
-                if (user === '') {
-                    alert('Please enter your Fortnite user name.');
-                    return;
-                }
+    function generateMatchId() {
+      return Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 8);
+    }
 
-                // build match object
-                const newMatch = {
-                    id: Date.now() + '_' + Math.random().toString(36).substring(2, 6),
-                    type: type,
-                    entryFee: fee,
-                    creator: user,
-                    createdAt: Date.now(),
-                    status: 'open'
-                };
+    function updateStats() {
+      let total = 0;
+      matches.forEach(m => { if (!m.voided) total += m.entryFee * 2; });
+      totalTokenDisplay.textContent = formatToken(total);
+      matchCount.textContent = matches.length + ' match' + (matches.length !== 1 ? 'es' : '');
+    }
 
-                matches.unshift(newMatch); // newest first
-                renderMatches();
+    function renderMatches() {
+      if (matches.length === 0) {
+        matchGrid.innerHTML = `<div class="empty-state"><i class="fas fa-skull"></i><span>no matches — create one</span></div>`;
+        updateStats();
+        return;
+      }
+      let html = '';
+      matches.forEach(m => {
+        const pot = formatToken(m.entryFee * 2);
+        const user = m.creator || 'unknown';
+        const isEnded = m.ended || false;
+        const isDispute = m.dispute || false;
+        const isVoided = m.voided || false;
+        let statusText = 'open';
+        let statusColor = '#d4af37';
+        let extraClass = '';
+        if (isVoided) { statusText = 'voided'; statusColor = '#666'; }
+        else if (isEnded) { statusText = 'ended'; statusColor = '#666'; }
+        else if (isDispute) { statusText = 'dispute'; statusColor = '#ff4444'; extraClass = 'dispute'; }
 
-                // optional: reset fee to default but keep user
-                // we don't reset user, but we can set fee back to 0.50 as placeholder
-                // but it's fine to keep last value.
-                // just a tiny UX: set fee to 0.50 if it was empty
-                if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) {
-                    entryFee.value = '0.50';
-                }
-                // keep user as is
-            }
+        const disputeTag = isDispute ? `<div class="dispute-tag"><i class="fas fa-exclamation-triangle"></i> DISPUTE</div>` : '';
 
-            // event listeners
-            createBtn.addEventListener('click', createMatch);
+        html += `
+          <div class="match-card ${extraClass}" data-id="${m.id}">
+            <div class="match-title">
+              <span class="mode-badge"><i class="fas fa-crosshairs"></i> ${m.type.toUpperCase()}</span>
+              <span class="token-pot"><i class="fas fa-coins"></i> ${isVoided ? 'VOIDED' : pot}</span>
+            </div>
+            <div class="match-details">
+              <div><i class="fas fa-user"></i> creator: <strong style="color:white;">${user}</strong></div>
+              <div style="display:flex; flex-wrap:wrap; gap:6px 12px; margin-top:4px;">
+                <span><i class="fas fa-ticket-alt"></i> entry: <span class="entry-fee">${formatToken(m.entryFee)} tokens</span></span>
+                ${!isVoided ? `<span><i class="fas fa-trophy"></i> winner takes ${pot}</span>` : ''}
+              </div>
+              ${disputeTag}
+              <div class="fortnite-user"><i class="fab fa-fort-awesome"></i> ${user}</div>
+              <div style="font-size:0.7rem; color:#666; margin-top:4px;">ID: ${m.id.substring(0,8)}</div>
+            </div>
+            <div class="match-footer">
+              <span><i class="far fa-clock"></i> ${new Date(m.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+              <span class="status ${isDispute ? 'dispute-status' : ''}"><i class="fas fa-circle" style="color:${statusColor};font-size:0.6rem;"></i> ${statusText}</span>
+            </div>
+            ${!isEnded && !isVoided ? `<button class="join-match-btn" style="margin-top:10px; background:#1a1a1a; border:1px solid #b8860b; color:#f0e6d0; border-radius:40px; padding:0.3rem 0; cursor:pointer; width:100%;">join & chat</button>` : ''}
+          </div>
+        `;
+      });
+      matchGrid.innerHTML = html;
+      updateStats();
 
-            // enter key on any input
-            document.querySelectorAll('#matchType, #entryFee, #fortniteUser').forEach(el => {
-                el.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        createMatch();
-                    }
-                });
-            });
+      document.querySelectorAll('.join-match-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const card = this.closest('.match-card');
+          const id = card.dataset.id;
+          const match = matches.find(m => m.id === id);
+          if (!match) return alert('match not found');
+          if (!loggedInUser) return alert('please login first');
+          if (match.ended || match.voided) return alert('this match is no longer active');
+          openChat(match.id);
+        });
+      });
+    }
 
-            // seed with two example matches (so UI looks alive)
-            function seedMatches() {
-                const now = Date.now();
-                matches = [
-                    {
-                        id: 'seed1',
-                        type: '2v2',
-                        entryFee: 0.50,
-                        creator: 'Ninja_Elite',
-                        createdAt: now - 120000,
-                        status: 'open'
-                    },
-                    {
-                        id: 'seed2',
-                        type: '1v1',
-                        entryFee: 1.25,
-                        creator: 'SniperWolf',
-                        createdAt: now - 350000,
-                        status: 'open'
-                    },
-                    {
-                        id: 'seed3',
-                        type: '3v3',
-                        entryFee: 0.75,
-                        creator: 'Bugha_22',
-                        createdAt: now - 700000,
-                        status: 'open'
-                    }
-                ];
-                renderMatches();
-            }
+    // ---------- CHAT ----------
+    function openChat(matchId) {
+      activeMatchId = matchId;
+      chatPanel.style.display = 'block';
+      chatMatchId.textContent = matchId.substring(0, 8);
+      if (!chatMessages[matchId]) chatMessages[matchId] = [];
+      renderChatMessages(matchId);
 
-            // initial seed
-            seedMatches();
+      // Show staff panel if staff
+      const match = matches.find(m => m.id === matchId);
+      if (isStaff && match && match.dispute) {
+        showStaffPanel(match);
+      } else {
+        staffPanel.classList.remove('show');
+      }
 
-            // also set default user if empty
-            if (fortniteUser.value === '') {
-                fortniteUser.value = 'Vortex_77';
-            }
+      const msgs = chatMessages[matchId];
+      if (!msgs.some(m => m.system && m.text.includes('joined'))) {
+        msgs.push({ system: true, text: `${loggedInUser} joined the match`, time: Date.now() });
+        renderChatMessages(matchId);
+      }
+    }
 
-            // extra: if entry fee empty, set default
-            if (entryFee.value === '') {
-                entryFee.value = '0.50';
-            }
+    function renderChatMessages(matchId) {
+      const msgs = chatMessages[matchId] || [];
+      chatMessagesDiv.innerHTML = msgs.map(m => {
+        let className = 'msg';
+        if (m.system) className += ' system';
+        if (m.dispute) className += ' dispute';
+        if (m.staff) className += ' staff';
+        if (m.system) return `<div class="${className}">${m.text}</div>`;
+        return `<div class="${className}"><strong>${m.user}</strong> ${m.text}</div>`;
+      }).join('');
+      chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    }
 
-            // expose for debugging
-            window.__matches = matches;
-        })();
-    </script>
+    function sendChatMessage() {
+      if (!activeMatchId || !loggedInUser) return alert('login and join a match');
+      const text = chatInput.value.trim();
+      if (!text) return;
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push({ user: loggedInUser, text: text, time: Date.now() });
+      chatMessages[activeMatchId] = msgs;
+      renderChatMessages(activeMatchId);
+      chatInput.value = '';
+    }
+
+    // ---------- PROOF & STAFF CALL ----------
+    function showProofSection() {
+      if (!activeMatchId) return alert('join a match first');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('match not found');
+      if (match.ended || match.voided) return alert('match already ended');
+      proofSection.classList.add('show');
+    }
+
+    function cancelProof() {
+      proofSection.classList.remove('show');
+      proofFileInput.value = '';
+      proofFile = null;
+    }
+
+    async function submitProof() {
+      if (!activeMatchId || !loggedInUser) return alert('login and join a match');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('match not found');
+      if (match.ended || match.voided) return alert('match already ended');
+
+      const file = proofFileInput.files[0];
+      if (!file) return alert('Please select a proof image');
+
+      // Read file as base64 for webhook
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const proofData = e.target.result; // base64
+        proofFile = proofData;
+
+        // Add to chat
+        const msgs = chatMessages[activeMatchId] || [];
+        msgs.push({ system: true, dispute: true, text: `⚠️ ${loggedInUser} called STAFF with proof!` });
+        chatMessages[activeMatchId] = msgs;
+        renderChatMessages(activeMatchId);
+
+        // Send webhook
+        const webhookData = {
+          event: 'staff_call',
+          matchId: match.id,
+          matchType: match.type,
+          entryFee: match.entryFee,
+          creator: match.creator,
+          calledBy: loggedInUser,
+          wins: match.wins || [],
+          losses: match.losses || [],
+          proof: proofData.substring(0, 200) + '...', // truncated for display
+          proofFull: proofData,
+          chatLog: chatMessages[match.id] || [],
+          timestamp: new Date().toISOString()
+        };
+        await sendWebhook(webhookData);
+
+        // Mark as dispute
+        match.dispute = true;
+        renderMatches();
+
+        // If staff is logged in, show staff panel
+        if (isStaff) {
+          showStaffPanel(match);
+        }
+
+        proofSection.classList.remove('show');
+        proofFileInput.value = '';
+        proofFile = null;
+
+        alert('Staff notified! They will review the proof.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ---------- STAFF PANEL ----------
+    function showStaffPanel(match) {
+      if (!isStaff) return;
+      staffPanel.classList.add('show');
+      staffMatchId.textContent = match.id;
+      staffTeams.textContent = `${match.type} · Creator: ${match.creator}`;
+      staffVotes.textContent = `Wins: ${(match.wins || []).join(', ') || 'none'} | Losses: ${(match.losses || []).join(', ') || 'none'}`;
+      staffProof.textContent = match.proofSubmitted ? '📷 Proof submitted' : 'No proof yet';
+    }
+
+    // ---------- STAFF RESOLUTIONS ----------
+    async function resolveMatch(matchId, resolution) {
+      const match = matches.find(m => m.id === matchId);
+      if (!match) return;
+
+      match.ended = true;
+      match.resolved = true;
+      match.resolution = resolution;
+
+      const msgs = chatMessages[matchId] || [];
+      msgs.push({ system: true, staff: true, text: `👑 STAFF RESOLUTION: ${resolution}` });
+      chatMessages[matchId] = msgs;
+      renderChatMessages(matchId);
+
+      // Send webhook
+      const webhookData = {
+        event: 'staff_resolution',
+        matchId: match.id,
+        resolution: resolution,
+        resolvedBy: loggedInUser,
+        wins: match.wins || [],
+        losses: match.losses || [],
+        chatLog: chatMessages[match.id] || [],
+        timestamp: new Date().toISOString()
+      };
+      await sendWebhook(webhookData);
+
+      staffPanel.classList.remove('show');
+      renderMatches();
+      alert(`Match resolved: ${resolution}`);
+    }
+
+    // ---------- MATCH ACTIONS ----------
+    async function handleWin() {
+      if (!activeMatchId || !loggedInUser) return alert('join a match first');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('match gone');
+      if (match.ended || match.voided) return alert('match already ended');
+      if (!match.wins) match.wins = [];
+      if (!match.losses) match.losses = [];
+      if (match.wins.includes(loggedInUser)) return alert('you already voted win');
+      match.wins.push(loggedInUser);
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push({ system: true, text: `${loggedInUser} voted WIN` });
+      chatMessages[activeMatchId] = msgs;
+      renderChatMessages(activeMatchId);
+      checkDispute(match);
+    }
+
+    async function handleLose() {
+      if (!activeMatchId || !loggedInUser) return alert('join a match first');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('match gone');
+      if (match.ended || match.voided) return alert('match already ended');
+      if (!match.losses) match.losses = [];
+      if (!match.wins) match.wins = [];
+      if (match.losses.includes(loggedInUser)) return alert('already voted loss');
+      match.losses.push(loggedInUser);
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push({ system: true, text: `${loggedInUser} voted LOSS` });
+      chatMessages[activeMatchId] = msgs;
+      renderChatMessages(activeMatchId);
+      checkDispute(match);
+    }
+
+    async function checkDispute(match) {
+      const wins = match.wins || [];
+      const losses = match.losses || [];
+      if (wins.length > 0 && losses.length > 0) {
+        match.dispute = true;
+        renderMatches();
+
+        const msgs = chatMessages[match.id] || [];
+        msgs.push({ system: true, dispute: true, text: `⚠️ DISPUTE detected! Both teams claimed win. Staff will review.` });
+        chatMessages[match.id] = msgs;
+        renderChatMessages(match.id);
+
+        // Send webhook
+        const webhookData = {
+          event: 'dispute',
+          matchId: match.id,
+          matchType: match.type,
+          entryFee: match.entryFee,
+          creator: match.creator,
+          wins: wins,
+          losses: losses,
+          chatLog: chatMessages[match.id] || [],
+          timestamp: new Date().toISOString()
+        };
+        await sendWebhook(webhookData);
+
+        alert('Dispute detected! Staff have been notified.');
+
+        if (isStaff) {
+          showStaffPanel(match);
+        }
+      }
+    }
+
+    async function endMatch() {
+      if (!activeMatchId || !loggedInUser) return alert('join a match');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('match gone');
+      if (match.ended || match.voided) return alert('match already ended');
+
+      match.ended = true;
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push({ system: true, text: `${loggedInUser} ended the match.` });
+      chatMessages[activeMatchId] = msgs;
+      renderChatMessages(activeMatchId);
+
+      const webhookData = {
+        event: 'match_ended',
+        matchId: match.id,
+        matchType: match.type,
+        entryFee: match.entryFee,
+        creator: match.creator,
+        endedBy: loggedInUser,
+        wins: match.wins || [],
+        losses: match.losses || [],
+        chatLog: chatMessages[match.id] || [],
+        timestamp: new Date().toISOString()
+      };
+      await sendWebhook(webhookData);
+
+      activeMatchId = null;
+      chatPanel.style.display = 'none';
+      staffPanel.classList.remove('show');
+      renderMatches();
+      alert('Match ended.');
+    }
+
+    // ---------- AUTH ----------
+    function registerUser() {
+      const u = regUser.value.trim();
+      const p = regPass.value.trim();
+      if (!u || !p) return alert('enter username and password');
+      const users = JSON.parse(localStorage.getItem('evalUsers') || '{}');
+      if (users[u]) return alert('user already exists');
+      users[u] = p;
+      localStorage.setItem('evalUsers', JSON.stringify(users));
+      alert('registered! login now.');
+    }
+
+    function loginUser() {
+      const u = regUser.value.trim();
+      const p = regPass.value.trim();
+      if (!u || !p) return alert('enter credentials');
+
+      // Check staff account
+      if (u === STAFF_USERNAME && p === STAFF_PASSWORD) {
+        isStaff = true;
+        loggedInUser = u;
+        staffBadge.classList.add('show');
+        authStatus.innerHTML = `<i class="fas fa-circle" style="color:#ff4444;font-size:0.6rem;"></i> <strong style="color:#ff4444;">STAFF</strong>`;
+        fortniteUser.value = u;
+        // Show staff panel for any disputed matches
+        matches.forEach(m => {
+          if (m.dispute && !m.ended) {
+            // If staff is viewing a disputed match
+          }
+        });
+        alert('Staff logged in! You can resolve disputes.');
+        return true;
+      }
+
+      const users = JSON.parse(localStorage.getItem('evalUsers') || '{}');
+      if (users[u] && users[u] === p) {
+        isStaff = false;
+        loggedInUser = u;
+        staffBadge.classList.remove('show');
+        authStatus.innerHTML = `<i class="fas fa-circle" style="color:#d4af37;font-size:0.6rem;"></i> ${u}`;
+        fortniteUser.value = u;
+        return true;
+      } else {
+        alert('invalid credentials');
+        return false;
+      }
+    }
+
+    // ---------- CREATE MATCH ----------
+    async function createMatch() {
+      if (!loggedInUser) return alert('please login first');
+      if (isStaff) return alert('Staff cannot create matches');
+      const type = matchType.value;
+      let fee = parseFloat(entryFee.value);
+      if (isNaN(fee) || fee <= 0) return alert('valid entry fee');
+      fee = Math.round(fee * 100) / 100;
+      let user = fortniteUser.value.trim();
+      if (!user) return alert('fortnite user required');
+
+      const matchId = generateMatchId();
+      const newMatch = {
+        id: matchId,
+        type: type,
+        entryFee: fee,
+        creator: user,
+        createdAt: Date.now(),
+        status: 'open',
+        wins: [],
+        losses: [],
+        dispute: false,
+        ended: false,
+        voided: false,
+        resolved: false,
+        proofSubmitted: false
+      };
+      matches.unshift(newMatch);
+      chatMessages[newMatch.id] = [{ system: true, text: `match created by ${user}` }];
+      renderMatches();
+
+      const webhookData = {
+        event: 'match_created',
+        matchId: matchId,
+        matchType: type,
+        entryFee: fee,
+        creator: user,
+        timestamp: new Date().toISOString()
+      };
+      await sendWebhook(webhookData);
+
+      if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
+    }
+
+    // ---------- INIT ----------
+    function init() {
+      // Seed matches
+      const now = Date.now();
+      matches = [
+        { id: 'seed1', type: '2v2', entryFee: 0.50, creator: 'Ninja_Elite', createdAt: now-120000, status:'open', wins:[], losses:[], dispute:false, ended:false, voided:false, resolved:false, proofSubmitted:false },
+        { id: 'seed2', type: '1v1', entryFee: 1.25, creator: 'SniperWolf', createdAt: now-350000, status:'open', wins:[], losses:[], dispute:false, ended:false, voided:false, resolved:false, proofSubmitted:false },
+        { id: 'seed3', type: '3v3', entryFee: 0.75, creator: 'Bugha_22', createdAt: now-700000, status:'open', wins:[], losses:[], dispute:false, ended:false, voided:false, resolved:false, proofSubmitted:false }
+      ];
+      matches.forEach(m => { chatMessages[m.id] = [{ system: true, text: `match ready` }]; });
+      renderMatches();
+
+      // Event listeners
+      createBtn.addEventListener('click', createMatch);
+      registerBtn.addEventListener('click', registerUser);
+      loginBtn.addEventListener('click', loginUser);
+      sendChatBtn.addEventListener('click', sendChatMessage);
+      chatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendChatMessage(); });
+      closeChatBtn.addEventListener('click', () => { chatPanel.style.display = 'none'; activeMatchId = null; staffPanel.classList.remove('show'); });
+      winBtn.addEventListener('click', handleWin);
+      loseBtn.addEventListener('click', handleLose);
+      endMatchBtn.addEventListener('click', endMatch);
+      callStaffBtn.addEventListener('click', showProofSection);
+      cancelProofBtn.addEventListener('click', cancelProof);
+      submitProofBtn.addEventListener('click', submitProof);
+
+      // Staff resolution buttons
+      resolveSplit.addEventListener('click', () => {
+        if (activeMatchId) resolveMatch(activeMatchId, 'Split tokens 50/50');
+      });
+      resolveTeam1.addEventListener('click', () => {
+        if (activeMatchId) resolveMatch(activeMatchId, 'Team 1 awarded tokens');
+      });
+      resolveTeam2.addEventListener('click', () => {
+        if (activeMatchId) resolveMatch(activeMatchId, 'Team 2 awarded tokens');
+      });
+      resolveVoid.addEventListener('click', () => {
+        if (activeMatchId) {
+          const match = matches.find(m => m.id === activeMatchId);
+          if (match) match.voided = true;
+          resolveMatch(activeMatchId, 'Match voided - tokens returned');
+        }
+      });
+
+      // Auto-login demo
+      const users = JSON.parse(localStorage.getItem('evalUsers') || '{}');
+      if (!users['player1']) { users['player1'] = '123'; localStorage.setItem('evalUsers', JSON.stringify(users)); }
+      regUser.value = 'player1';
+      regPass.value = '123';
+      loginUser();
+    }
+
+    init();
+  })();
+</script>
 </body>
 </html>

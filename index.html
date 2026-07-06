@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eval Tokensr</title>
+  <title>Eval Tokens · Fortnite matchmaker</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -112,6 +112,23 @@
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+
+    .webhook-status {
+      font-size: 0.7rem;
+      margin-left: 0.5rem;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+    }
+    .webhook-status.success {
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+    .webhook-status.fail {
+      border-color: #ff4444;
+      color: #ff4444;
     }
 
     .auth-bar {
@@ -238,6 +255,21 @@
       box-shadow: 0 6px 0 #6a4f0a;
     }
     .btn-create:active { transform: translateY(3px); box-shadow: 0 2px 0 #6a4f0a; }
+
+    .btn-test-webhook {
+      background: #1a1a1a;
+      border: 1px solid #b8860b;
+      color: #f0e6d0;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.15s;
+    }
+    .btn-test-webhook:hover {
+      background: #b8860b;
+      color: #0b0b0b;
+    }
 
     .match-header {
       display: flex;
@@ -645,6 +677,8 @@
     <button id="loginBtn">login</button>
     <span class="auth-status" id="authStatus"><i class="fas fa-circle" style="color:#555;font-size:0.6rem;"></i> guest</span>
     <span class="sync-status" id="syncStatus"><i class="fas fa-cloud"></i> connected</span>
+    <button class="btn-test-webhook" id="testWebhookBtn"><i class="fas fa-bolt"></i> Test Webhook</button>
+    <span class="webhook-status" id="webhookStatus">⚪ idle</span>
   </div>
 
   <div class="create-section">
@@ -726,13 +760,17 @@
 <script>
   (function() {
     // ============================================================
-    // SUPABASE CREDENTIALS (YOUR PROVIDED INFO)
+    // SUPABASE CREDENTIALS
     // ============================================================
     const SUPABASE_URL = 'https://rgdkdflkviigwdtuodjy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip';
     // ============================================================
 
+    // ============================================================
+    // DISCORD WEBHOOK - REPLACE WITH YOUR ACTUAL WEBHOOK URL
+    // ============================================================
     const WEBHOOK_URL = 'https://canary.discord.com/api/webhooks/1523567476669943888/FSCD4PnVSuTHl80EsFmCK03cvTPeXo8Eww2rtuKcaeH9NfhpVMZSf5n_W5-xmrJIrAqk';
+    // ============================================================
 
     const STAFF_USERNAME = 'EvalStaff';
     const STAFF_PASSWORD = 'Evaltweaks50sdkdgeneratedkeypasswordcanthaveaccess111';
@@ -756,7 +794,6 @@
     let activeMatchId = null;
     let chatMessages = {};
     let isStaff = false;
-    let proofFile = null;
 
     // DOM refs
     const matchGrid = document.getElementById('matchGrid');
@@ -774,6 +811,7 @@
     const loginBtn = document.getElementById('loginBtn');
     const staffBadge = document.getElementById('staffBadge');
     const syncStatus = document.getElementById('syncStatus');
+    const webhookStatus = document.getElementById('webhookStatus');
 
     const chatPanel = document.getElementById('chatPanel');
     const chatMessagesDiv = document.getElementById('chatMessages');
@@ -785,6 +823,7 @@
     const loseBtn = document.getElementById('loseBtn');
     const endMatchBtn = document.getElementById('endMatchBtn');
     const callStaffBtn = document.getElementById('callStaffBtn');
+    const testWebhookBtn = document.getElementById('testWebhookBtn');
 
     const proofSection = document.getElementById('proofSection');
     const proofFileInput = document.getElementById('proofFile');
@@ -803,19 +842,61 @@
 
     // ---------- WEBHOOK ----------
     async function sendWebhook(data) {
+      webhookStatus.textContent = '⏳ sending...';
+      webhookStatus.className = 'webhook-status';
+      
       try {
+        console.log('📤 Sending webhook:', data);
+        
         const response = await fetch(WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        console.log('Webhook sent:', data);
+        
+        const responseText = await response.text();
+        console.log('📥 Webhook response:', response.status, responseText);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${responseText}`);
+        }
+        
+        webhookStatus.textContent = '✅ sent!';
+        webhookStatus.className = 'webhook-status success';
+        setTimeout(() => {
+          webhookStatus.textContent = '⚪ idle';
+          webhookStatus.className = 'webhook-status';
+        }, 5000);
+        
         return true;
       } catch (error) {
-        console.error('Webhook failed:', error);
+        console.error('❌ Webhook failed:', error);
+        webhookStatus.textContent = '❌ failed: ' + error.message;
+        webhookStatus.className = 'webhook-status fail';
+        setTimeout(() => {
+          webhookStatus.textContent = '⚪ idle';
+          webhookStatus.className = 'webhook-status';
+        }, 8000);
         return false;
       }
+    }
+
+    // ---------- TEST WEBHOOK ----------
+    async function testWebhook() {
+      const testData = {
+        content: '🧪 **Eval Tokens Webhook Test**\n\n✅ This is a test message to verify your webhook is working correctly!',
+        embeds: [{
+          title: 'Webhook Test',
+          description: 'If you see this, your webhook is configured correctly!',
+          color: 0xd4af37,
+          fields: [
+            { name: 'Status', value: '✅ Working', inline: true },
+            { name: 'Time', value: new Date().toLocaleString(), inline: true }
+          ]
+        }]
+      };
+      
+      await sendWebhook(testData);
     }
 
     // ---------- HELPERS ----------
@@ -936,63 +1017,6 @@
       }
     }
 
-    async function loadChatMessagesFromSupabase(matchId) {
-      if (!isSupabaseConnected) return;
-
-      try {
-        const { data, error } = await supabase
-          .from('chat_messages')
-          .select('*')
-          .eq('match_id', matchId)
-          .order('created_at', { ascending: true });
-
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-          chatMessages[matchId] = data.map(m => ({
-            user: m.username,
-            text: m.text,
-            system: m.system || false,
-            dispute: m.dispute || false,
-            staff: m.staff || false,
-            time: m.created_at
-          }));
-          if (activeMatchId === matchId) {
-            renderChatMessages(matchId);
-          }
-        }
-      } catch (e) {
-        console.error('Error loading chat from Supabase:', e);
-      }
-    }
-
-    // ---------- SUBSCRIPTION FOR REAL-TIME UPDATES ----------
-    function subscribeToMatches() {
-      if (!isSupabaseConnected) return;
-
-      const channel = supabase
-        .channel('matches_changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'matches'
-          },
-          async (payload) => {
-            console.log('Match update received:', payload);
-            await loadMatchesFromSupabase();
-          }
-        )
-        .subscribe((status) => {
-          console.log('Subscription status:', status);
-          if (status === 'SUBSCRIBED') {
-            syncStatus.textContent = '🔄 live';
-            syncStatus.className = 'sync-status';
-          }
-        });
-    }
-
     // ---------- RENDER ----------
     function renderMatches() {
       const activeMatches = matches.filter(m => !m.ended && !m.voided);
@@ -1063,10 +1087,8 @@
       
       if (!chatMessages[matchId]) {
         chatMessages[matchId] = [];
-        loadChatMessagesFromSupabase(matchId);
-      } else {
-        renderChatMessages(matchId);
       }
+      renderChatMessages(matchId);
 
       const match = matches.find(m => m.id === matchId);
       if (isStaff && match && match.dispute) {
@@ -1124,7 +1146,6 @@
     function cancelProof() {
       proofSection.classList.remove('show');
       proofFileInput.value = '';
-      proofFile = null;
     }
 
     async function submitProof() {
@@ -1152,19 +1173,28 @@
         await saveMatchToSupabase(match);
         await loadMatchesFromSupabase();
 
-        const webhookData = {
-          event: 'staff_call',
-          matchId: match.id,
-          matchType: match.type,
-          entryFee: match.entryFee,
-          creator: match.creator,
-          calledBy: loggedInUser,
-          wins: match.wins || [],
-          losses: match.losses || [],
-          proof: proofData.substring(0, 200) + '...',
-          chatLog: chatMessages[match.id] || [],
+        // Send Discord embed
+        const embed = {
+          title: '🚨 STAFF CALLED - DISPUTE',
+          color: 0xff4444,
+          fields: [
+            { name: 'Match ID', value: match.id, inline: false },
+            { name: 'Format', value: match.type, inline: true },
+            { name: 'Entry Fee', value: `${formatToken(match.entryFee)} tokens`, inline: true },
+            { name: 'Creator', value: match.creator, inline: true },
+            { name: 'Called By', value: loggedInUser, inline: true },
+            { name: 'Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
+            { name: 'Losses', value: (match.losses || []).join(', ') || 'None', inline: true },
+            { name: 'Proof', value: '📷 Image attached below (base64)', inline: false }
+          ],
           timestamp: new Date().toISOString()
         };
+
+        const webhookData = {
+          embeds: [embed],
+          content: `🔔 **STAFF ALERT** - A player has called for staff intervention in match **${match.id.substring(0,8)}**`
+        };
+        
         await sendWebhook(webhookData);
 
         if (isStaff) {
@@ -1173,7 +1203,6 @@
 
         proofSection.classList.remove('show');
         proofFileInput.value = '';
-        proofFile = null;
         alert('Staff notified! They will review the proof.');
       };
       reader.readAsDataURL(file);
@@ -1206,17 +1235,20 @@
 
       await saveMatchToSupabase(match);
 
-      const webhookData = {
-        event: 'staff_resolution',
-        matchId: match.id,
-        resolution: resolution,
-        resolvedBy: loggedInUser,
-        wins: match.wins || [],
-        losses: match.losses || [],
-        chatLog: chatMessages[match.id] || [],
+      const embed = {
+        title: '⚖️ STAFF RESOLUTION',
+        color: 0xd4af37,
+        fields: [
+          { name: 'Match ID', value: match.id, inline: false },
+          { name: 'Resolution', value: resolution, inline: true },
+          { name: 'Resolved By', value: loggedInUser, inline: true },
+          { name: 'Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
+          { name: 'Losses', value: (match.losses || []).join(', ') || 'None', inline: true }
+        ],
         timestamp: new Date().toISOString()
       };
-      await sendWebhook(webhookData);
+
+      await sendWebhook({ embeds: [embed] });
 
       staffPanel.classList.remove('show');
       await loadMatchesFromSupabase();
@@ -1279,18 +1311,21 @@
         renderChatMessages(match.id);
         await saveChatMessageToSupabase(match.id, disputeMsg);
 
-        const webhookData = {
-          event: 'dispute',
-          matchId: match.id,
-          matchType: match.type,
-          entryFee: match.entryFee,
-          creator: match.creator,
-          wins: wins,
-          losses: losses,
-          chatLog: chatMessages[match.id] || [],
+        const embed = {
+          title: '⚠️ DISPUTE DETECTED',
+          color: 0xff4444,
+          fields: [
+            { name: 'Match ID', value: match.id, inline: false },
+            { name: 'Format', value: match.type, inline: true },
+            { name: 'Entry Fee', value: `${formatToken(match.entryFee)} tokens`, inline: true },
+            { name: 'Creator', value: match.creator, inline: true },
+            { name: 'Wins', value: wins.join(', ') || 'None', inline: true },
+            { name: 'Losses', value: losses.join(', ') || 'None', inline: true }
+          ],
           timestamp: new Date().toISOString()
         };
-        await sendWebhook(webhookData);
+
+        await sendWebhook({ embeds: [embed] });
 
         alert('Dispute detected! Staff have been notified.');
         if (isStaff) {
@@ -1314,19 +1349,19 @@
       await saveChatMessageToSupabase(activeMatchId, endMsg);
       await saveMatchToSupabase(match);
 
-      const webhookData = {
-        event: 'match_ended',
-        matchId: match.id,
-        matchType: match.type,
-        entryFee: match.entryFee,
-        creator: match.creator,
-        endedBy: loggedInUser,
-        wins: match.wins || [],
-        losses: match.losses || [],
-        chatLog: chatMessages[match.id] || [],
+      const embed = {
+        title: '🏁 Match Ended',
+        color: 0x888888,
+        fields: [
+          { name: 'Match ID', value: match.id, inline: false },
+          { name: 'Ended By', value: loggedInUser, inline: true },
+          { name: 'Final Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
+          { name: 'Final Losses', value: (match.losses || []).join(', ') || 'None', inline: true }
+        ],
         timestamp: new Date().toISOString()
       };
-      await sendWebhook(webhookData);
+
+      await sendWebhook({ embeds: [embed] });
 
       activeMatchId = null;
       chatPanel.style.display = 'none';
@@ -1435,15 +1470,21 @@
       const saved = await saveMatchToSupabase(newMatch);
       if (saved) {
         await loadMatchesFromSupabase();
-        const webhookData = {
-          event: 'match_created',
-          matchId: matchId,
-          matchType: type,
-          entryFee: fee,
-          creator: user,
+        
+        const embed = {
+          title: '🎮 New Match Created',
+          color: 0xd4af37,
+          fields: [
+            { name: 'Match ID', value: matchId, inline: false },
+            { name: 'Format', value: type, inline: true },
+            { name: 'Entry Fee', value: `${formatToken(fee)} tokens`, inline: true },
+            { name: 'Creator', value: user, inline: true },
+            { name: 'Total Pot', value: `${formatToken(fee * 2)} tokens`, inline: true }
+          ],
           timestamp: new Date().toISOString()
         };
-        await sendWebhook(webhookData);
+
+        await sendWebhook({ embeds: [embed] });
         
         if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
         alert('Match created!');
@@ -1458,7 +1499,23 @@
       await loadMatchesFromSupabase();
       
       // Subscribe to real-time updates
-      subscribeToMatches();
+      if (isSupabaseConnected) {
+        supabase
+          .channel('matches_changes')
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'matches'
+            },
+            async (payload) => {
+              console.log('Match update received:', payload);
+              await loadMatchesFromSupabase();
+            }
+          )
+          .subscribe();
+      }
 
       // Event listeners
       createBtn.addEventListener('click', createMatch);
@@ -1477,6 +1534,7 @@
       callStaffBtn.addEventListener('click', showProofSection);
       cancelProofBtn.addEventListener('click', cancelProof);
       submitProofBtn.addEventListener('click', submitProof);
+      testWebhookBtn.addEventListener('click', testWebhook);
 
       resolveSplit.addEventListener('click', () => {
         if (activeMatchId) resolveMatch(activeMatchId, 'Split tokens 50/50');
@@ -1495,7 +1553,7 @@
         }
       });
 
-      // Auto-login demo if no users exist
+      // Auto-login demo
       try {
         const { data } = await supabase.from('users').select('*').limit(1);
         if (!data || data.length === 0) {

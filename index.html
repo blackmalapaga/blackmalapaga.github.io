@@ -178,7 +178,42 @@
       font-weight: 500;
     }
 
-    /* STAFF JOIN SECTION */
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 0.5rem;
+    }
+    .nav-tabs button {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.15s;
+      font-weight: 500;
+    }
+    .nav-tabs button:hover {
+      border-color: #b8860b;
+      color: #d4af37;
+    }
+    .nav-tabs button.active {
+      background: #b8860b;
+      border-color: #d4af37;
+      color: #0b0b0b;
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Staff Join Section */
     .staff-join-section {
       background: #0f0f0f;
       border: 1px solid #ff4444;
@@ -467,8 +502,8 @@
     }
     .empty-state i { font-size: 2.5rem; color: #b8860b; margin-bottom: 0.5rem; display: block; }
 
-    /* STAFF MATCH UI - Full page takeover */
-    .staff-match-ui {
+    /* MATCH UI - Same for players and staff */
+    .match-ui {
       display: none;
       position: fixed;
       top: 0;
@@ -480,42 +515,42 @@
       padding: 2rem;
       overflow-y: auto;
     }
-    .staff-match-ui.show {
+    .match-ui.show {
       display: block;
     }
-    .staff-match-ui .staff-header {
+    .match-ui .match-header-ui {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #ff4444;
+      border-bottom: 2px solid #b8860b;
       padding-bottom: 1rem;
       margin-bottom: 2rem;
     }
-    .staff-match-ui .staff-header h2 {
-      color: #ff4444;
+    .match-ui .match-header-ui h2 {
+      color: #d4af37;
       font-size: 2rem;
     }
-    .staff-match-ui .staff-header .staff-match-id {
+    .match-ui .match-header-ui .match-id-display {
       color: #888;
       font-size: 0.9rem;
     }
-    .staff-match-ui .staff-close-btn {
+    .match-ui .match-close-btn {
       background: #1a1a1a;
-      border: 1px solid #ff4444;
-      color: #ff4444;
+      border: 1px solid #2a2a2a;
+      color: #888;
       padding: 0.5rem 1.5rem;
       border-radius: 40px;
       cursor: pointer;
       font-weight: 600;
     }
-    .staff-match-ui .staff-close-btn:hover {
-      background: #ff4444;
-      color: #0b0b0b;
+    .match-ui .match-close-btn:hover {
+      border-color: #b8860b;
+      color: #d4af37;
     }
 
-    .staff-match-ui .staff-match-info {
+    .match-ui .match-info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1rem;
       background: #111;
       padding: 1.5rem;
@@ -523,51 +558,51 @@
       border: 1px solid #2a2a2a;
       margin-bottom: 2rem;
     }
-    .staff-match-ui .staff-match-info .info-item {
+    .match-ui .match-info-grid .info-item {
       color: #ccc;
     }
-    .staff-match-ui .staff-match-info .info-item .label {
+    .match-ui .match-info-grid .info-item .label {
       color: #888;
       font-size: 0.7rem;
       text-transform: uppercase;
     }
-    .staff-match-ui .staff-match-info .info-item .value {
+    .match-ui .match-info-grid .info-item .value {
       color: white;
       font-weight: 500;
       font-size: 1.1rem;
     }
 
-    .staff-match-ui .staff-chat-section {
+    .match-ui .chat-section {
       background: #0c0c0c;
       border-radius: 1.5rem;
       border: 1px solid #2a2a2a;
       padding: 1.5rem;
       margin-bottom: 2rem;
     }
-    .staff-match-ui .staff-chat-section h3 {
+    .match-ui .chat-section h3 {
       color: #d4af37;
       margin-bottom: 1rem;
     }
-    .staff-match-ui .staff-chat-box {
+    .match-ui .chat-box {
       max-height: 300px;
       overflow-y: auto;
       margin-bottom: 1rem;
     }
-    .staff-match-ui .staff-chat-box .msg {
+    .match-ui .chat-box .msg {
       padding: 0.3rem 0;
       border-bottom: 1px solid #1a1a1a;
       color: #ddd;
     }
-    .staff-match-ui .staff-chat-box .msg strong { color: #d4af37; }
-    .staff-match-ui .staff-chat-box .msg.system { color: #888; font-style: italic; }
-    .staff-match-ui .staff-chat-box .msg.dispute { color: #ff6b6b; }
-    .staff-match-ui .staff-chat-box .msg.staff { color: #ff4444; font-weight: 600; }
+    .match-ui .chat-box .msg strong { color: #d4af37; }
+    .match-ui .chat-box .msg.system { color: #888; font-style: italic; }
+    .match-ui .chat-box .msg.dispute { color: #ff6b6b; }
+    .match-ui .chat-box .msg.staff { color: #ff4444; font-weight: 600; }
 
-    .staff-match-ui .staff-chat-input {
+    .match-ui .chat-input-row {
       display: flex;
       gap: 0.8rem;
     }
-    .staff-match-ui .staff-chat-input input {
+    .match-ui .chat-input-row input {
       flex: 1;
       background: #141414;
       border: 1px solid #2a2a2a;
@@ -576,25 +611,122 @@
       color: white;
       outline: none;
     }
-    .staff-match-ui .staff-chat-input input:focus { border-color: #ff4444; }
-    .staff-match-ui .staff-chat-input button {
+    .match-ui .chat-input-row input:focus { border-color: #b8860b; }
+    .match-ui .chat-input-row button {
       background: #1a1a1a;
-      border: 1px solid #ff4444;
+      border: 1px solid #b8860b;
       color: #f0e6d0;
       padding: 0.5rem 1.6rem;
       border-radius: 40px;
       cursor: pointer;
       transition: 0.15s;
     }
-    .staff-match-ui .staff-chat-input button:hover { background: #ff4444; color: #0b0b0b; }
+    .match-ui .chat-input-row button:hover { background: #b8860b; color: #0b0b0b; }
 
-    .staff-match-ui .staff-actions {
+    .match-ui .proof-section {
+      background: #0a0a0a;
+      border-radius: 1rem;
+      border: 1px solid #2a2a2a;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .match-ui .proof-section.show {
+      display: block;
+    }
+    .match-ui .proof-section label {
+      color: #ddd;
+      font-size: 0.85rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .match-ui .proof-section input[type="file"] {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      color: white;
+      width: 100%;
+      cursor: pointer;
+    }
+    .match-ui .proof-section input[type="file"]::file-selector-button {
+      background: #1a1a1a;
+      border: 1px solid #b8860b;
+      color: #f0e6d0;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+    .match-ui .proof-section .proof-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.8rem;
+    }
+    .match-ui .proof-section .proof-actions button {
+      padding: 0.4rem 1.6rem;
+      border-radius: 40px;
+      border: 1px solid #b8860b;
+      background: #1a1a1a;
+      color: #f0e6d0;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .match-ui .proof-section .proof-actions button:hover {
+      background: #b8860b;
+      color: #0b0b0b;
+    }
+    .match-ui .proof-section .proof-actions .cancel-proof {
+      border-color: #5a5a5a;
+      color: #888;
+    }
+
+    .match-ui .match-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
+      margin-top: 1rem;
     }
-    .staff-match-ui .staff-actions button {
-      padding: 0.7rem 2rem;
+    .match-ui .match-actions button {
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      border: 1px solid #2a2a2a;
+      background: #141414;
+      color: #ddd;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.15s;
+      flex: 1;
+      min-width: 120px;
+    }
+    .match-ui .match-actions button:hover { border-color: #b8860b; color: #d4af37; }
+    .match-ui .match-actions .win-btn { border-color: #b8860b; color: #d4af37; }
+    .match-ui .match-actions .lose-btn { border-color: #5a5a5a; color: #aaa; }
+    .match-ui .match-actions .end-btn { border-color: #5a3a0a; color: #b8860b; }
+    .match-ui .match-actions .call-staff-btn { border-color: #ff4444; color: #ff4444; }
+    .match-ui .match-actions .call-staff-btn:hover { background: #ff4444; color: #0b0b0b; }
+
+    /* Staff resolution buttons in match UI */
+    .match-ui .staff-resolution-section {
+      display: none;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid #ff4444;
+    }
+    .match-ui .staff-resolution-section.show {
+      display: block;
+    }
+    .match-ui .staff-resolution-section h3 {
+      color: #ff4444;
+      margin-bottom: 1rem;
+    }
+    .match-ui .staff-resolution-section .staff-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .match-ui .staff-resolution-section .staff-actions button {
+      padding: 0.6rem 1.8rem;
       border-radius: 40px;
       border: 1px solid #2a2a2a;
       background: #141414;
@@ -605,15 +737,15 @@
       flex: 1;
       min-width: 150px;
     }
-    .staff-match-ui .staff-actions button:hover { transform: scale(1.02); }
-    .staff-match-ui .staff-actions .resolve-split { border-color: #d4af37; color: #d4af37; }
-    .staff-match-ui .staff-actions .resolve-split:hover { background: #d4af37; color: #0b0b0b; }
-    .staff-match-ui .staff-actions .resolve-team1 { border-color: #4caf50; color: #4caf50; }
-    .staff-match-ui .staff-actions .resolve-team1:hover { background: #4caf50; color: #0b0b0b; }
-    .staff-match-ui .staff-actions .resolve-team2 { border-color: #2196f3; color: #2196f3; }
-    .staff-match-ui .staff-actions .resolve-team2:hover { background: #2196f3; color: #0b0b0b; }
-    .staff-match-ui .staff-actions .resolve-void { border-color: #ff4444; color: #ff4444; }
-    .staff-match-ui .staff-actions .resolve-void:hover { background: #ff4444; color: #0b0b0b; }
+    .match-ui .staff-resolution-section .staff-actions button:hover { transform: scale(1.02); }
+    .match-ui .staff-resolution-section .staff-actions .resolve-split { border-color: #d4af37; color: #d4af37; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-split:hover { background: #d4af37; color: #0b0b0b; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-team1 { border-color: #4caf50; color: #4caf50; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-team1:hover { background: #4caf50; color: #0b0b0b; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-team2 { border-color: #2196f3; color: #2196f3; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-team2:hover { background: #2196f3; color: #0b0b0b; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-void { border-color: #ff4444; color: #ff4444; }
+    .match-ui .staff-resolution-section .staff-actions .resolve-void:hover { background: #ff4444; color: #0b0b0b; }
 
     @media (max-width: 700px) {
       .glass-card { padding: 1.5rem; }
@@ -622,8 +754,10 @@
       .logo h1 { font-size: 1.8rem; }
       .auth-bar { flex-direction: column; align-items: stretch; }
       .match-grid { grid-template-columns: 1fr; }
-      .staff-match-ui { padding: 1rem; }
-      .staff-match-ui .staff-match-info { grid-template-columns: 1fr; }
+      .match-ui { padding: 1rem; }
+      .match-ui .match-info-grid { grid-template-columns: 1fr; }
+      .nav-tabs { flex-wrap: wrap; }
+      .nav-tabs button { flex: 1; text-align: center; }
     }
   </style>
 </head>
@@ -657,120 +791,149 @@
     <button id="staffJoinBtn"><i class="fas fa-sign-in-alt"></i> Join Match</button>
   </div>
 
-  <div class="create-section">
-    <div class="form-row">
-      <div class="form-group">
-        <label>format</label>
-        <select id="matchType"><option value="1v1">1v1</option><option value="2v2" selected>2v2</option><option value="3v3">3v3</option></select>
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="active" data-tab="home">Home</button>
+    <button data-tab="matches">Matches</button>
+  </div>
+
+  <!-- Home Tab -->
+  <div class="tab-content active" id="tab-home">
+    <div style="text-align:center; padding:3rem 0;">
+      <h2 style="color:#d4af37; font-size:2.5rem; margin-bottom:1rem;">Welcome to Eval Tokens</h2>
+      <p style="color:#888; font-size:1.1rem; max-width:600px; margin:0 auto;">
+        Create matches, compete with friends, and win tokens. 
+        Staff are available to resolve disputes.
+      </p>
+      <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+        <div style="background:#111; padding:1.5rem 2rem; border-radius:1.5rem; border:1px solid #2a2a2a; min-width:150px;">
+          <div style="color:#888; font-size:0.8rem;">Total Tokens</div>
+          <div style="color:#d4af37; font-size:2rem; font-weight:600;" id="homeTotalTokens">0.00</div>
+        </div>
+        <div style="background:#111; padding:1.5rem 2rem; border-radius:1.5rem; border:1px solid #2a2a2a; min-width:150px;">
+          <div style="color:#888; font-size:0.8rem;">Active Matches</div>
+          <div style="color:#d4af37; font-size:2rem; font-weight:600;" id="homeActiveMatches">0</div>
+        </div>
+        <div style="background:#111; padding:1.5rem 2rem; border-radius:1.5rem; border:1px solid #2a2a2a; min-width:150px;">
+          <div style="color:#888; font-size:0.8rem;">Logged In As</div>
+          <div style="color:white; font-size:1.2rem; font-weight:500;" id="homeUser">Guest</div>
+        </div>
       </div>
-      <div class="form-group">
-        <label>entry fee (tokens)</label>
-        <input type="number" id="entryFee" placeholder="0.50" step="0.01" min="0.01" value="0.50">
-      </div>
-      <div class="form-group" style="flex:2;">
-        <label>your fortnite user</label>
-        <input type="text" id="fortniteUser" placeholder="Epic name" value="Vortex_77">
-      </div>
-      <button class="btn-create" id="createMatchBtn"><i class="fas fa-plus"></i> create match</button>
-    </div>
-    <div style="margin-top:0.6rem; font-size:0.8rem; color:#666; display:flex; gap:20px; flex-wrap:wrap;">
-      <span><i class="fas fa-info-circle" style="color:#d4af37;"></i> winner takes pot</span>
-      <span><i class="fas fa-lock" style="color:#d4af37;"></i> tokens locked</span>
-      <span><i class="fas fa-users" style="color:#d4af37;"></i> <span id="matchCountDisplay">0</span> active matches</span>
     </div>
   </div>
 
-  <div class="match-header">
-    <h2><i class="fas fa-gamepad"></i> live matches</h2>
-    <span class="match-count" id="matchCount">0 matches</span>
-  </div>
-  <div class="match-grid" id="matchGrid">
-    <div class="empty-state"><i class="fas fa-skull"></i><span>loading matches...</span></div>
-  </div>
-
-  <!-- Regular Chat Panel -->
-  <div class="chat-panel" id="chatPanel" style="display:none;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-      <span style="color:#d4af37; font-weight:500;">match chat · <span id="chatMatchId">#</span></span>
-      <button id="closeChatBtn" style="background:none; border:1px solid #2a2a2a; color:#888; border-radius:40px; padding:0.2rem 1.2rem; cursor:pointer;">close</button>
-    </div>
-    <div class="chat-box" id="chatMessages"><div class="msg system">system: join the match to chat</div></div>
-    <div class="chat-input-row">
-      <input type="text" id="chatInput" placeholder="type message...">
-      <button id="sendChatBtn">send</button>
-    </div>
-
-    <div class="proof-section" id="proofSection">
-      <label><i class="fas fa-image"></i> Upload proof of your win (screenshot):</label>
-      <input type="file" id="proofFile" accept="image/*">
-      <div class="proof-actions">
-        <button id="submitProofBtn"><i class="fas fa-check"></i> Submit proof & call staff</button>
-        <button class="cancel-proof" id="cancelProofBtn">Cancel</button>
+  <!-- Matches Tab -->
+  <div class="tab-content" id="tab-matches">
+    <!-- Create Match -->
+    <div class="create-section">
+      <div class="form-row">
+        <div class="form-group">
+          <label>format</label>
+          <select id="matchType"><option value="1v1">1v1</option><option value="2v2" selected>2v2</option><option value="3v3">3v3</option></select>
+        </div>
+        <div class="form-group">
+          <label>entry fee (tokens)</label>
+          <input type="number" id="entryFee" placeholder="0.50" step="0.01" min="0.01" value="0.50">
+        </div>
+        <div class="form-group" style="flex:2;">
+          <label>your fortnite user</label>
+          <input type="text" id="fortniteUser" placeholder="Epic name" value="Vortex_77">
+        </div>
+        <button class="btn-create" id="createMatchBtn"><i class="fas fa-plus"></i> create match</button>
+      </div>
+      <div style="margin-top:0.6rem; font-size:0.8rem; color:#666; display:flex; gap:20px; flex-wrap:wrap;">
+        <span><i class="fas fa-info-circle" style="color:#d4af37;"></i> winner takes pot</span>
+        <span><i class="fas fa-lock" style="color:#d4af37;"></i> tokens locked</span>
+        <span><i class="fas fa-users" style="color:#d4af37;"></i> <span id="matchCountDisplay">0</span> active matches</span>
       </div>
     </div>
 
-    <div class="match-actions">
-      <button class="win-btn" id="winBtn"><i class="fas fa-trophy"></i> we won</button>
-      <button class="lose-btn" id="loseBtn"><i class="fas fa-flag"></i> we lost</button>
-      <button class="end-btn" id="endMatchBtn">end match</button>
-      <button class="call-staff-btn" id="callStaffBtn"><i class="fas fa-exclamation-triangle"></i> Call Staff</button>
+    <!-- Match List -->
+    <div class="match-header">
+      <h2><i class="fas fa-gamepad"></i> live matches</h2>
+      <span class="match-count" id="matchCount">0 matches</span>
+    </div>
+    <div class="match-grid" id="matchGrid">
+      <div class="empty-state"><i class="fas fa-skull"></i><span>loading matches...</span></div>
     </div>
   </div>
 </div>
 
-<!-- STAFF MATCH UI - Full Page Takeover -->
-<div class="staff-match-ui" id="staffMatchUI">
-  <div class="staff-header">
+<!-- MATCH UI - Unified for players and staff -->
+<div class="match-ui" id="matchUI">
+  <div class="match-header-ui">
     <div>
-      <h2><i class="fas fa-shield-alt"></i> Staff Match View</h2>
-      <div class="staff-match-id" id="staffUIMatchId">Match ID: -</div>
+      <h2 id="matchUITitle">Match</h2>
+      <div class="match-id-display" id="matchUIId">ID: -</div>
     </div>
-    <button class="staff-close-btn" id="staffUICloseBtn"><i class="fas fa-times"></i> Close</button>
+    <button class="match-close-btn" id="matchUICloseBtn">Close</button>
   </div>
 
-  <div class="staff-match-info" id="staffUIMatchInfo">
+  <div class="match-info-grid" id="matchUIInfo">
     <div class="info-item">
       <div class="label">Format</div>
-      <div class="value" id="staffUIFormat">-</div>
+      <div class="value" id="matchUIFormat">-</div>
     </div>
     <div class="info-item">
       <div class="label">Entry Fee</div>
-      <div class="value" id="staffUIEntryFee">-</div>
+      <div class="value" id="matchUIEntryFee">-</div>
     </div>
     <div class="info-item">
       <div class="label">Creator</div>
-      <div class="value" id="staffUICreator">-</div>
+      <div class="value" id="matchUICreator">-</div>
     </div>
     <div class="info-item">
       <div class="label">Status</div>
-      <div class="value" id="staffUIStatus">-</div>
+      <div class="value" id="matchUIStatus">-</div>
     </div>
     <div class="info-item">
       <div class="label">Wins</div>
-      <div class="value" id="staffUIWins">-</div>
+      <div class="value" id="matchUIWins">-</div>
     </div>
     <div class="info-item">
       <div class="label">Losses</div>
-      <div class="value" id="staffUILosses">-</div>
+      <div class="value" id="matchUILosses">-</div>
     </div>
   </div>
 
-  <div class="staff-chat-section">
+  <div class="chat-section">
     <h3><i class="fas fa-comments"></i> Match Chat</h3>
-    <div class="staff-chat-box" id="staffUIChatBox">
+    <div class="chat-box" id="matchUIChatBox">
       <div class="msg system">Loading chat...</div>
     </div>
-    <div class="staff-chat-input">
-      <input type="text" id="staffUIChatInput" placeholder="Type a message...">
-      <button id="staffUISendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+    <div class="chat-input-row">
+      <input type="text" id="matchUIChatInput" placeholder="Type a message...">
+      <button id="matchUISendBtn">Send</button>
     </div>
   </div>
 
-  <div class="staff-actions">
-    <button class="resolve-split" id="staffUIResolveSplit"><i class="fas fa-arrows-left-right"></i> Split Tokens (50/50)</button>
-    <button class="resolve-team1" id="staffUIResolveTeam1"><i class="fas fa-crown"></i> Award Team 1</button>
-    <button class="resolve-team2" id="staffUIResolveTeam2"><i class="fas fa-crown"></i> Award Team 2</button>
-    <button class="resolve-void" id="staffUIResolveVoid"><i class="fas fa-ban"></i> Void Match</button>
+  <!-- Player Actions -->
+  <div class="match-actions" id="matchUIPlayerActions">
+    <button class="win-btn" id="matchUIWinBtn">We Won</button>
+    <button class="lose-btn" id="matchUILoseBtn">We Lost</button>
+    <button class="end-btn" id="matchUIEndBtn">End Match</button>
+    <button class="call-staff-btn" id="matchUICallStaffBtn">Call Staff</button>
+  </div>
+
+  <!-- Proof Section -->
+  <div class="proof-section" id="matchUIProofSection">
+    <label>Upload proof of your win (screenshot):</label>
+    <input type="file" id="matchUIProofFile" accept="image/*">
+    <div class="proof-actions">
+      <button id="matchUISubmitProofBtn">Submit proof & call staff</button>
+      <button class="cancel-proof" id="matchUICancelProofBtn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Staff Resolution Section -->
+  <div class="staff-resolution-section" id="matchUIStaffResolution">
+    <h3><i class="fas fa-shield-alt"></i> Staff Resolution</h3>
+    <div class="staff-actions">
+      <button class="resolve-split" id="matchUIResolveSplit">Split Tokens (50/50)</button>
+      <button class="resolve-team1" id="matchUIResolveTeam1">Award Team 1</button>
+      <button class="resolve-team2" id="matchUIResolveTeam2">Award Team 2</button>
+      <button class="resolve-void" id="matchUIResolveVoid">Void Match</button>
+    </div>
   </div>
 </div>
 
@@ -799,25 +962,28 @@
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       isSupabaseConnected = true;
-      console.log('✅ Supabase connected');
+      console.log('Supabase connected');
     } catch (e) {
-      console.error('❌ Supabase connection failed:', e);
+      console.error('Supabase connection failed:', e);
       isSupabaseConnected = false;
     }
 
     // ---------- STATE ----------
     let matches = [];
     let loggedInUser = null;
-    let activeMatchId = null;
     let chatMessages = {};
     let isStaff = false;
-    let staffActiveMatchId = null;
+    let activeMatchId = null;  // Current match in UI
+    let matchUIChatSubscription = null;
 
     // DOM refs
     const matchGrid = document.getElementById('matchGrid');
     const matchCount = document.getElementById('matchCount');
     const matchCountDisplay = document.getElementById('matchCountDisplay');
     const totalTokenDisplay = document.getElementById('totalTokenDisplay');
+    const homeTotalTokens = document.getElementById('homeTotalTokens');
+    const homeActiveMatches = document.getElementById('homeActiveMatches');
+    const homeUser = document.getElementById('homeUser');
     const matchType = document.getElementById('matchType');
     const entryFee = document.getElementById('entryFee');
     const fortniteUser = document.getElementById('fortniteUser');
@@ -833,99 +999,83 @@
     const staffJoinSection = document.getElementById('staffJoinSection');
     const staffJoinInput = document.getElementById('staffJoinInput');
     const staffJoinBtn = document.getElementById('staffJoinBtn');
-
-    const chatPanel = document.getElementById('chatPanel');
-    const chatMessagesDiv = document.getElementById('chatMessages');
-    const chatInput = document.getElementById('chatInput');
-    const sendChatBtn = document.getElementById('sendChatBtn');
-    const closeChatBtn = document.getElementById('closeChatBtn');
-    const chatMatchId = document.getElementById('chatMatchId');
-    const winBtn = document.getElementById('winBtn');
-    const loseBtn = document.getElementById('loseBtn');
-    const endMatchBtn = document.getElementById('endMatchBtn');
-    const callStaffBtn = document.getElementById('callStaffBtn');
     const testWebhookBtn = document.getElementById('testWebhookBtn');
 
-    const proofSection = document.getElementById('proofSection');
-    const proofFileInput = document.getElementById('proofFile');
-    const submitProofBtn = document.getElementById('submitProofBtn');
-    const cancelProofBtn = document.getElementById('cancelProofBtn');
+    // Tab navigation
+    const tabs = document.querySelectorAll('.nav-tabs button');
+    const tabContents = document.querySelectorAll('.tab-content');
 
-    // Staff UI
-    const staffMatchUI = document.getElementById('staffMatchUI');
-    const staffUIMatchId = document.getElementById('staffUIMatchId');
-    const staffUIFormat = document.getElementById('staffUIFormat');
-    const staffUIEntryFee = document.getElementById('staffUIEntryFee');
-    const staffUICreator = document.getElementById('staffUICreator');
-    const staffUIStatus = document.getElementById('staffUIStatus');
-    const staffUIWins = document.getElementById('staffUIWins');
-    const staffUILosses = document.getElementById('staffUILosses');
-    const staffUIChatBox = document.getElementById('staffUIChatBox');
-    const staffUIChatInput = document.getElementById('staffUIChatInput');
-    const staffUISendBtn = document.getElementById('staffUISendBtn');
-    const staffUICloseBtn = document.getElementById('staffUICloseBtn');
-    const staffUIResolveSplit = document.getElementById('staffUIResolveSplit');
-    const staffUIResolveTeam1 = document.getElementById('staffUIResolveTeam1');
-    const staffUIResolveTeam2 = document.getElementById('staffUIResolveTeam2');
-    const staffUIResolveVoid = document.getElementById('staffUIResolveVoid');
+    // Match UI
+    const matchUI = document.getElementById('matchUI');
+    const matchUITitle = document.getElementById('matchUITitle');
+    const matchUIId = document.getElementById('matchUIId');
+    const matchUIFormat = document.getElementById('matchUIFormat');
+    const matchUIEntryFee = document.getElementById('matchUIEntryFee');
+    const matchUICreator = document.getElementById('matchUICreator');
+    const matchUIStatus = document.getElementById('matchUIStatus');
+    const matchUIWins = document.getElementById('matchUIWins');
+    const matchUILosses = document.getElementById('matchUILosses');
+    const matchUIChatBox = document.getElementById('matchUIChatBox');
+    const matchUIChatInput = document.getElementById('matchUIChatInput');
+    const matchUISendBtn = document.getElementById('matchUISendBtn');
+    const matchUICloseBtn = document.getElementById('matchUICloseBtn');
+    const matchUIWinBtn = document.getElementById('matchUIWinBtn');
+    const matchUILoseBtn = document.getElementById('matchUILoseBtn');
+    const matchUIEndBtn = document.getElementById('matchUIEndBtn');
+    const matchUICallStaffBtn = document.getElementById('matchUICallStaffBtn');
+    const matchUIProofSection = document.getElementById('matchUIProofSection');
+    const matchUIProofFile = document.getElementById('matchUIProofFile');
+    const matchUISubmitProofBtn = document.getElementById('matchUISubmitProofBtn');
+    const matchUICancelProofBtn = document.getElementById('matchUICancelProofBtn');
+    const matchUIStaffResolution = document.getElementById('matchUIStaffResolution');
+    const matchUIResolveSplit = document.getElementById('matchUIResolveSplit');
+    const matchUIResolveTeam1 = document.getElementById('matchUIResolveTeam1');
+    const matchUIResolveTeam2 = document.getElementById('matchUIResolveTeam2');
+    const matchUIResolveVoid = document.getElementById('matchUIResolveVoid');
 
     // ---------- WEBHOOK ----------
     async function sendWebhook(data) {
-      webhookStatus.textContent = '⏳ sending...';
+      webhookStatus.textContent = 'sending...';
       webhookStatus.className = 'webhook-status';
       
       try {
-        console.log('📤 Sending webhook:', data);
-        
         const response = await fetch(WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
         
-        const responseText = await response.text();
-        console.log('📥 Webhook response:', response.status, responseText);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${responseText}`);
-        }
-        
-        webhookStatus.textContent = '✅ sent!';
+        webhookStatus.textContent = 'sent!';
         webhookStatus.className = 'webhook-status success';
         setTimeout(() => {
-          webhookStatus.textContent = '⚪ idle';
+          webhookStatus.textContent = 'idle';
           webhookStatus.className = 'webhook-status';
         }, 5000);
-        
         return true;
       } catch (error) {
-        console.error('❌ Webhook failed:', error);
-        webhookStatus.textContent = '❌ failed: ' + error.message;
+        console.error('Webhook failed:', error);
+        webhookStatus.textContent = 'failed';
         webhookStatus.className = 'webhook-status fail';
         setTimeout(() => {
-          webhookStatus.textContent = '⚪ idle';
+          webhookStatus.textContent = 'idle';
           webhookStatus.className = 'webhook-status';
         }, 8000);
         return false;
       }
     }
 
-    // ---------- TEST WEBHOOK ----------
     async function testWebhook() {
-      const testData = {
-        content: '🧪 **Eval Tokens Webhook Test**\n\n✅ This is a test message to verify your webhook is working correctly!',
+      await sendWebhook({
+        content: 'Webhook test - Eval Tokens is working!',
         embeds: [{
           title: 'Webhook Test',
-          description: 'If you see this, your webhook is configured correctly!',
+          description: 'Your webhook is configured correctly.',
           color: 0xd4af37,
-          fields: [
-            { name: 'Status', value: '✅ Working', inline: true },
-            { name: 'Time', value: new Date().toLocaleString(), inline: true }
-          ]
+          timestamp: new Date().toISOString()
         }]
-      };
-      
-      await sendWebhook(testData);
+      });
     }
 
     // ---------- HELPERS ----------
@@ -940,6 +1090,9 @@
       let total = 0;
       activeMatches.forEach(m => { total += m.entryFee * 2; });
       totalTokenDisplay.textContent = formatToken(total);
+      if (homeTotalTokens) homeTotalTokens.textContent = formatToken(total);
+      if (homeActiveMatches) homeActiveMatches.textContent = activeMatches.length;
+      if (homeUser) homeUser.textContent = loggedInUser || 'Guest';
       matchCount.textContent = activeMatches.length + ' match' + (activeMatches.length !== 1 ? 'es' : '');
       if (matchCountDisplay) {
         matchCountDisplay.textContent = activeMatches.length;
@@ -948,10 +1101,7 @@
 
     // ---------- SUPABASE OPERATIONS ----------
     async function loadMatchesFromSupabase() {
-      if (!isSupabaseConnected) {
-        console.warn('Supabase not connected');
-        return false;
-      }
+      if (!isSupabaseConnected) return false;
 
       try {
         const { data, error } = await supabase
@@ -961,7 +1111,7 @@
 
         if (error) throw error;
 
-        if (data && data.length > 0) {
+        if (data) {
           matches = data.map(m => ({
             id: m.id,
             type: m.type,
@@ -979,13 +1129,14 @@
             resolution: m.resolution || null
           }));
           renderMatches();
-          syncStatus.textContent = '✅ synced';
+          updateStats();
+          syncStatus.textContent = 'synced';
           syncStatus.className = 'sync-status';
           return true;
         }
       } catch (e) {
-        console.error('Error loading matches from Supabase:', e);
-        syncStatus.textContent = '❌ error';
+        console.error('Error loading matches:', e);
+        syncStatus.textContent = 'error';
         syncStatus.className = 'sync-status offline';
       }
       return false;
@@ -1017,7 +1168,7 @@
         if (error) throw error;
         return true;
       } catch (e) {
-        console.error('Error saving match to Supabase:', e);
+        console.error('Error saving match:', e);
         return false;
       }
     }
@@ -1041,7 +1192,7 @@
         if (error) throw error;
         return true;
       } catch (e) {
-        console.error('Error saving chat to Supabase:', e);
+        console.error('Error saving chat:', e);
         return false;
       }
     }
@@ -1058,7 +1209,7 @@
 
         if (error) throw error;
 
-        if (data && data.length > 0) {
+        if (data) {
           chatMessages[matchId] = data.map(m => ({
             user: m.username,
             text: m.text,
@@ -1068,18 +1219,15 @@
             time: m.created_at
           }));
           if (activeMatchId === matchId) {
-            renderChatMessages(matchId);
-          }
-          if (staffActiveMatchId === matchId) {
-            renderStaffUIChat(matchId);
+            renderMatchUIChat(matchId);
           }
         }
       } catch (e) {
-        console.error('Error loading chat from Supabase:', e);
+        console.error('Error loading chat:', e);
       }
     }
 
-    // ---------- RENDER ----------
+    // ---------- RENDER MATCHES ----------
     function renderMatches() {
       const activeMatches = matches.filter(m => !m.ended && !m.voided);
       
@@ -1104,7 +1252,7 @@
         html += `
           <div class="match-card ${extraClass}" data-id="${m.id}">
             <div class="match-title">
-              <span class="mode-badge"><i class="fas fa-crosshairs"></i> ${m.type.toUpperCase()}</span>
+              <span class="mode-badge">${m.type.toUpperCase()}</span>
               <span class="token-pot"><i class="fas fa-coins"></i> ${pot}</span>
             </div>
             <div class="match-details">
@@ -1121,7 +1269,7 @@
               <span><i class="far fa-clock"></i> ${new Date(m.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
               <span class="status ${isDispute ? 'dispute-status' : ''}"><i class="fas fa-circle" style="color:${statusColor};font-size:0.6rem;"></i> ${statusText}</span>
             </div>
-            <button class="join-match-btn" style="margin-top:10px; background:#1a1a1a; border:1px solid #b8860b; color:#f0e6d0; border-radius:40px; padding:0.3rem 0; cursor:pointer; width:100%;">join & chat</button>
+            <button class="join-match-btn" style="margin-top:10px; background:#1a1a1a; border:1px solid #b8860b; color:#f0e6d0; border-radius:40px; padding:0.3rem 0; cursor:pointer; width:100%;">join match</button>
           </div>
         `;
       });
@@ -1136,40 +1284,96 @@
           if (!match) return alert('match not found');
           if (!loggedInUser) return alert('please login first');
           if (match.ended || match.voided) return alert('this match is no longer active');
-          
-          if (isStaff) {
-            openStaffMatchUI(id);
-          } else {
-            openChat(id);
-          }
+          openMatchUI(id);
         });
       });
     }
 
-    // ---------- REGULAR CHAT ----------
-    function openChat(matchId) {
+    // ---------- MATCH UI ----------
+    function openMatchUI(matchId) {
+      const match = matches.find(m => m.id === matchId);
+      if (!match) {
+        alert('Match not found');
+        return;
+      }
+
       activeMatchId = matchId;
-      chatPanel.style.display = 'block';
-      chatMatchId.textContent = matchId.substring(0, 8);
-      
+      matchUI.classList.add('show');
+      matchUITitle.textContent = match.type.toUpperCase() + ' Match';
+      matchUIId.textContent = 'ID: ' + matchId;
+      matchUIFormat.textContent = match.type;
+      matchUIEntryFee.textContent = formatToken(match.entryFee) + ' tokens';
+      matchUICreator.textContent = match.creator;
+      matchUIStatus.textContent = match.dispute ? 'DISPUTE' : 'Open';
+      matchUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
+      matchUIWins.textContent = (match.wins || []).join(', ') || 'None';
+      matchUILosses.textContent = (match.losses || []).join(', ') || 'None';
+
+      // Show staff resolution if staff
+      if (isStaff) {
+        matchUIStaffResolution.classList.add('show');
+      } else {
+        matchUIStaffResolution.classList.remove('show');
+      }
+
+      // Load chat
       if (!chatMessages[matchId]) {
         chatMessages[matchId] = [];
         loadChatMessagesFromSupabase(matchId);
       }
-      renderChatMessages(matchId);
+      renderMatchUIChat(matchId);
 
+      // Subscribe to chat updates
+      if (matchUIChatSubscription) {
+        matchUIChatSubscription.unsubscribe();
+      }
+      matchUIChatSubscription = supabase
+        .channel('chat_' + matchId)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'chat_messages',
+            filter: 'match_id=eq.' + matchId
+          },
+          (payload) => {
+            const newMsg = payload.new;
+            const msg = {
+              user: newMsg.username,
+              text: newMsg.text,
+              system: newMsg.system || false,
+              dispute: newMsg.dispute || false,
+              staff: newMsg.staff || false,
+              time: newMsg.created_at
+            };
+            if (!chatMessages[matchId]) chatMessages[matchId] = [];
+            chatMessages[matchId].push(msg);
+            if (activeMatchId === matchId) {
+              renderMatchUIChat(matchId);
+            }
+          }
+        )
+        .subscribe();
+
+      // Auto-join message
       const msgs = chatMessages[matchId];
       if (!msgs.some(m => m.system && m.text.includes('joined'))) {
-        const joinMsg = { system: true, text: `${loggedInUser} joined the match`, time: Date.now() };
+        const joinMsg = { 
+          system: true, 
+          text: (isStaff ? 'Staff ' : '') + loggedInUser + ' joined the match', 
+          time: Date.now(),
+          staff: isStaff
+        };
         msgs.push(joinMsg);
-        renderChatMessages(matchId);
+        renderMatchUIChat(matchId);
         saveChatMessageToSupabase(matchId, joinMsg);
       }
     }
 
-    function renderChatMessages(matchId) {
+    function renderMatchUIChat(matchId) {
       const msgs = chatMessages[matchId] || [];
-      chatMessagesDiv.innerHTML = msgs.map(m => {
+      matchUIChatBox.innerHTML = msgs.map(m => {
         let className = 'msg';
         if (m.system) className += ' system';
         if (m.dispute) className += ' dispute';
@@ -1177,84 +1381,190 @@
         if (m.system) return `<div class="${className}">${m.text}</div>`;
         return `<div class="${className}"><strong>${m.user}</strong> ${m.text}</div>`;
       }).join('');
-      chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+      matchUIChatBox.scrollTop = matchUIChatBox.scrollHeight;
     }
 
-    async function sendChatMessage() {
-      if (!activeMatchId || !loggedInUser) return alert('login and join a match');
-      const text = chatInput.value.trim();
+    async function sendMatchUIChatMessage() {
+      if (!activeMatchId || !loggedInUser) return alert('No match active');
+      const text = matchUIChatInput.value.trim();
       if (!text) return;
       
-      const msg = { user: loggedInUser, text: text, time: Date.now() };
+      const msg = { 
+        user: loggedInUser, 
+        text: text, 
+        time: Date.now(),
+        staff: isStaff
+      };
       const msgs = chatMessages[activeMatchId] || [];
       msgs.push(msg);
       chatMessages[activeMatchId] = msgs;
-      renderChatMessages(activeMatchId);
-      chatInput.value = '';
+      renderMatchUIChat(activeMatchId);
+      matchUIChatInput.value = '';
       
       await saveChatMessageToSupabase(activeMatchId, msg);
     }
 
+    function closeMatchUI() {
+      if (matchUIChatSubscription) {
+        matchUIChatSubscription.unsubscribe();
+        matchUIChatSubscription = null;
+      }
+      matchUI.classList.remove('show');
+      matchUIProofSection.classList.remove('show');
+      activeMatchId = null;
+    }
+
+    // ---------- MATCH ACTIONS ----------
+    async function handleMatchWin() {
+      if (!activeMatchId || !loggedInUser) return alert('No match active');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('Match not found');
+      if (match.ended || match.voided) return alert('Match already ended');
+      if (!match.wins) match.wins = [];
+      if (match.wins.includes(loggedInUser)) return alert('You already voted win');
+      
+      match.wins.push(loggedInUser);
+      const msg = { system: true, text: loggedInUser + ' voted WIN' };
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push(msg);
+      chatMessages[activeMatchId] = msgs;
+      renderMatchUIChat(activeMatchId);
+      await saveChatMessageToSupabase(activeMatchId, msg);
+      await saveMatchToSupabase(match);
+      await checkMatchDispute(match);
+    }
+
+    async function handleMatchLose() {
+      if (!activeMatchId || !loggedInUser) return alert('No match active');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('Match not found');
+      if (match.ended || match.voided) return alert('Match already ended');
+      if (!match.losses) match.losses = [];
+      if (match.losses.includes(loggedInUser)) return alert('You already voted loss');
+      
+      match.losses.push(loggedInUser);
+      const msg = { system: true, text: loggedInUser + ' voted LOSS' };
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push(msg);
+      chatMessages[activeMatchId] = msgs;
+      renderMatchUIChat(activeMatchId);
+      await saveChatMessageToSupabase(activeMatchId, msg);
+      await saveMatchToSupabase(match);
+      await checkMatchDispute(match);
+    }
+
+    async function checkMatchDispute(match) {
+      const wins = match.wins || [];
+      const losses = match.losses || [];
+      if (wins.length > 0 && losses.length > 0) {
+        match.dispute = true;
+        await saveMatchToSupabase(match);
+        await loadMatchesFromSupabase();
+
+        const msg = { system: true, dispute: true, text: 'DISPUTE detected! Both teams claimed win. Staff will review.' };
+        const msgs = chatMessages[match.id] || [];
+        msgs.push(msg);
+        chatMessages[match.id] = msgs;
+        renderMatchUIChat(match.id);
+        await saveChatMessageToSupabase(match.id, msg);
+
+        await sendWebhook({
+          embeds: [{
+            title: 'DISPUTE DETECTED',
+            color: 0xff4444,
+            fields: [
+              { name: 'Match ID', value: match.id },
+              { name: 'Format', value: match.type },
+              { name: 'Wins', value: wins.join(', ') || 'None' },
+              { name: 'Losses', value: losses.join(', ') || 'None' }
+            ],
+            timestamp: new Date().toISOString()
+          }]
+        });
+
+        alert('Dispute detected! Staff have been notified.');
+        if (isStaff) {
+          // Refresh UI
+          matchUIStatus.textContent = 'DISPUTE';
+          matchUIStatus.style.color = '#ff4444';
+        }
+      }
+    }
+
+    async function handleMatchEnd() {
+      if (!activeMatchId || !loggedInUser) return alert('No match active');
+      const match = matches.find(m => m.id === activeMatchId);
+      if (!match) return alert('Match not found');
+      if (match.ended || match.voided) return alert('Match already ended');
+
+      match.ended = true;
+      const msg = { system: true, text: loggedInUser + ' ended the match.' };
+      const msgs = chatMessages[activeMatchId] || [];
+      msgs.push(msg);
+      chatMessages[activeMatchId] = msgs;
+      renderMatchUIChat(activeMatchId);
+      await saveChatMessageToSupabase(activeMatchId, msg);
+      await saveMatchToSupabase(match);
+
+      await sendWebhook({
+        embeds: [{
+          title: 'Match Ended',
+          color: 0x888888,
+          fields: [
+            { name: 'Match ID', value: match.id },
+            { name: 'Ended By', value: loggedInUser },
+            { name: 'Final Wins', value: (match.wins || []).join(', ') || 'None' },
+            { name: 'Final Losses', value: (match.losses || []).join(', ') || 'None' }
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      });
+
+      closeMatchUI();
+      await loadMatchesFromSupabase();
+      alert('Match ended.');
+    }
+
     // ---------- PROOF & STAFF ----------
-    function showProofSection() {
-      if (!activeMatchId) return alert('join a match first');
+    function showMatchProofSection() {
+      if (!activeMatchId) return alert('No match active');
       const match = matches.find(m => m.id === activeMatchId);
-      if (!match) return alert('match not found');
-      if (match.ended || match.voided) return alert('match already ended');
-      proofSection.classList.add('show');
+      if (!match) return alert('Match not found');
+      if (match.ended || match.voided) return alert('Match already ended');
+      matchUIProofSection.classList.add('show');
     }
 
-    function cancelProof() {
-      proofSection.classList.remove('show');
-      proofFileInput.value = '';
+    function cancelMatchProof() {
+      matchUIProofSection.classList.remove('show');
+      matchUIProofFile.value = '';
     }
 
-    async function submitProof() {
-      if (!activeMatchId || !loggedInUser) return alert('login and join a match');
+    async function submitMatchProof() {
+      if (!activeMatchId || !loggedInUser) return alert('No match active');
       const match = matches.find(m => m.id === activeMatchId);
-      if (!match) return alert('match not found');
-      if (match.ended || match.voided) return alert('match already ended');
+      if (!match) return alert('Match not found');
+      if (match.ended || match.voided) return alert('Match already ended');
 
-      const file = proofFileInput.files[0];
+      const file = matchUIProofFile.files[0];
       if (!file) return alert('Please select a proof image');
 
-      // Read file as base64 for Discord attachment
       const reader = new FileReader();
       reader.onload = async function(e) {
-        const proofData = e.target.result; // base64
+        const proofData = e.target.result;
 
+        const msg = { system: true, dispute: true, text: loggedInUser + ' called STAFF with proof!' };
         const msgs = chatMessages[activeMatchId] || [];
-        const staffMsg = { system: true, dispute: true, text: `⚠️ ${loggedInUser} called STAFF with proof!` };
-        msgs.push(staffMsg);
+        msgs.push(msg);
         chatMessages[activeMatchId] = msgs;
-        renderChatMessages(activeMatchId);
-        await saveChatMessageToSupabase(activeMatchId, staffMsg);
+        renderMatchUIChat(activeMatchId);
+        await saveChatMessageToSupabase(activeMatchId, msg);
 
         match.dispute = true;
         match.proofSubmitted = true;
         await saveMatchToSupabase(match);
         await loadMatchesFromSupabase();
 
-        // Send to Discord with image attachment
-        const embed = {
-          title: '🚨 STAFF CALLED - DISPUTE',
-          color: 0xff4444,
-          fields: [
-            { name: 'Match ID', value: match.id, inline: false },
-            { name: 'Format', value: match.type, inline: true },
-            { name: 'Entry Fee', value: `${formatToken(match.entryFee)} tokens`, inline: true },
-            { name: 'Creator', value: match.creator, inline: true },
-            { name: 'Called By', value: loggedInUser, inline: true },
-            { name: 'Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
-            { name: 'Losses', value: (match.losses || []).join(', ') || 'None', inline: true }
-          ],
-          timestamp: new Date().toISOString(),
-          image: {
-            url: 'attachment://proof.png'
-          }
-        };
-
-        // Convert base64 to blob for attachment
+        // Send to Discord with image
         const base64Data = proofData.split(',')[1];
         const binaryString = atob(base64Data);
         const bytes = new Uint8Array(binaryString.length);
@@ -1265,278 +1575,121 @@
 
         const formData = new FormData();
         formData.append('payload_json', JSON.stringify({
-          content: `🔔 **STAFF ALERT** - A player has called for staff intervention in match **${match.id.substring(0,8)}**`,
-          embeds: [embed]
+          content: 'STAFF ALERT - Player called for staff intervention in match ' + match.id.substring(0,8),
+          embeds: [{
+            title: 'STAFF CALLED - DISPUTE',
+            color: 0xff4444,
+            fields: [
+              { name: 'Match ID', value: match.id },
+              { name: 'Format', value: match.type },
+              { name: 'Entry Fee', value: formatToken(match.entryFee) + ' tokens' },
+              { name: 'Called By', value: loggedInUser },
+              { name: 'Wins', value: (match.wins || []).join(', ') || 'None' },
+              { name: 'Losses', value: (match.losses || []).join(', ') || 'None' }
+            ],
+            timestamp: new Date().toISOString(),
+            image: { url: 'attachment://proof.png' }
+          }]
         }));
         formData.append('file', blob, 'proof.png');
 
         try {
-          const response = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            body: formData
-          });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          webhookStatus.textContent = '✅ sent!';
+          await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
+          webhookStatus.textContent = 'sent!';
           webhookStatus.className = 'webhook-status success';
           setTimeout(() => {
-            webhookStatus.textContent = '⚪ idle';
+            webhookStatus.textContent = 'idle';
             webhookStatus.className = 'webhook-status';
           }, 5000);
         } catch (error) {
           console.error('Webhook with image failed:', error);
-          webhookStatus.textContent = '❌ failed';
-          webhookStatus.className = 'webhook-status fail';
         }
 
         if (isStaff) {
-          openStaffMatchUI(match.id);
+          matchUIStatus.textContent = 'DISPUTE';
+          matchUIStatus.style.color = '#ff4444';
         }
 
-        proofSection.classList.remove('show');
-        proofFileInput.value = '';
+        matchUIProofSection.classList.remove('show');
+        matchUIProofFile.value = '';
         alert('Staff notified! They will review the proof.');
       };
       reader.readAsDataURL(file);
     }
 
-    // ---------- STAFF MATCH UI (Full Page) ----------
-    function openStaffMatchUI(matchId) {
-      const match = matches.find(m => m.id === matchId);
-      if (!match) {
-        alert('Match not found');
-        return;
-      }
-
-      staffActiveMatchId = matchId;
-      staffMatchUI.classList.add('show');
-
-      // Update info
-      staffUIMatchId.textContent = `Match ID: ${matchId}`;
-      staffUIFormat.textContent = match.type;
-      staffUIEntryFee.textContent = `${formatToken(match.entryFee)} tokens`;
-      staffUICreator.textContent = match.creator;
-      staffUIStatus.textContent = match.dispute ? '⚠️ DISPUTE' : '🟢 Open';
-      staffUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
-      staffUIWins.textContent = (match.wins || []).join(', ') || 'None';
-      staffUILosses.textContent = (match.losses || []).join(', ') || 'None';
-
-      // Load chat
-      if (!chatMessages[matchId]) {
-        chatMessages[matchId] = [];
-        loadChatMessagesFromSupabase(matchId);
-      }
-      renderStaffUIChat(matchId);
-
-      // Auto-join message
-      const msgs = chatMessages[matchId];
-      if (!msgs.some(m => m.system && m.text.includes('Staff joined'))) {
-        const joinMsg = { system: true, staff: true, text: `👑 Staff ${loggedInUser} joined the match`, time: Date.now() };
-        msgs.push(joinMsg);
-        renderStaffUIChat(matchId);
-        saveChatMessageToSupabase(matchId, joinMsg);
-      }
-    }
-
-    function renderStaffUIChat(matchId) {
-      const msgs = chatMessages[matchId] || [];
-      staffUIChatBox.innerHTML = msgs.map(m => {
-        let className = 'msg';
-        if (m.system) className += ' system';
-        if (m.dispute) className += ' dispute';
-        if (m.staff) className += ' staff';
-        if (m.system) return `<div class="${className}">${m.text}</div>`;
-        return `<div class="${className}"><strong>${m.user}</strong> ${m.text}</div>`;
-      }).join('');
-      staffUIChatBox.scrollTop = staffUIChatBox.scrollHeight;
-    }
-
-    async function sendStaffChatMessage() {
-      if (!staffActiveMatchId || !loggedInUser) return alert('No match active');
-      const text = staffUIChatInput.value.trim();
-      if (!text) return;
-      
-      const msg = { user: loggedInUser, text: text, time: Date.now(), staff: isStaff };
-      const msgs = chatMessages[staffActiveMatchId] || [];
-      msgs.push(msg);
-      chatMessages[staffActiveMatchId] = msgs;
-      renderStaffUIChat(staffActiveMatchId);
-      staffUIChatInput.value = '';
-      
-      await saveChatMessageToSupabase(staffActiveMatchId, msg);
-    }
-
     // ---------- STAFF RESOLUTIONS ----------
-    async function resolveStaffMatch(resolution) {
-      if (!staffActiveMatchId) return alert('No match active');
-      const match = matches.find(m => m.id === staffActiveMatchId);
+    async function resolveMatch(resolution) {
+      if (!activeMatchId) return alert('No match active');
+      const match = matches.find(m => m.id === activeMatchId);
       if (!match) return alert('Match not found');
 
       match.ended = true;
       match.resolved = true;
       match.resolution = resolution;
 
-      const msgs = chatMessages[staffActiveMatchId] || [];
-      const resMsg = { system: true, staff: true, text: `👑 STAFF RESOLUTION: ${resolution}` };
-      msgs.push(resMsg);
-      chatMessages[staffActiveMatchId] = msgs;
-      renderStaffUIChat(staffActiveMatchId);
-      await saveChatMessageToSupabase(staffActiveMatchId, resMsg);
-
-      await saveMatchToSupabase(match);
-
-      const embed = {
-        title: '⚖️ STAFF RESOLUTION',
-        color: 0xd4af37,
-        fields: [
-          { name: 'Match ID', value: match.id, inline: false },
-          { name: 'Resolution', value: resolution, inline: true },
-          { name: 'Resolved By', value: loggedInUser, inline: true },
-          { name: 'Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
-          { name: 'Losses', value: (match.losses || []).join(', ') || 'None', inline: true }
-        ],
-        timestamp: new Date().toISOString()
-      };
-
-      await sendWebhook({ embeds: [embed] });
-
-      staffMatchUI.classList.remove('show');
-      staffActiveMatchId = null;
-      await loadMatchesFromSupabase();
-      alert(`Match resolved: ${resolution}`);
-    }
-
-    // ---------- MATCH ACTIONS ----------
-    async function handleWin() {
-      if (!activeMatchId || !loggedInUser) return alert('join a match first');
-      const match = matches.find(m => m.id === activeMatchId);
-      if (!match) return alert('match gone');
-      if (match.ended || match.voided) return alert('match already ended');
-      if (!match.wins) match.wins = [];
-      if (!match.losses) match.losses = [];
-      if (match.wins.includes(loggedInUser)) return alert('you already voted win');
-      
-      match.wins.push(loggedInUser);
+      const msg = { system: true, staff: true, text: 'STAFF RESOLUTION: ' + resolution };
       const msgs = chatMessages[activeMatchId] || [];
-      const voteMsg = { system: true, text: `${loggedInUser} voted WIN` };
-      msgs.push(voteMsg);
+      msgs.push(msg);
       chatMessages[activeMatchId] = msgs;
-      renderChatMessages(activeMatchId);
-      await saveChatMessageToSupabase(activeMatchId, voteMsg);
+      renderMatchUIChat(activeMatchId);
+      await saveChatMessageToSupabase(activeMatchId, msg);
+
       await saveMatchToSupabase(match);
-      await checkDispute(match);
-    }
 
-    async function handleLose() {
-      if (!activeMatchId || !loggedInUser) return alert('join a match first');
-      const match = matches.find(m => m.id === activeMatchId);
-      if (!match) return alert('match gone');
-      if (match.ended || match.voided) return alert('match already ended');
-      if (!match.losses) match.losses = [];
-      if (!match.wins) match.wins = [];
-      if (match.losses.includes(loggedInUser)) return alert('already voted loss');
-      
-      match.losses.push(loggedInUser);
-      const msgs = chatMessages[activeMatchId] || [];
-      const voteMsg = { system: true, text: `${loggedInUser} voted LOSS` };
-      msgs.push(voteMsg);
-      chatMessages[activeMatchId] = msgs;
-      renderChatMessages(activeMatchId);
-      await saveChatMessageToSupabase(activeMatchId, voteMsg);
-      await saveMatchToSupabase(match);
-      await checkDispute(match);
-    }
-
-    async function checkDispute(match) {
-      const wins = match.wins || [];
-      const losses = match.losses || [];
-      if (wins.length > 0 && losses.length > 0) {
-        match.dispute = true;
-        await saveMatchToSupabase(match);
-        await loadMatchesFromSupabase();
-
-        const msgs = chatMessages[match.id] || [];
-        const disputeMsg = { system: true, dispute: true, text: `⚠️ DISPUTE detected! Both teams claimed win. Staff will review.` };
-        msgs.push(disputeMsg);
-        chatMessages[match.id] = msgs;
-        renderChatMessages(match.id);
-        await saveChatMessageToSupabase(match.id, disputeMsg);
-
-        const embed = {
-          title: '⚠️ DISPUTE DETECTED',
-          color: 0xff4444,
+      await sendWebhook({
+        embeds: [{
+          title: 'STAFF RESOLUTION',
+          color: 0xd4af37,
           fields: [
-            { name: 'Match ID', value: match.id, inline: false },
-            { name: 'Format', value: match.type, inline: true },
-            { name: 'Entry Fee', value: `${formatToken(match.entryFee)} tokens`, inline: true },
-            { name: 'Creator', value: match.creator, inline: true },
-            { name: 'Wins', value: wins.join(', ') || 'None', inline: true },
-            { name: 'Losses', value: losses.join(', ') || 'None', inline: true }
+            { name: 'Match ID', value: match.id },
+            { name: 'Resolution', value: resolution },
+            { name: 'Resolved By', value: loggedInUser },
+            { name: 'Wins', value: (match.wins || []).join(', ') || 'None' },
+            { name: 'Losses', value: (match.losses || []).join(', ') || 'None' }
           ],
           timestamp: new Date().toISOString()
-        };
+        }]
+      });
 
-        await sendWebhook({ embeds: [embed] });
-
-        alert('Dispute detected! Staff have been notified.');
-        if (isStaff) {
-          openStaffMatchUI(match.id);
-        }
-      }
+      closeMatchUI();
+      await loadMatchesFromSupabase();
+      alert('Match resolved: ' + resolution);
     }
 
-    async function endMatch() {
-      if (!activeMatchId || !loggedInUser) return alert('join a match');
-      const match = matches.find(m => m.id === activeMatchId);
-      if (!match) return alert('match gone');
-      if (match.ended || match.voided) return alert('match already ended');
+    // ---------- STAFF JOIN BY ID ----------
+    async function staffJoinMatch() {
+      if (!isStaff) return alert('You must be logged in as staff');
+      const matchId = staffJoinInput.value.trim();
+      if (!matchId) return alert('Please enter a match ID');
 
-      match.ended = true;
-      const msgs = chatMessages[activeMatchId] || [];
-      const endMsg = { system: true, text: `${loggedInUser} ended the match.` };
-      msgs.push(endMsg);
-      chatMessages[activeMatchId] = msgs;
-      renderChatMessages(activeMatchId);
-      await saveChatMessageToSupabase(activeMatchId, endMsg);
-      await saveMatchToSupabase(match);
-
-      const embed = {
-        title: '🏁 Match Ended',
-        color: 0x888888,
-        fields: [
-          { name: 'Match ID', value: match.id, inline: false },
-          { name: 'Ended By', value: loggedInUser, inline: true },
-          { name: 'Final Wins', value: (match.wins || []).join(', ') || 'None', inline: true },
-          { name: 'Final Losses', value: (match.losses || []).join(', ') || 'None', inline: true }
-        ],
-        timestamp: new Date().toISOString()
-      };
-
-      await sendWebhook({ embeds: [embed] });
-
-      activeMatchId = null;
-      chatPanel.style.display = 'none';
-      await loadMatchesFromSupabase();
-      alert('Match ended.');
+      const match = matches.find(m => m.id === matchId);
+      if (!match) {
+        await loadMatchesFromSupabase();
+        const matchReload = matches.find(m => m.id === matchId);
+        if (!matchReload) return alert('Match not found. Please check the ID.');
+        openMatchUI(matchReload.id);
+      } else {
+        openMatchUI(match.id);
+      }
+      staffJoinInput.value = '';
     }
 
     // ---------- AUTH ----------
     async function registerUser() {
       const u = regUser.value.trim();
       const p = regPass.value.trim();
-      if (!u || !p) return alert('enter username and password');
+      if (!u || !p) return alert('Enter username and password');
 
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('users')
           .insert({ username: u, password: p, created_at: Date.now() });
 
         if (error) {
-          if (error.code === '23505') {
-            return alert('user already exists');
-          }
+          if (error.code === '23505') return alert('User already exists');
           throw error;
         }
-        alert('registered! login now.');
+        alert('Registered! Login now.');
       } catch (e) {
         console.error('Registration error:', e);
         alert('Registration failed: ' + e.message);
@@ -1546,15 +1699,16 @@
     async function loginUser() {
       const u = regUser.value.trim();
       const p = regPass.value.trim();
-      if (!u || !p) return alert('enter credentials');
+      if (!u || !p) return alert('Enter credentials');
 
       if (u === STAFF_USERNAME && p === STAFF_PASSWORD) {
         isStaff = true;
         loggedInUser = u;
         staffBadge.classList.add('show');
         staffJoinSection.classList.add('show');
-        authStatus.innerHTML = `<i class="fas fa-circle" style="color:#ff4444;font-size:0.6rem;"></i> <strong style="color:#ff4444;">STAFF</strong>`;
+        authStatus.innerHTML = '<i class="fas fa-circle" style="color:#ff4444;font-size:0.6rem;"></i> <strong style="color:#ff4444;">STAFF</strong>';
         fortniteUser.value = u;
+        updateStats();
         alert('Staff logged in! You can join any match by ID.');
         return true;
       }
@@ -1574,11 +1728,12 @@
           loggedInUser = u;
           staffBadge.classList.remove('show');
           staffJoinSection.classList.remove('show');
-          authStatus.innerHTML = `<i class="fas fa-circle" style="color:#d4af37;font-size:0.6rem;"></i> ${u}`;
+          authStatus.innerHTML = '<i class="fas fa-circle" style="color:#d4af37;font-size:0.6rem;"></i> ' + u;
           fortniteUser.value = u;
+          updateStats();
           return true;
         } else {
-          alert('invalid credentials');
+          alert('Invalid credentials');
           return false;
         }
       } catch (e) {
@@ -1590,15 +1745,15 @@
 
     // ---------- CREATE MATCH ----------
     async function createMatch() {
-      if (!loggedInUser) return alert('please login first');
+      if (!loggedInUser) return alert('Please login first');
       if (isStaff) return alert('Staff cannot create matches');
       
       const type = matchType.value;
       let fee = parseFloat(entryFee.value);
-      if (isNaN(fee) || fee <= 0) return alert('valid entry fee');
+      if (isNaN(fee) || fee <= 0) return alert('Valid entry fee required');
       fee = Math.round(fee * 100) / 100;
       let user = fortniteUser.value.trim();
-      if (!user) return alert('fortnite user required');
+      if (!user) return alert('Fortnite user required');
 
       const matchId = generateMatchId();
       const newMatch = {
@@ -1622,52 +1777,43 @@
       if (saved) {
         await loadMatchesFromSupabase();
         
-        // Creator automatically joins
-        chatMessages[matchId] = [{ system: true, text: `Match created by ${user}` }];
-        await saveChatMessageToSupabase(matchId, { system: true, text: `Match created by ${user}` });
+        chatMessages[matchId] = [{ system: true, text: 'Match created by ' + user }];
+        await saveChatMessageToSupabase(matchId, { system: true, text: 'Match created by ' + user });
         
-        const embed = {
-          title: '🎮 New Match Created',
-          color: 0xd4af37,
-          fields: [
-            { name: 'Match ID', value: matchId, inline: false },
-            { name: 'Format', value: type, inline: true },
-            { name: 'Entry Fee', value: `${formatToken(fee)} tokens`, inline: true },
-            { name: 'Creator', value: user, inline: true },
-            { name: 'Total Pot', value: `${formatToken(fee * 2)} tokens`, inline: true }
-          ],
-          timestamp: new Date().toISOString()
-        };
-
-        await sendWebhook({ embeds: [embed] });
+        await sendWebhook({
+          embeds: [{
+            title: 'New Match Created',
+            color: 0xd4af37,
+            fields: [
+              { name: 'Match ID', value: matchId },
+              { name: 'Format', value: type },
+              { name: 'Entry Fee', value: formatToken(fee) + ' tokens' },
+              { name: 'Creator', value: user },
+              { name: 'Total Pot', value: formatToken(fee * 2) + ' tokens' }
+            ],
+            timestamp: new Date().toISOString()
+          }]
+        });
         
         if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
-        alert('Match created! You are automatically joined.');
+        alert('Match created! Opening match...');
         
-        // Auto-open chat for creator
-        openChat(matchId);
+        // Auto-open the match for the creator
+        openMatchUI(matchId);
       } else {
         alert('Failed to create match. Check Supabase connection.');
       }
     }
 
-    // ---------- STAFF JOIN BY ID ----------
-    async function staffJoinMatch() {
-      if (!isStaff) return alert('You must be logged in as staff');
-      const matchId = staffJoinInput.value.trim();
-      if (!matchId) return alert('Please enter a match ID');
-
-      const match = matches.find(m => m.id === matchId);
-      if (!match) {
-        // Try to load from Supabase
-        await loadMatchesFromSupabase();
-        const matchReload = matches.find(m => m.id === matchId);
-        if (!matchReload) return alert('Match not found. Please check the ID.');
-        openStaffMatchUI(matchReload.id);
-      } else {
-        openStaffMatchUI(match.id);
-      }
-      staffJoinInput.value = '';
+    // ---------- TAB NAVIGATION ----------
+    function switchTab(tabId) {
+      tabs.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(c => c.classList.remove('active'));
+      
+      const targetTab = document.getElementById('tab-' + tabId);
+      const targetBtn = document.querySelector('[data-tab="' + tabId + '"]');
+      if (targetTab) targetTab.classList.add('active');
+      if (targetBtn) targetBtn.classList.add('active');
     }
 
     // ---------- INIT ----------
@@ -1685,18 +1831,18 @@
               table: 'matches'
             },
             async (payload) => {
-              console.log('Match update received:', payload);
+              console.log('Match update:', payload);
               await loadMatchesFromSupabase();
-              if (staffActiveMatchId) {
-                const match = matches.find(m => m.id === staffActiveMatchId);
+              if (activeMatchId) {
+                const match = matches.find(m => m.id === activeMatchId);
                 if (match) {
-                  staffUIFormat.textContent = match.type;
-                  staffUIEntryFee.textContent = `${formatToken(match.entryFee)} tokens`;
-                  staffUICreator.textContent = match.creator;
-                  staffUIStatus.textContent = match.dispute ? '⚠️ DISPUTE' : '🟢 Open';
-                  staffUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
-                  staffUIWins.textContent = (match.wins || []).join(', ') || 'None';
-                  staffUILosses.textContent = (match.losses || []).join(', ') || 'None';
+                  matchUIFormat.textContent = match.type;
+                  matchUIEntryFee.textContent = formatToken(match.entryFee) + ' tokens';
+                  matchUICreator.textContent = match.creator;
+                  matchUIStatus.textContent = match.dispute ? 'DISPUTE' : 'Open';
+                  matchUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
+                  matchUIWins.textContent = (match.wins || []).join(', ') || 'None';
+                  matchUILosses.textContent = (match.losses || []).join(', ') || 'None';
                 }
               }
             }
@@ -1708,35 +1854,33 @@
       createBtn.addEventListener('click', createMatch);
       registerBtn.addEventListener('click', registerUser);
       loginBtn.addEventListener('click', loginUser);
-      sendChatBtn.addEventListener('click', sendChatMessage);
-      chatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendChatMessage(); });
-      closeChatBtn.addEventListener('click', () => { 
-        chatPanel.style.display = 'none'; 
-        activeMatchId = null; 
-      });
-      winBtn.addEventListener('click', handleWin);
-      loseBtn.addEventListener('click', handleLose);
-      endMatchBtn.addEventListener('click', endMatch);
-      callStaffBtn.addEventListener('click', showProofSection);
-      cancelProofBtn.addEventListener('click', cancelProof);
-      submitProofBtn.addEventListener('click', submitProof);
       testWebhookBtn.addEventListener('click', testWebhook);
       
-      // Staff join
       staffJoinBtn.addEventListener('click', staffJoinMatch);
       staffJoinInput.addEventListener('keypress', e => { if(e.key === 'Enter') staffJoinMatch(); });
 
-      // Staff UI events
-      staffUISendBtn.addEventListener('click', sendStaffChatMessage);
-      staffUIChatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendStaffChatMessage(); });
-      staffUICloseBtn.addEventListener('click', () => {
-        staffMatchUI.classList.remove('show');
-        staffActiveMatchId = null;
+      // Match UI events
+      matchUISendBtn.addEventListener('click', sendMatchUIChatMessage);
+      matchUIChatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendMatchUIChatMessage(); });
+      matchUICloseBtn.addEventListener('click', closeMatchUI);
+      matchUIWinBtn.addEventListener('click', handleMatchWin);
+      matchUILoseBtn.addEventListener('click', handleMatchLose);
+      matchUIEndBtn.addEventListener('click', handleMatchEnd);
+      matchUICallStaffBtn.addEventListener('click', showMatchProofSection);
+      matchUICancelProofBtn.addEventListener('click', cancelMatchProof);
+      matchUISubmitProofBtn.addEventListener('click', submitMatchProof);
+      matchUIResolveSplit.addEventListener('click', () => resolveMatch('Split tokens 50/50'));
+      matchUIResolveTeam1.addEventListener('click', () => resolveMatch('Team 1 awarded tokens'));
+      matchUIResolveTeam2.addEventListener('click', () => resolveMatch('Team 2 awarded tokens'));
+      matchUIResolveVoid.addEventListener('click', () => resolveMatch('Match voided - tokens returned'));
+
+      // Tab navigation
+      tabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          switchTab(tabId);
+        });
       });
-      staffUIResolveSplit.addEventListener('click', () => resolveStaffMatch('Split tokens 50/50'));
-      staffUIResolveTeam1.addEventListener('click', () => resolveStaffMatch('Team 1 awarded tokens'));
-      staffUIResolveTeam2.addEventListener('click', () => resolveStaffMatch('Team 2 awarded tokens'));
-      staffUIResolveVoid.addEventListener('click', () => resolveStaffMatch('Match voided - tokens returned'));
 
       // Auto-login
       try {
@@ -1756,9 +1900,11 @@
       regPass.value = '123';
       await loginUser();
 
-      console.log('✅ Eval Tokens initialized with Supabase!');
-      console.log('📊 Active matches:', matches.length);
-      console.log('🔑 Staff login: EvalStaff / Evaltweaks50sdkdgeneratedkeypasswordcanthaveaccess111');
+      // Switch to matches tab by default
+      switchTab('matches');
+
+      console.log('Eval Tokens initialized with Supabase!');
+      console.log('Staff login: EvalStaff / ' + STAFF_PASSWORD);
     }
 
     init();

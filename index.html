@@ -1,527 +1,575 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hybrid Rift · Status</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eval Tokens · Fortnite matchmaker</title>
+    <!-- Font Awesome (icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
 
-    body {
-      background: #0b0b0b;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #f0f0f0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      margin: 0;
-      -webkit-font-smoothing: antialiased;
-    }
+        body {
+            background: #0f0f0f;
+            background-image: radial-gradient(circle at 20% 30%, #1a2a1a, #050505 80%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
 
-    /* subtle animated glow */
-    .bg-glow {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(ellipse 50% 40% at 30% 20%, rgba(255, 215, 0, 0.04), transparent 70%),
-                  radial-gradient(ellipse 50% 40% at 70% 80%, rgba(255, 215, 0, 0.03), transparent 70%);
-      animation: breathe 10s ease-in-out infinite alternate;
-    }
+        .glass-card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid #2e7d32;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px #1e4a22 inset;
+            border-radius: 2.5rem;
+            padding: 2.2rem 2.5rem;
+            max-width: 1300px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
 
-    @keyframes breathe {
-      0% { opacity: 0.5; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.05); }
-    }
+        /* header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2.2rem;
+            border-bottom: 2px solid #2e7d32;
+            padding-bottom: 0.8rem;
+        }
 
-    /* soft orbs */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(110px);
-      opacity: 0.08;
-      z-index: 0;
-      pointer-events: none;
-      animation: float 20s infinite alternate ease-in-out;
-    }
-    .orb-1 {
-      width: 500px;
-      height: 500px;
-      background: #f5c842;
-      top: -120px;
-      left: -120px;
-    }
-    .orb-2 {
-      width: 600px;
-      height: 600px;
-      background: #e6b800;
-      bottom: -140px;
-      right: -100px;
-      animation-delay: -6s;
-    }
+        .logo h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: white;
+            text-shadow: 0 0 10px #2e7d32, 0 0 20px #1e4a22;
+        }
+        .logo span {
+            color: #66bb6a;
+            background: #1a2a1a;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            margin-left: 10px;
+            border: 1px solid #388e3c;
+        }
+        .token-badge {
+            background: #1e2a1e;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            color: #b9f6ca;
+            border: 1px solid #388e3c;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .token-badge i {
+            color: #66bb6a;
+        }
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(40px, 30px) scale(1.15); }
-    }
+        /* create match form */
+        .create-section {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2.8rem;
+            border: 1px solid #2a5e2a;
+            box-shadow: 0 8px 0 #0a1a0a;
+        }
 
-    /* main card – glass, smooth, focused */
-    .status-container {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 780px;
-      margin: 0 auto;
-    }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 1.5rem;
+            align-items: flex-end;
+        }
 
-    .brand-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 20px 12px 28px;
-      margin-bottom: 28px;
-      background: rgba(16, 16, 16, 0.55);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-    }
+        .form-group {
+            flex: 1 0 160px;
+            min-width: 130px;
+        }
+        .form-group label {
+            display: block;
+            color: #b0d0b0;
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            background: #1a1f1a;
+            border: 1px solid #2e5a2e;
+            border-radius: 40px;
+            padding: 0.7rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: #66bb6a;
+            box-shadow: 0 0 0 2px #1e4a22;
+        }
+        .form-group input::placeholder {
+            color: #6a7a6a;
+            font-weight: 400;
+        }
 
-    .brand-bar .brand {
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      background: linear-gradient(135deg, #fff, #f5c842);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-decoration: none;
-    }
+        .btn-create {
+            background: #1e4a22;
+            border: none;
+            border-radius: 60px;
+            padding: 0.7rem 2.2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid #388e3c;
+            box-shadow: 0 4px 0 #0a2a0a;
+            flex: 0 0 auto;
+            margin-left: auto;
+        }
+        .btn-create i {
+            color: #a5d6a7;
+        }
+        .btn-create:hover {
+            background: #2e6a32;
+            transform: scale(1.01);
+            border-color: #66bb6a;
+            box-shadow: 0 6px 0 #0a2a0a;
+        }
+        .btn-create:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #0a2a0a;
+        }
 
-    .brand-bar .badge-pill {
-      background: rgba(255, 215, 0, 0.08);
-      color: #f5c842;
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      padding: 5px 16px;
-      border-radius: 60px;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-    }
+        /* match list */
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1.5rem;
+            color: #c8e6c9;
+            flex-wrap: wrap;
+        }
+        .match-header h2 {
+            font-weight: 600;
+            font-size: 1.7rem;
+            color: white;
+            letter-spacing: -0.3px;
+        }
+        .match-header h2 i {
+            color: #66bb6a;
+            margin-right: 10px;
+        }
+        .match-count {
+            background: #1e2e1e;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            border: 1px solid #2e7d32;
+            font-size: 0.9rem;
+        }
 
-    /* main status card */
-    .status-card {
-      background: rgba(14, 14, 14, 0.7);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 44px;
-      padding: 40px 38px 36px;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
-      transition: all 0.2s ease;
-    }
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+        }
 
-    .status-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 28px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
+        .match-card {
+            background: rgba(10, 20, 10, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid #2a5e2a;
+            border-radius: 2rem;
+            padding: 1.5rem 1.2rem 1.2rem;
+            transition: 0.15s ease;
+            box-shadow: 0 6px 0 #0a1a0a;
+            display: flex;
+            flex-direction: column;
+        }
+        .match-card:hover {
+            border-color: #4caf50;
+            box-shadow: 0 8px 0 #0a1a0a, 0 0 10px #1e4a22;
+            transform: translateY(-3px);
+        }
 
-    .status-header .title-group h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: -0.4px;
-      color: #fff;
-      line-height: 1.2;
-    }
+        .match-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .match-title .mode-badge {
+            background: #1e3a1e;
+            padding: 0.2rem 0.9rem;
+            border-radius: 30px;
+            color: #a5d6a7;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #2e7d32;
+        }
+        .match-title .token-pot {
+            background: #0f2a0f;
+            border-radius: 30px;
+            padding: 0.2rem 0.9rem;
+            color: #b9f6ca;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 1px solid #388e3c;
+        }
+        .match-title .token-pot i {
+            margin-right: 4px;
+            color: #66bb6a;
+        }
 
-    .status-header .title-group .sub {
-      font-size: 0.8rem;
-      color: #777;
-      font-weight: 400;
-      margin-top: 2px;
-      letter-spacing: 0.2px;
-    }
+        .match-details {
+            margin: 0.5rem 0 0.8rem;
+            color: #cfdfcf;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+        .match-details i {
+            width: 20px;
+            color: #66bb6a;
+        }
+        .match-details .entry-fee {
+            background: #1a2a1a;
+            display: inline-block;
+            padding: 0.1rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid #2e7d32;
+            font-weight: 600;
+            color: #b9f6ca;
+            margin-top: 4px;
+        }
+        .fortnite-user {
+            background: #111e11;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            border: 1px solid #2a5a2a;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #c8e6c9;
+            margin-top: 6px;
+        }
+        .fortnite-user i {
+            color: #81c784;
+        }
 
-    .status-header .status-tag {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 215, 0, 0.06);
-      padding: 6px 18px 6px 14px;
-      border-radius: 60px;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-    }
+        .match-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #1e3a1e;
+            padding-top: 0.8rem;
+            margin-top: 0.7rem;
+            color: #8aaa8a;
+            font-size: 0.8rem;
+        }
+        .match-footer .status {
+            color: #a5d6a7;
+            background: #0f2a0f;
+            padding: 0.1rem 0.9rem;
+            border-radius: 30px;
+            border: 1px solid #2e7d32;
+        }
+        .match-footer .status i {
+            margin-right: 4px;
+        }
 
-    .status-header .status-tag .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #f5c842;
-      animation: pulse-dot 1.8s infinite;
-    }
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #6a8a6a;
+            padding: 2.5rem 0;
+            font-size: 1.1rem;
+            border: 1px dashed #2a5a2a;
+            border-radius: 3rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .empty-state i {
+            font-size: 2.2rem;
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
 
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.2; transform: scale(0.6); }
-    }
-
-    .status-header .status-tag .label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: #f5c842;
-    }
-
-    /* grid */
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px 32px;
-      margin: 24px 0 20px;
-    }
-
-    .info-grid .item .lbl {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-      color: #555;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .info-grid .item .val {
-      font-size: 0.95rem;
-      color: #ddd;
-      font-weight: 400;
-      letter-spacing: 0.1px;
-    }
-
-    .info-grid .item .val.gold {
-      color: #f5c842;
-      font-weight: 500;
-    }
-
-    .info-grid .item .val.mono {
-      font-family: 'SF Mono', 'Courier New', monospace;
-      font-size: 0.8rem;
-      color: #999;
-    }
-
-    .divider-light {
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.06), transparent);
-      margin: 12px 0 18px;
-    }
-
-    .status-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 8px;
-    }
-
-    .status-footer .timestamp {
-      color: #555;
-      font-size: 0.7rem;
-      letter-spacing: 0.2px;
-    }
-
-    .status-footer .timestamp i {
-      margin-right: 6px;
-      color: #444;
-    }
-
-    .status-footer .meta-link {
-      color: #666;
-      text-decoration: none;
-      font-size: 0.75rem;
-      padding: 4px 14px;
-      border-radius: 40px;
-      border: 1px solid #222;
-      transition: 0.25s ease;
-      background: rgba(0,0,0,0.2);
-    }
-
-    .status-footer .meta-link i {
-      margin-right: 6px;
-    }
-
-    .status-footer .meta-link:hover {
-      color: #f5c842;
-      border-color: rgba(245, 200, 66, 0.15);
-      background: rgba(245, 200, 66, 0.03);
-    }
-
-    /* note */
-    .status-note {
-      margin-top: 24px;
-      padding: 14px 22px;
-      background: rgba(16, 16, 16, 0.4);
-      border-radius: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.02);
-    }
-
-    .status-note p {
-      color: #555;
-      font-size: 0.75rem;
-      letter-spacing: 0.2px;
-    }
-
-    .status-note p i {
-      margin-right: 8px;
-      color: #3a3a3a;
-    }
-
-    /* footer */
-    .site-footer {
-      margin-top: 40px;
-      text-align: center;
-      color: #3a3a3a;
-      font-size: 0.7rem;
-      letter-spacing: 0.3px;
-      border-top: 1px solid rgba(255,255,255,0.02);
-      padding-top: 24px;
-      width: 100%;
-      max-width: 780px;
-    }
-
-    .site-footer a {
-      color: #4a4a4a;
-      text-decoration: none;
-      margin: 0 12px;
-      transition: 0.2s;
-    }
-
-    .site-footer a:hover {
-      color: #f5c842;
-    }
-
-    .site-footer .copy {
-      margin-top: 8px;
-      color: #2e2e2e;
-    }
-
-    /* mobile */
-    @media (max-width: 600px) {
-      body { padding: 12px; }
-
-      .brand-bar {
-        padding: 10px 16px 10px 20px;
-        border-radius: 40px;
-      }
-      .brand-bar .brand { font-size: 1rem; }
-      .brand-bar .badge-pill { font-size: 0.5rem; padding: 4px 12px; }
-
-      .status-card {
-        padding: 26px 18px 24px;
-        border-radius: 32px;
-      }
-
-      .status-header .title-group h1 { font-size: 1.4rem; }
-      .status-header .status-tag { padding: 4px 12px 4px 10px; }
-      .status-header .status-tag .label { font-size: 0.6rem; }
-
-      .info-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .status-footer {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .status-note { padding: 12px 16px; }
-      .site-footer { margin-top: 28px; padding-top: 18px; }
-      .site-footer a { margin: 0 8px; }
-    }
-
-    @media (max-width: 400px) {
-      .status-card { padding: 20px 14px; }
-      .status-header .title-group h1 { font-size: 1.2rem; }
-    }
-  </style>
+        /* responsive */
+        @media (max-width: 650px) {
+            .glass-card { padding: 1.5rem; }
+            .form-row { flex-direction: column; align-items: stretch; }
+            .btn-create { margin-left: 0; justify-content: center; }
+            .logo h1 { font-size: 1.8rem; }
+        }
+    </style>
 </head>
 <body>
+    <div class="glass-card" id="app">
+        <!-- header -->
+        <div class="header">
+            <div class="logo">
+                <h1>🎯 Eval Tokens <span>beta</span></h1>
+            </div>
+            <div class="token-badge">
+                <i class="fas fa-coins"></i> token pool: <span id="totalTokenDisplay">0.00</span>
+            </div>
+        </div>
 
-  <div class="bg-glow"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+        <!-- create match -->
+        <div class="create-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user-friends"></i> format</label>
+                    <select id="matchType">
+                        <option value="1v1">1v1</option>
+                        <option value="2v2" selected>2v2</option>
+                        <option value="3v3">3v3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-ticket-alt"></i> entry fee (tokens)</label>
+                    <input type="number" id="entryFee" placeholder="e.g. 0.50" step="0.01" min="0.01" value="0.50">
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label><i class="fas fa-user"></i> your fortnite user</label>
+                    <input type="text" id="fortniteUser" placeholder="Epic display name..." value="Vortex_77">
+                </div>
+                <button class="btn-create" id="createMatchBtn"><i class="fas fa-plus-circle"></i> create match</button>
+            </div>
+            <div style="margin-top: 0.6rem; font-size: 0.8rem; color: #5a7a5a; display: flex; gap: 16px; flex-wrap: wrap;">
+                <span><i class="fas fa-info-circle" style="color: #388e3c;"></i> winner gets 0.50 from both duos (2v2)</span>
+                <span><i class="fas fa-coins" style="color: #66bb6a;"></i> tokens are locked in the match</span>
+            </div>
+        </div>
 
-  <div class="status-container">
+        <!-- match list -->
+        <div class="match-header">
+            <h2><i class="fas fa-gamepad"></i> live matches</h2>
+            <span class="match-count" id="matchCount">0 matches</span>
+        </div>
 
-    <!-- minimal bar -->
-    <div class="brand-bar">
-      <span class="brand">HYBRID RIFT</span>
-      <span class="badge-pill"><i class="fas fa-circle" style="font-size:6px; margin-right:6px; color:#f5c842;"></i> status</span>
+        <div class="match-grid" id="matchGrid">
+            <!-- dynamic cards injected here -->
+            <div class="empty-state">
+                <i class="fas fa-ghost"></i>
+                <span>no matches yet — create one above</span>
+            </div>
+        </div>
     </div>
 
-    <!-- main status card -->
-    <div class="status-card">
+    <script>
+        (function() {
+            // ---------- state ----------
+            let matches = [];  // each: { id, type, entryFee, creator, createdAt, status }
 
-      <div class="status-header">
-        <div class="title-group">
-          <h1>System Status</h1>
-          <div class="sub">Real‑time product & development updates</div>
-        </div>
-        <div class="status-tag">
-          <span class="dot"></span>
-          <span class="label">Developing</span>
-        </div>
-      </div>
+            // DOM refs
+            const matchGrid = document.getElementById('matchGrid');
+            const matchCount = document.getElementById('matchCount');
+            const totalTokenDisplay = document.getElementById('totalTokenDisplay');
 
-      <!-- product info -->
-      <div style="margin-bottom: 6px;">
-        <span style="font-size:1.1rem; font-weight:600; color:#fff; letter-spacing:-0.2px;">Fortnite Slotted</span>
-        <span style="font-size:0.7rem; color:#555; margin-left:10px; font-weight:400;">v2.4.1</span>
-      </div>
+            const matchType = document.getElementById('matchType');
+            const entryFee = document.getElementById('entryFee');
+            const fortniteUser = document.getElementById('fortniteUser');
+            const createBtn = document.getElementById('createMatchBtn');
 
-      <div class="info-grid">
-        <div class="item">
-          <div class="lbl">Status</div>
-          <div class="val gold">In Development</div>
-        </div>
-        <div class="item">
-          <div class="lbl">Last Update</div>
-          <div class="val">2026-07-02 10:24 UTC</div>
-        </div>
-        <div class="item">
-          <div class="lbl">Known Issues</div>
-          <div class="val mono">none</div>
-        </div>
-        <div class="item">
-          <div class="lbl">Stability</div>
-          <div class="val">Testing phase</div>
-        </div>
-        <div class="item">
-          <div class="lbl">Detection Risk</div>
-          <div class="val gold">Low</div>
-        </div>
-        <div class="item">
-          <div class="lbl">Estimated Release</div>
-          <div class="val">Q3 2026</div>
-        </div>
-      </div>
-
-      <div class="divider-light"></div>
-
-      <div class="status-footer">
-        <div class="timestamp">
-          <i class="fas fa-clock"></i>
-          Last checked: <span id="timestamp">just now</span>
-        </div>
-        <a href="#" class="meta-link">
-          <i class="fas fa-code"></i> Changelog
-        </a>
-      </div>
-
-      <div class="status-note">
-        <p>
-          <i class="fas fa-info-circle"></i>
-          This page is dedicated to real‑time status. Additional products will appear here as they become available.
-        </p>
-      </div>
-
-    </div>
-
-    <!-- footer -->
-    <div class="site-footer">
-      <div>
-        <a href="#">Home</a>
-        <a href="#" style="color:#f5c842;">Status</a>
-        <a href="#">Resell</a>
-        <a href="#">Terms</a>
-        <a href="#">About</a>
-      </div>
-      <div class="copy">
-        <i class="fas fa-bolt" style="margin-right:4px; color:#2a2a2a;"></i> 2026 Hybrid Rift · all rights reserved
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    (function() {
-      // Supabase client (kept for completeness, not actively used in this view)
-      const supabase = window.supabase.createClient(
-        "https://rgdkdflkviigwdtuodjy.supabase.co",
-        "sb_publishable_g6SPFSeUGkLQiwcwDegpuw_HDihXvip"
-      );
-
-      // timestamp updater
-      function updateTimestamp() {
-        const el = document.getElementById('timestamp');
-        if (!el) return;
-        const now = new Date();
-        const utc = now.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        });
-        el.textContent = utc + ' UTC';
-      }
-
-      updateTimestamp();
-      setInterval(updateTimestamp, 15000);
-
-      // optional: handle simple "changelog" click (demo)
-      document.querySelector('.meta-link')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        const note = document.querySelector('.status-note p');
-        if (note) {
-          const original = note.innerHTML;
-          note.innerHTML = '<i class="fas fa-code"></i> Changelog: v2.4.1 — improved stability, minor fixes.';
-          setTimeout(() => {
-            note.innerHTML = original;
-          }, 2800);
-        }
-      });
-
-      // brand / nav clicks (just for demo consistency)
-      document.querySelectorAll('.site-footer a, .brand-bar .brand').forEach(link => {
-        link.addEventListener('click', function(e) {
-          if (this.getAttribute('href') === '#') {
-            e.preventDefault();
-            if (this.textContent.trim().toLowerCase() !== 'status') {
-              // subtle feedback
-              const statusCard = document.querySelector('.status-card');
-              if (statusCard) {
-                statusCard.style.transition = 'box-shadow 0.15s';
-                statusCard.style.boxShadow = '0 0 0 1px rgba(255,215,0,0.08), 0 25px 80px rgba(0,0,0,0.7)';
-                setTimeout(() => {
-                  statusCard.style.boxShadow = '0 25px 80px rgba(0,0,0,0.7)';
-                }, 200);
-              }
+            // helpers
+            function formatToken(val) {
+                return Number(val).toFixed(2);
             }
-          }
-        });
-      });
 
-      console.log('Hybrid Rift · status page (clean & focused)');
-    })();
-  </script>
+            function updateStats() {
+                // total token pool = sum of entryFee * 2 (because each player pays entry, but we display as "pot" per match)
+                // for simplicity: total tokens = sum of all entry fees * 2 (as if both sides pay)
+                // but we want to show "token pool" as total tokens in all matches
+                let total = 0;
+                matches.forEach(m => {
+                    total += m.entryFee * 2;  // both sides contribute
+                });
+                totalTokenDisplay.textContent = formatToken(total);
 
+                // match count
+                matchCount.textContent = matches.length + ' match' + (matches.length !== 1 ? 'es' : '');
+            }
+
+            function renderMatches() {
+                if (matches.length === 0) {
+                    matchGrid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-ghost"></i>
+                            <span>no matches yet — create one above</span>
+                        </div>
+                    `;
+                    updateStats();
+                    return;
+                }
+
+                let html = '';
+                matches.forEach((match, index) => {
+                    // determine mode label
+                    const modeLabel = match.type.toUpperCase();
+                    // entry fee per player
+                    const fee = formatToken(match.entryFee);
+                    // total pot = fee * 2 (for 2 players) but we show as "pot"
+                    const pot = formatToken(match.entryFee * 2);
+
+                    // fortnite user: use the creator's name, or fallback
+                    const user = match.creator || 'unknown';
+
+                    html += `
+                        <div class="match-card" data-id="${match.id}">
+                            <div class="match-title">
+                                <span class="mode-badge"><i class="fas fa-crosshairs"></i> ${modeLabel}</span>
+                                <span class="token-pot"><i class="fas fa-coins"></i> ${pot}</span>
+                            </div>
+                            <div class="match-details">
+                                <div><i class="fas fa-user"></i> creator: <strong style="color:white;">${user}</strong></div>
+                                <div style="display:flex; flex-wrap:wrap; gap: 6px 12px; margin-top: 4px;">
+                                    <span><i class="fas fa-ticket-alt"></i> entry: <span class="entry-fee">${fee} tokens</span></span>
+                                    <span><i class="fas fa-trophy"></i> winner takes ${pot}</span>
+                                </div>
+                                <div class="fortnite-user">
+                                    <i class="fab fa-fort-awesome"></i> ${user}
+                                </div>
+                            </div>
+                            <div class="match-footer">
+                                <span><i class="far fa-clock"></i> ${new Date(match.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                                <span class="status"><i class="fas fa-circle" style="color: #66bb6a; font-size: 0.6rem;"></i> open</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                matchGrid.innerHTML = html;
+                updateStats();
+            }
+
+            // create match
+            function createMatch() {
+                // get values
+                const type = matchType.value;
+                let fee = parseFloat(entryFee.value);
+                if (isNaN(fee) || fee <= 0) {
+                    alert('Please enter a valid entry fee (e.g. 0.50)');
+                    return;
+                }
+                // cap to 2 decimals
+                fee = Math.round(fee * 100) / 100;
+
+                let user = fortniteUser.value.trim();
+                if (user === '') {
+                    alert('Please enter your Fortnite user name.');
+                    return;
+                }
+
+                // build match object
+                const newMatch = {
+                    id: Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                    type: type,
+                    entryFee: fee,
+                    creator: user,
+                    createdAt: Date.now(),
+                    status: 'open'
+                };
+
+                matches.unshift(newMatch); // newest first
+                renderMatches();
+
+                // optional: reset fee to default but keep user
+                // we don't reset user, but we can set fee back to 0.50 as placeholder
+                // but it's fine to keep last value.
+                // just a tiny UX: set fee to 0.50 if it was empty
+                if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) {
+                    entryFee.value = '0.50';
+                }
+                // keep user as is
+            }
+
+            // event listeners
+            createBtn.addEventListener('click', createMatch);
+
+            // enter key on any input
+            document.querySelectorAll('#matchType, #entryFee, #fortniteUser').forEach(el => {
+                el.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        createMatch();
+                    }
+                });
+            });
+
+            // seed with two example matches (so UI looks alive)
+            function seedMatches() {
+                const now = Date.now();
+                matches = [
+                    {
+                        id: 'seed1',
+                        type: '2v2',
+                        entryFee: 0.50,
+                        creator: 'Ninja_Elite',
+                        createdAt: now - 120000,
+                        status: 'open'
+                    },
+                    {
+                        id: 'seed2',
+                        type: '1v1',
+                        entryFee: 1.25,
+                        creator: 'SniperWolf',
+                        createdAt: now - 350000,
+                        status: 'open'
+                    },
+                    {
+                        id: 'seed3',
+                        type: '3v3',
+                        entryFee: 0.75,
+                        creator: 'Bugha_22',
+                        createdAt: now - 700000,
+                        status: 'open'
+                    }
+                ];
+                renderMatches();
+            }
+
+            // initial seed
+            seedMatches();
+
+            // also set default user if empty
+            if (fortniteUser.value === '') {
+                fortniteUser.value = 'Vortex_77';
+            }
+
+            // extra: if entry fee empty, set default
+            if (entryFee.value === '') {
+                entryFee.value = '0.50';
+            }
+
+            // expose for debugging
+            window.__matches = matches;
+        })();
+    </script>
 </body>
 </html>

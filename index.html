@@ -107,6 +107,13 @@
     .sync-status.offline {
       color: #ff4444;
     }
+    .sync-status .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
     .webhook-status {
       font-size: 0.7rem;
@@ -178,7 +185,6 @@
       font-weight: 500;
     }
 
-    /* Navigation Tabs */
     .nav-tabs {
       display: flex;
       gap: 0.5rem;
@@ -213,7 +219,6 @@
       display: block;
     }
 
-    /* Staff Join Section */
     .staff-join-section {
       background: #0f0f0f;
       border: 1px solid #ff4444;
@@ -502,7 +507,7 @@
     }
     .empty-state i { font-size: 2.5rem; color: #b8860b; margin-bottom: 0.5rem; display: block; }
 
-    /* MATCH UI - Same for players and staff */
+    /* MATCH UI */
     .match-ui {
       display: none;
       position: fixed;
@@ -587,6 +592,7 @@
       max-height: 300px;
       overflow-y: auto;
       margin-bottom: 1rem;
+      min-height: 100px;
     }
     .match-ui .chat-box .msg {
       padding: 0.3rem 0;
@@ -706,7 +712,6 @@
     .match-ui .match-actions .call-staff-btn { border-color: #ff4444; color: #ff4444; }
     .match-ui .match-actions .call-staff-btn:hover { background: #ff4444; color: #0b0b0b; }
 
-    /* Staff resolution buttons in match UI */
     .match-ui .staff-resolution-section {
       display: none;
       margin-top: 1.5rem;
@@ -779,25 +784,22 @@
     <button id="registerBtn">register</button>
     <button id="loginBtn">login</button>
     <span class="auth-status" id="authStatus"><i class="fas fa-circle" style="color:#555;font-size:0.6rem;"></i> guest</span>
-    <span class="sync-status" id="syncStatus"><i class="fas fa-cloud"></i> connected</span>
+    <span class="sync-status" id="syncStatus"><i class="fas fa-sync-alt fa-spinner"></i> connecting</span>
     <button class="btn-test-webhook" id="testWebhookBtn"><i class="fas fa-bolt"></i> Test Webhook</button>
-    <span class="webhook-status" id="webhookStatus">⚪ idle</span>
+    <span class="webhook-status" id="webhookStatus">idle</span>
   </div>
 
-  <!-- Staff Join Section -->
   <div class="staff-join-section" id="staffJoinSection">
     <label><i class="fas fa-key"></i> Staff Join Match:</label>
     <input type="text" id="staffJoinInput" placeholder="Enter match ID...">
     <button id="staffJoinBtn"><i class="fas fa-sign-in-alt"></i> Join Match</button>
   </div>
 
-  <!-- Navigation Tabs -->
   <div class="nav-tabs">
     <button class="active" data-tab="home">Home</button>
     <button data-tab="matches">Matches</button>
   </div>
 
-  <!-- Home Tab -->
   <div class="tab-content active" id="tab-home">
     <div style="text-align:center; padding:3rem 0;">
       <h2 style="color:#d4af37; font-size:2.5rem; margin-bottom:1rem;">Welcome to Eval Tokens</h2>
@@ -822,9 +824,7 @@
     </div>
   </div>
 
-  <!-- Matches Tab -->
   <div class="tab-content" id="tab-matches">
-    <!-- Create Match -->
     <div class="create-section">
       <div class="form-row">
         <div class="form-group">
@@ -848,7 +848,6 @@
       </div>
     </div>
 
-    <!-- Match List -->
     <div class="match-header">
       <h2><i class="fas fa-gamepad"></i> live matches</h2>
       <span class="match-count" id="matchCount">0 matches</span>
@@ -859,7 +858,7 @@
   </div>
 </div>
 
-<!-- MATCH UI - Unified for players and staff -->
+<!-- MATCH UI -->
 <div class="match-ui" id="matchUI">
   <div class="match-header-ui">
     <div>
@@ -907,7 +906,6 @@
     </div>
   </div>
 
-  <!-- Player Actions -->
   <div class="match-actions" id="matchUIPlayerActions">
     <button class="win-btn" id="matchUIWinBtn">We Won</button>
     <button class="lose-btn" id="matchUILoseBtn">We Lost</button>
@@ -915,7 +913,6 @@
     <button class="call-staff-btn" id="matchUICallStaffBtn">Call Staff</button>
   </div>
 
-  <!-- Proof Section -->
   <div class="proof-section" id="matchUIProofSection">
     <label>Upload proof of your win (screenshot):</label>
     <input type="file" id="matchUIProofFile" accept="image/*">
@@ -925,7 +922,6 @@
     </div>
   </div>
 
-  <!-- Staff Resolution Section -->
   <div class="staff-resolution-section" id="matchUIStaffResolution">
     <h3><i class="fas fa-shield-alt"></i> Staff Resolution</h3>
     <div class="staff-actions">
@@ -973,8 +969,10 @@
     let loggedInUser = null;
     let chatMessages = {};
     let isStaff = false;
-    let activeMatchId = null;  // Current match in UI
-    let matchUIChatSubscription = null;
+    let activeMatchId = null;
+    let chatPollInterval = null;
+    let matchPollInterval = null;
+    let isChatPolling = false;
 
     // DOM refs
     const matchGrid = document.getElementById('matchGrid');
@@ -1001,7 +999,6 @@
     const staffJoinBtn = document.getElementById('staffJoinBtn');
     const testWebhookBtn = document.getElementById('testWebhookBtn');
 
-    // Tab navigation
     const tabs = document.querySelectorAll('.nav-tabs button');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -1045,7 +1042,7 @@
           body: JSON.stringify(data)
         });
         
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         
         webhookStatus.textContent = 'sent!';
         webhookStatus.className = 'webhook-status success';
@@ -1099,10 +1096,10 @@
       }
     }
 
-    // ---------- SUPABASE OPERATIONS ----------
-    async function loadMatchesFromSupabase() {
-      if (!isSupabaseConnected) return false;
-
+    // ---------- POLLING FUNCTIONS ----------
+    async function pollMatches() {
+      if (!isSupabaseConnected) return;
+      
       try {
         const { data, error } = await supabase
           .from('matches')
@@ -1112,7 +1109,7 @@
         if (error) throw error;
 
         if (data) {
-          matches = data.map(m => ({
+          const newMatches = data.map(m => ({
             id: m.id,
             type: m.type,
             entryFee: m.entry_fee,
@@ -1128,77 +1125,46 @@
             proofSubmitted: m.proof_submitted || false,
             resolution: m.resolution || null
           }));
+          
+          // Check if matches changed
+          const oldIds = new Set(matches.map(m => m.id));
+          const newIds = new Set(newMatches.map(m => m.id));
+          const changed = oldIds.size !== newIds.size || 
+            JSON.stringify(matches) !== JSON.stringify(newMatches);
+          
+          matches = newMatches;
           renderMatches();
           updateStats();
-          syncStatus.textContent = 'synced';
-          syncStatus.className = 'sync-status';
-          return true;
+          
+          if (changed) {
+            syncStatus.textContent = 'synced';
+            syncStatus.className = 'sync-status';
+          }
+          
+          // Update active match UI if open
+          if (activeMatchId) {
+            const match = matches.find(m => m.id === activeMatchId);
+            if (match) {
+              matchUIFormat.textContent = match.type;
+              matchUIEntryFee.textContent = formatToken(match.entryFee) + ' tokens';
+              matchUICreator.textContent = match.creator;
+              matchUIStatus.textContent = match.dispute ? 'DISPUTE' : 'Open';
+              matchUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
+              matchUIWins.textContent = (match.wins || []).join(', ') || 'None';
+              matchUILosses.textContent = (match.losses || []).join(', ') || 'None';
+            }
+          }
         }
       } catch (e) {
-        console.error('Error loading matches:', e);
+        console.error('Poll matches error:', e);
         syncStatus.textContent = 'error';
         syncStatus.className = 'sync-status offline';
       }
-      return false;
     }
 
-    async function saveMatchToSupabase(match) {
-      if (!isSupabaseConnected) return false;
-
-      try {
-        const { error } = await supabase
-          .from('matches')
-          .upsert({
-            id: match.id,
-            type: match.type,
-            entry_fee: match.entryFee,
-            creator: match.creator,
-            created_at: match.createdAt,
-            status: match.status || 'open',
-            wins: match.wins || [],
-            losses: match.losses || [],
-            dispute: match.dispute || false,
-            ended: match.ended || false,
-            voided: match.voided || false,
-            resolved: match.resolved || false,
-            proof_submitted: match.proofSubmitted || false,
-            resolution: match.resolution || null
-          }, { onConflict: 'id' });
-
-        if (error) throw error;
-        return true;
-      } catch (e) {
-        console.error('Error saving match:', e);
-        return false;
-      }
-    }
-
-    async function saveChatMessageToSupabase(matchId, message) {
-      if (!isSupabaseConnected) return false;
-
-      try {
-        const { error } = await supabase
-          .from('chat_messages')
-          .insert({
-            match_id: matchId,
-            username: message.user || 'system',
-            text: message.text,
-            system: message.system || false,
-            dispute: message.dispute || false,
-            staff: message.staff || false,
-            created_at: message.time || Date.now()
-          });
-
-        if (error) throw error;
-        return true;
-      } catch (e) {
-        console.error('Error saving chat:', e);
-        return false;
-      }
-    }
-
-    async function loadChatMessagesFromSupabase(matchId) {
-      if (!isSupabaseConnected) return;
+    async function pollChat(matchId) {
+      if (!isSupabaseConnected || !matchId || isChatPolling) return;
+      isChatPolling = true;
 
       try {
         const { data, error } = await supabase
@@ -1210,7 +1176,7 @@
         if (error) throw error;
 
         if (data) {
-          chatMessages[matchId] = data.map(m => ({
+          const newMessages = data.map(m => ({
             user: m.username,
             text: m.text,
             system: m.system || false,
@@ -1218,13 +1184,23 @@
             staff: m.staff || false,
             time: m.created_at
           }));
-          if (activeMatchId === matchId) {
-            renderMatchUIChat(matchId);
+          
+          // Check if messages changed
+          const oldMsgs = chatMessages[matchId] || [];
+          const changed = JSON.stringify(oldMsgs) !== JSON.stringify(newMessages);
+          
+          if (changed) {
+            chatMessages[matchId] = newMessages;
+            if (activeMatchId === matchId) {
+              renderMatchUIChat(matchId);
+            }
           }
         }
       } catch (e) {
-        console.error('Error loading chat:', e);
+        console.error('Poll chat error:', e);
       }
+      
+      isChatPolling = false;
     }
 
     // ---------- RENDER MATCHES ----------
@@ -1232,7 +1208,7 @@
       const activeMatches = matches.filter(m => !m.ended && !m.voided);
       
       if (activeMatches.length === 0) {
-        matchGrid.innerHTML = `<div class="empty-state"><i class="fas fa-skull"></i><span>no active matches — create one</span></div>`;
+        matchGrid.innerHTML = '<div class="empty-state"><i class="fas fa-skull"></i><span>no active matches — create one</span></div>';
         updateStats();
         return;
       }
@@ -1247,7 +1223,7 @@
         let extraClass = '';
         if (isDispute) { statusText = 'dispute'; statusColor = '#ff4444'; extraClass = 'dispute'; }
 
-        const disputeTag = isDispute ? `<div class="dispute-tag"><i class="fas fa-exclamation-triangle"></i> DISPUTE</div>` : '';
+        const disputeTag = isDispute ? '<div class="dispute-tag"><i class="fas fa-exclamation-triangle"></i> DISPUTE</div>' : '';
 
         html += `
           <div class="match-card ${extraClass}" data-id="${m.id}">
@@ -1319,42 +1295,16 @@
       // Load chat
       if (!chatMessages[matchId]) {
         chatMessages[matchId] = [];
-        loadChatMessagesFromSupabase(matchId);
       }
       renderMatchUIChat(matchId);
-
-      // Subscribe to chat updates
-      if (matchUIChatSubscription) {
-        matchUIChatSubscription.unsubscribe();
+      
+      // Start chat polling
+      if (chatPollInterval) {
+        clearInterval(chatPollInterval);
       }
-      matchUIChatSubscription = supabase
-        .channel('chat_' + matchId)
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'chat_messages',
-            filter: 'match_id=eq.' + matchId
-          },
-          (payload) => {
-            const newMsg = payload.new;
-            const msg = {
-              user: newMsg.username,
-              text: newMsg.text,
-              system: newMsg.system || false,
-              dispute: newMsg.dispute || false,
-              staff: newMsg.staff || false,
-              time: newMsg.created_at
-            };
-            if (!chatMessages[matchId]) chatMessages[matchId] = [];
-            chatMessages[matchId].push(msg);
-            if (activeMatchId === matchId) {
-              renderMatchUIChat(matchId);
-            }
-          }
-        )
-        .subscribe();
+      chatPollInterval = setInterval(() => {
+        pollChat(matchId);
+      }, 1500);
 
       // Auto-join message
       const msgs = chatMessages[matchId];
@@ -1366,6 +1316,7 @@
           staff: isStaff
         };
         msgs.push(joinMsg);
+        chatMessages[matchId] = msgs;
         renderMatchUIChat(matchId);
         saveChatMessageToSupabase(matchId, joinMsg);
       }
@@ -1373,13 +1324,17 @@
 
     function renderMatchUIChat(matchId) {
       const msgs = chatMessages[matchId] || [];
+      if (msgs.length === 0) {
+        matchUIChatBox.innerHTML = '<div class="msg system">No messages yet</div>';
+        return;
+      }
       matchUIChatBox.innerHTML = msgs.map(m => {
         let className = 'msg';
         if (m.system) className += ' system';
         if (m.dispute) className += ' dispute';
         if (m.staff) className += ' staff';
-        if (m.system) return `<div class="${className}">${m.text}</div>`;
-        return `<div class="${className}"><strong>${m.user}</strong> ${m.text}</div>`;
+        if (m.system) return '<div class="' + className + '">' + m.text + '</div>';
+        return '<div class="' + className + '"><strong>' + m.user + '</strong> ' + m.text + '</div>';
       }).join('');
       matchUIChatBox.scrollTop = matchUIChatBox.scrollHeight;
     }
@@ -1405,9 +1360,9 @@
     }
 
     function closeMatchUI() {
-      if (matchUIChatSubscription) {
-        matchUIChatSubscription.unsubscribe();
-        matchUIChatSubscription = null;
+      if (chatPollInterval) {
+        clearInterval(chatPollInterval);
+        chatPollInterval = null;
       }
       matchUI.classList.remove('show');
       matchUIProofSection.classList.remove('show');
@@ -1459,7 +1414,7 @@
       if (wins.length > 0 && losses.length > 0) {
         match.dispute = true;
         await saveMatchToSupabase(match);
-        await loadMatchesFromSupabase();
+        await pollMatches();
 
         const msg = { system: true, dispute: true, text: 'DISPUTE detected! Both teams claimed win. Staff will review.' };
         const msgs = chatMessages[match.id] || [];
@@ -1484,7 +1439,6 @@
 
         alert('Dispute detected! Staff have been notified.');
         if (isStaff) {
-          // Refresh UI
           matchUIStatus.textContent = 'DISPUTE';
           matchUIStatus.style.color = '#ff4444';
         }
@@ -1521,7 +1475,7 @@
       });
 
       closeMatchUI();
-      await loadMatchesFromSupabase();
+      await pollMatches();
       alert('Match ended.');
     }
 
@@ -1562,7 +1516,7 @@
         match.dispute = true;
         match.proofSubmitted = true;
         await saveMatchToSupabase(match);
-        await loadMatchesFromSupabase();
+        await pollMatches();
 
         // Send to Discord with image
         const base64Data = proofData.split(',')[1];
@@ -1652,7 +1606,7 @@
       });
 
       closeMatchUI();
-      await loadMatchesFromSupabase();
+      await pollMatches();
       alert('Match resolved: ' + resolution);
     }
 
@@ -1662,16 +1616,67 @@
       const matchId = staffJoinInput.value.trim();
       if (!matchId) return alert('Please enter a match ID');
 
+      await pollMatches();
       const match = matches.find(m => m.id === matchId);
-      if (!match) {
-        await loadMatchesFromSupabase();
-        const matchReload = matches.find(m => m.id === matchId);
-        if (!matchReload) return alert('Match not found. Please check the ID.');
-        openMatchUI(matchReload.id);
-      } else {
-        openMatchUI(match.id);
-      }
+      if (!match) return alert('Match not found. Please check the ID.');
+      openMatchUI(match.id);
       staffJoinInput.value = '';
+    }
+
+    // ---------- SUPABASE OPERATIONS ----------
+    async function saveMatchToSupabase(match) {
+      if (!isSupabaseConnected) return false;
+
+      try {
+        const { error } = await supabase
+          .from('matches')
+          .upsert({
+            id: match.id,
+            type: match.type,
+            entry_fee: match.entryFee,
+            creator: match.creator,
+            created_at: match.createdAt,
+            status: match.status || 'open',
+            wins: match.wins || [],
+            losses: match.losses || [],
+            dispute: match.dispute || false,
+            ended: match.ended || false,
+            voided: match.voided || false,
+            resolved: match.resolved || false,
+            proof_submitted: match.proofSubmitted || false,
+            resolution: match.resolution || null
+          }, { onConflict: 'id' });
+
+        if (error) throw error;
+        return true;
+      } catch (e) {
+        console.error('Error saving match:', e);
+        return false;
+      }
+    }
+
+    async function saveChatMessageToSupabase(matchId, message) {
+      if (!isSupabaseConnected) return false;
+
+      try {
+        const { error } = await supabase
+          .from('chat_messages')
+          .insert({
+            match_id: matchId,
+            username: message.user || 'system',
+            text: message.text,
+            system: message.system || false,
+            dispute: message.dispute || false,
+            staff: message.staff || false,
+            created_at: message.time || Date.now()
+          });
+
+        if (error) throw error;
+        return true;
+      } catch (e) {
+        console.error('Error saving chat:', e);
+        return false;
+      }
     }
 
     // ---------- AUTH ----------
@@ -1775,7 +1780,7 @@
 
       const saved = await saveMatchToSupabase(newMatch);
       if (saved) {
-        await loadMatchesFromSupabase();
+        await pollMatches();
         
         chatMessages[matchId] = [{ system: true, text: 'Match created by ' + user }];
         await saveChatMessageToSupabase(matchId, { system: true, text: 'Match created by ' + user });
@@ -1797,8 +1802,6 @@
         
         if (entryFee.value === '' || parseFloat(entryFee.value) <= 0) entryFee.value = '0.50';
         alert('Match created! Opening match...');
-        
-        // Auto-open the match for the creator
         openMatchUI(matchId);
       } else {
         alert('Failed to create match. Check Supabase connection.');
@@ -1818,36 +1821,17 @@
 
     // ---------- INIT ----------
     async function init() {
-      await loadMatchesFromSupabase();
+      // Start polling
+      await pollMatches();
       
+      if (matchPollInterval) {
+        clearInterval(matchPollInterval);
+      }
+      matchPollInterval = setInterval(pollMatches, 3000);
+
       if (isSupabaseConnected) {
-        supabase
-          .channel('matches_changes')
-          .on(
-            'postgres_changes',
-            {
-              event: '*',
-              schema: 'public',
-              table: 'matches'
-            },
-            async (payload) => {
-              console.log('Match update:', payload);
-              await loadMatchesFromSupabase();
-              if (activeMatchId) {
-                const match = matches.find(m => m.id === activeMatchId);
-                if (match) {
-                  matchUIFormat.textContent = match.type;
-                  matchUIEntryFee.textContent = formatToken(match.entryFee) + ' tokens';
-                  matchUICreator.textContent = match.creator;
-                  matchUIStatus.textContent = match.dispute ? 'DISPUTE' : 'Open';
-                  matchUIStatus.style.color = match.dispute ? '#ff4444' : '#4caf50';
-                  matchUIWins.textContent = (match.wins || []).join(', ') || 'None';
-                  matchUILosses.textContent = (match.losses || []).join(', ') || 'None';
-                }
-              }
-            }
-          )
-          .subscribe();
+        syncStatus.textContent = 'synced';
+        syncStatus.className = 'sync-status';
       }
 
       // Event listeners
@@ -1900,10 +1884,9 @@
       regPass.value = '123';
       await loginUser();
 
-      // Switch to matches tab by default
       switchTab('matches');
 
-      console.log('Eval Tokens initialized with Supabase!');
+      console.log('Eval Tokens initialized with polling!');
       console.log('Staff login: EvalStaff / ' + STAFF_PASSWORD);
     }
 

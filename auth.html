@@ -46,6 +46,7 @@
       font-size: 1rem;
     }
     .btn-red:hover { background: #ff2a2a; transform: scale(1.02); }
+    .btn-red:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-outline-red {
       background: transparent;
       color: #e11d1d;
@@ -91,12 +92,43 @@
       font-size: 0.85rem;
       margin-top: 0.5rem;
       text-align: center;
+      padding: 10px;
+      background: #1a0505;
+      border-radius: 12px;
+      border: 1px solid #2a0a0a;
     }
     .success-msg {
       color: #4ade80;
       font-size: 0.85rem;
       margin-top: 0.5rem;
       text-align: center;
+      padding: 10px;
+      background: #051a05;
+      border-radius: 12px;
+      border: 1px solid #0a2a0a;
+    }
+    .info-msg {
+      color: #60a5fa;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      padding: 10px;
+      background: #0a0a2a;
+      border-radius: 12px;
+      border: 1px solid #1a1a4a;
+    }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -108,8 +140,8 @@
     <span class="brand-font" style="font-weight: 900; font-size: 1.8rem; color:#fff;">ELITE<span style="color:#e11d1d;">.</span>TOKENS</span>
   </div>
 
-  <h2 style="text-align:center; font-weight:700; margin-bottom:0.3rem;" id="formTitle">Welcome back</h2>
-  <p style="text-align:center; color:#9a9a9a; margin-bottom:1.5rem;" id="formSubtitle">Sign in to your account</p>
+  <h2 style="text-align:center; font-weight:700; margin-bottom:0.3rem;" id="formTitle">Create account</h2>
+  <p style="text-align:center; color:#9a9a9a; margin-bottom:1.5rem;" id="formSubtitle">Join the Elite Tokens community</p>
 
   <!-- Social Auth -->
   <button class="btn-outline-red" style="margin-bottom:0.6rem;" onclick="authWithDiscord()"><i class="fab fa-discord"></i> Continue with Discord</button>
@@ -120,19 +152,19 @@
   <!-- Form -->
   <form id="authForm" style="margin-top:1.2rem;" onsubmit="handleAuth(event)">
     <input type="email" id="email" placeholder="Email address" class="input-field" style="margin-bottom:0.8rem;" required />
-    <input type="password" id="password" placeholder="Password" class="input-field" style="margin-bottom:0.8rem;" required />
-    <input type="text" id="username" placeholder="Username" class="input-field" style="margin-bottom:0.8rem; display:none;" />
+    <input type="password" id="password" placeholder="Password" class="input-field" style="margin-bottom:0.8rem;" required minlength="6" />
+    <input type="text" id="username" placeholder="Username" class="input-field" style="margin-bottom:0.8rem;" />
     
     <div class="flex-center" style="justify-content:space-between; margin-bottom:1.2rem;">
       <label><input type="checkbox" id="rememberMe" /> Remember me</label>
       <a href="#" style="color:#e11d1d; text-decoration:none; font-size:0.9rem;" onclick="forgotPassword()">Forgot password?</a>
     </div>
     
-    <button type="submit" class="btn-red" id="submitBtn">Sign In</button>
+    <button type="submit" class="btn-red" id="submitBtn">Sign Up</button>
   </form>
 
   <p style="text-align:center; margin-top:1rem; color:#9a9a9a;" id="toggleText">
-    Don't have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign up</span>
+    Already have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign in</span>
   </p>
 
   <div id="message"></div>
@@ -151,7 +183,7 @@
   const SUPABASE_URL = 'https://kjpjopcxagdvnzhgijvg.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_5ko2Wr62diplPRl5VSlrEw_O601WowO';
 
-  let isLoginMode = true;
+  let isLoginMode = false; // Start in signup mode
 
   function toggleAuthMode() {
     isLoginMode = !isLoginMode;
@@ -160,6 +192,7 @@
     const submitBtn = document.getElementById('submitBtn');
     const toggleText = document.getElementById('toggleText');
     const usernameField = document.getElementById('username');
+    const forgotLink = document.querySelector('a[onclick="forgotPassword()"]');
     
     if (isLoginMode) {
       title.textContent = 'Welcome back';
@@ -167,12 +200,16 @@
       submitBtn.textContent = 'Sign In';
       toggleText.innerHTML = `Don't have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign up</span>`;
       usernameField.style.display = 'none';
+      usernameField.required = false;
+      forgotLink.style.display = 'block';
     } else {
       title.textContent = 'Create account';
       subtitle.textContent = 'Join the Elite Tokens community';
       submitBtn.textContent = 'Sign Up';
       toggleText.innerHTML = `Already have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign in</span>`;
       usernameField.style.display = 'block';
+      usernameField.required = true;
+      forgotLink.style.display = 'none';
     }
     document.getElementById('message').innerHTML = '';
   }
@@ -183,25 +220,33 @@
     const password = document.getElementById('password').value;
     const username = document.getElementById('username').value;
     const messageEl = document.getElementById('message');
+    const submitBtn = document.getElementById('submitBtn');
 
-    messageEl.innerHTML = '<div class="text-muted" style="text-align:center;">Processing...</div>';
+    // Disable button and show loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Processing...';
 
     try {
       if (isLoginMode) {
-        // LOGIN
+        // ===== LOGIN =====
         const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
           method: 'POST',
           headers: {
             'apikey': SUPABASE_ANON_KEY,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ 
+            email: email.trim(), 
+            password: password 
+          })
         });
 
         const data = await response.json();
 
         if (data.error) {
           messageEl.innerHTML = `<div class="error-msg">❌ ${data.error.message}</div>`;
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Sign In';
           return;
         }
 
@@ -210,7 +255,7 @@
         localStorage.setItem('user', JSON.stringify(data.user));
 
         // Get user profile from users table
-        const userRes = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${email}`, {
+        const userRes = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}`, {
           headers: {
             'apikey': SUPABASE_ANON_KEY,
             'Authorization': `Bearer ${data.access_token}`
@@ -228,7 +273,14 @@
         }, 1000);
 
       } else {
-        // REGISTER
+        // ===== REGISTER =====
+        if (!username || username.trim() === '') {
+          messageEl.innerHTML = `<div class="error-msg">❌ Please enter a username</div>`;
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Sign Up';
+          return;
+        }
+
         // First create auth user
         const signupResponse = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
           method: 'POST',
@@ -237,9 +289,9 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ 
-            email, 
-            password,
-            data: { username }
+            email: email.trim(), 
+            password: password,
+            data: { username: username.trim() }
           })
         });
 
@@ -247,53 +299,92 @@
 
         if (signupData.error) {
           messageEl.innerHTML = `<div class="error-msg">❌ ${signupData.error.message}</div>`;
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Sign Up';
           return;
         }
 
-        // Create user profile
-        const userRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+        // Create user profile in users table
+        const profileResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
           method: 'POST',
           headers: {
             'apikey': SUPABASE_ANON_KEY,
             'Authorization': `Bearer ${signupData.access_token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
           },
           body: JSON.stringify({
             id: signupData.user.id,
-            username: username || email.split('@')[0],
-            email: email,
-            token_balance: 0
+            username: username.trim(),
+            email: email.trim(),
+            token_balance: 0,
+            total_earned: 0,
+            total_wins: 0,
+            total_losses: 0,
+            is_admin: false
           })
         });
 
-        messageEl.innerHTML = `<div class="success-msg">✅ Account created! Please check your email to verify.</div>`;
-        
-        // Auto login after registration
+        const profileResult = await profileResponse.json();
+
+        if (profileResponse.status !== 201 && profileResponse.status !== 200) {
+          console.error('Profile creation error:', profileResult);
+          messageEl.innerHTML = `<div class="error-msg">❌ Account created but profile setup failed. Please contact support.</div>`;
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Sign Up';
+          return;
+        }
+
+        messageEl.innerHTML = `<div class="success-msg">✅ Account created! Redirecting...</div>`;
+        localStorage.setItem('token', signupData.access_token);
+        localStorage.setItem('user', JSON.stringify(signupData.user));
+        localStorage.setItem('userData', JSON.stringify(profileResult[0] || { username: username.trim() }));
+
         setTimeout(() => {
-          messageEl.innerHTML = `<div class="success-msg">✅ Login successful! Redirecting...</div>`;
-          localStorage.setItem('token', signupData.access_token);
-          localStorage.setItem('user', JSON.stringify(signupData.user));
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 1000);
+          window.location.href = 'dashboard.html';
         }, 1500);
       }
     } catch (error) {
       console.error('Auth error:', error);
-      messageEl.innerHTML = `<div class="error-msg">❌ Network error. Please try again.</div>`;
+      messageEl.innerHTML = `<div class="error-msg">❌ Network error: ${error.message}. Please check your connection and try again.</div>`;
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = isLoginMode ? 'Sign In' : 'Sign Up';
     }
   }
 
   function authWithDiscord() {
-    alert('Discord OAuth coming soon!');
+    // Redirect to Discord OAuth
+    const redirectUrl = encodeURIComponent(window.location.origin + '/auth-callback.html');
+    window.location.href = `https://kjpjopcxagdvnzhgijvg.supabase.co/auth/v1/authorize?provider=discord&redirect_to=${redirectUrl}`;
   }
 
   function authWithGoogle() {
-    alert('Google OAuth coming soon!');
+    const redirectUrl = encodeURIComponent(window.location.origin + '/auth-callback.html');
+    window.location.href = `https://kjpjopcxagdvnzhgijvg.supabase.co/auth/v1/authorize?provider=google&redirect_to=${redirectUrl}`;
   }
 
   function forgotPassword() {
-    alert('Password reset functionality coming soon!');
+    const email = document.getElementById('email').value;
+    if (!email) {
+      document.getElementById('message').innerHTML = `<div class="error-msg">❌ Please enter your email address</div>`;
+      return;
+    }
+    
+    fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('message').innerHTML = `<div class="success-msg">✅ Password reset email sent! Check your inbox.</div>`;
+    })
+    .catch(() => {
+      document.getElementById('message').innerHTML = `<div class="error-msg">❌ Error sending reset email. Please try again.</div>`;
+    });
   }
 
   // Check if already logged in

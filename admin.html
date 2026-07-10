@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Tokens · Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      line-height: 1.5;
+      padding: 0 1.5rem 2rem;
+      background-image: radial-gradient(circle at 10% 20%, #1a0505 0%, #0a0a0a 90%);
+    }
+    .text-red { color: #e11d1d; }
+    .card-dark {
+      background: #111111;
+      border-radius: 28px;
+      padding: 1.5rem 1.8rem;
+      border: 1px solid #1f1f1f;
+      transition: 0.25s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+    .card-dark:hover { border-color: #e11d1d; }
+    .btn-red {
+      background: #e11d1d;
+      color: #fff;
+      font-weight: 700;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      border: none;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .btn-red:hover { background: #ff2a2a; transform: scale(1.02); }
+    .badge-red {
+      background: #e11d1d20;
+      color: #e11d1d;
+      padding: 0.2rem 0.9rem;
+      border-radius: 60px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border: 1px solid #e11d1d40;
+    }
+    .text-muted { color: #9a9a9a; }
+    .container { max-width: 1440px; margin: 0 auto; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem; }
+    @media (max-width: 992px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .flex-center { display: flex; align-items: center; gap: 0.6rem; }
+    .gap-1 { gap: 1rem; }
+    .stat-pill {
+      background: #141414;
+      border-radius: 60px;
+      padding: 0.4rem 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      border: 1px solid #2a2a2a;
+    }
+    .brand-font { font-family: 'Orbitron', monospace; letter-spacing: 0.5px; }
+    .table-clean {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .table-clean th {
+      text-align: left;
+      color: #9a9a9a;
+      font-weight: 500;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #222;
+    }
+    .table-clean td {
+      padding: 0.7rem 0.1rem;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    footer {
+      border-top: 1px solid #1f1f1f;
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+    ::-webkit-scrollbar { width: 5px; background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #e11d1d; border-radius: 12px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- HEADER -->
+  <header class="flex-between" style="padding: 1.2rem 0;">
+    <div class="flex-center gap-1">
+      <i class="fas fa-bolt" style="color:#e11d1d; font-size: 2rem;"></i>
+      <span class="brand-font" style="font-weight: 900; font-size: 1.8rem; color:#fff;">ELITE<span style="color:#e11d1d;">.</span>TOKENS</span>
+      <span class="badge-red" style="margin-left:0.5rem;">Admin</span>
+    </div>
+    <div class="flex-center gap-2">
+      <span class="stat-pill"><i class="fas fa-users" style="color:#e11d1d;"></i> 2,340 users</span>
+      <a href="index.html" class="btn-red" style="padding: 0.4rem 1.4rem; text-decoration:none;"><i class="fas fa-home"></i> Home</a>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="grid-4" style="margin-bottom:2rem;">
+    <div class="card-dark"><span class="text-muted">Total Users</span><div style="font-size:1.8rem; font-weight:700;">2,340</div></div>
+    <div class="card-dark"><span class="text-muted">Active Matches</span><div style="font-size:1.8rem; font-weight:700;">47</div></div>
+    <div class="card-dark"><span class="text-muted">Pending Withdrawals</span><div style="font-size:1.8rem; font-weight:700;">23</div></div>
+    <div class="card-dark"><span class="text-muted">Total Volume</span><div style="font-size:1.8rem; font-weight:700;">$187k</div></div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="grid-3" style="margin-bottom:2rem;">
+    <div class="card-dark"><i class="fas fa-user-plus text-red"></i> <b>Manage Users</b><br><span class="text-muted">View, edit, suspend</span></div>
+    <div class="card-dark"><i class="fas fa-trophy text-red"></i> <b>Tournaments</b><br><span class="text-muted">Create, edit, bracket</span></div>
+    <div class="card-dark"><i class="fas fa-coin text-red"></i> <b>Token Balances</b><br><span class="text-muted">Adjust, audit, freeze</span></div>
+    <div class="card-dark"><i class="fas fa-arrow-up text-red"></i> <b>Withdrawals</b><br><span class="text-muted">Approve, reject, review</span></div>
+    <div class="card-dark"><i class="fas fa-arrow-down text-red"></i> <b>Deposits</b><br><span class="text-muted">Verify, manual add</span></div>
+    <div class="card-dark"><i class="fas fa-flag text-red"></i> <b>Reports</b><br><span class="text-muted">Disputes, appeals, review</span></div>
+  </div>
+
+  <!-- RECENT ACTIVITY -->
+  <div class="card-dark">
+    <h3><i class="fas fa-bolt" style="color:#e11d1d;"></i> Recent Activity</h3>
+    <table class="table-clean">
+      <thead><tr><th>User</th><th>Action</th><th>Details</th><th>Time</th></tr></thead>
+      <tbody>
+        <tr><td>ReaperX</td><td>Withdrawal</td><td>12 tokens → $10.20</td><td>5m ago</td></tr>
+        <tr><td>Venom_</td><td>Deposit</td><td>+25 tokens ($25)</td><td>12m ago</td></tr>
+        <tr><td>Lxgend</td><td>Match Win</td><td>+2.0 tokens (Box Fights)</td><td>24m ago</td></tr>
+        <tr><td>Fury</td><td>Tournament Register</td><td>Zone Wars Elite</td><td>1h ago</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="flex-between" style="flex-wrap:wrap; gap:0.8rem;">
+    <span>© 2026 ELITE TOKENS · Admin Panel</span>
+    <span class="flex-center gap-1"><i class="fab fa-discord"></i> <i class="fab fa-twitter"></i> <i class="fab fa-youtube"></i></span>
+    <span class="text-muted">Secured · JWT sessions</span>
+  </footer>
+</div>
+</body>
+</html>

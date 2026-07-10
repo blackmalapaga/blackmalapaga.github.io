@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Tokens · Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      line-height: 1.5;
+      padding: 0 1.5rem 2rem;
+      background-image: radial-gradient(circle at 10% 20%, #1a0505 0%, #0a0a0a 90%);
+    }
+    .text-red { color: #e11d1d; }
+    .bg-red { background: #e11d1d; }
+    .glass {
+      background: rgba(20, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(225, 29, 29, 0.25);
+      border-radius: 28px;
+      box-shadow: 0 12px 40px rgba(225, 29, 29, 0.15);
+    }
+    .card-dark {
+      background: #111111;
+      border-radius: 28px;
+      padding: 1.5rem 1.8rem;
+      border: 1px solid #1f1f1f;
+      transition: 0.25s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+    .card-dark:hover { border-color: #e11d1d; box-shadow: 0 0 0 1px #e11d1d55, 0 8px 30px rgba(225,29,29,0.2); }
+    .btn-red {
+      background: #e11d1d;
+      color: #fff;
+      font-weight: 700;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      border: none;
+      transition: 0.2s;
+      box-shadow: 0 4px 16px rgba(225, 29, 29, 0.3);
+      cursor: pointer;
+    }
+    .btn-red:hover { background: #ff2a2a; transform: scale(1.02); box-shadow: 0 8px 28px rgba(225, 29, 29, 0.5); }
+    .btn-outline-red {
+      background: transparent;
+      color: #e11d1d;
+      border: 1.5px solid #e11d1d;
+      padding: 0.65rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .btn-outline-red:hover { background: #e11d1d; color: #fff; }
+    .badge-red {
+      background: #e11d1d20;
+      color: #e11d1d;
+      padding: 0.2rem 0.9rem;
+      border-radius: 60px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border: 1px solid #e11d1d40;
+    }
+    .text-muted { color: #9a9a9a; }
+    .container { max-width: 1440px; margin: 0 auto; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem; }
+    @media (max-width: 992px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .flex-center { display: flex; align-items: center; gap: 0.6rem; }
+    .gap-1 { gap: 1rem; }
+    .gap-2 { gap: 2rem; }
+    .stat-pill {
+      background: #141414;
+      border-radius: 60px;
+      padding: 0.4rem 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      border: 1px solid #2a2a2a;
+    }
+    .live-dot {
+      width: 10px; height: 10px;
+      background: #e11d1d;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulseRed 1.6s infinite;
+    }
+    @keyframes pulseRed {
+      0% { opacity: 0.3; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.3; transform: scale(0.9); }
+    }
+    .match-card {
+      background: #121212;
+      border-radius: 24px;
+      padding: 1.3rem;
+      border: 1px solid #202020;
+      transition: 0.2s;
+    }
+    .match-card:hover { border-color: #e11d1d; }
+    .brand-font { font-family: 'Orbitron', monospace; letter-spacing: 0.5px; }
+    .hero {
+      padding: 3.5rem 2rem 3rem;
+      position: relative;
+      background: radial-gradient(circle at 70% 20%, #2a0808, #0a0a0a 85%);
+      border-radius: 48px;
+      margin-bottom: 2.5rem;
+      overflow: hidden;
+      border: 1px solid #2a0a0a;
+    }
+    .hero-animated {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg, #e11d1d06 0px, #e11d1d06 30px, #1a0505 30px, #1a0505 60px);
+      opacity: 0.25;
+      animation: drift 30s linear infinite;
+    }
+    @keyframes drift {
+      0% { background-position: 0 0; }
+      100% { background-position: 80px 80px; }
+    }
+    footer {
+      border-top: 1px solid #1f1f1f;
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+    ::-webkit-scrollbar { width: 5px; background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #e11d1d; border-radius: 12px; }
+    .skeleton {
+      background: #1e1e1e;
+      border-radius: 12px;
+      height: 24px;
+      width: 100%;
+      animation: shimmer 1.8s infinite;
+    }
+    @keyframes shimmer {
+      0% { opacity: 0.3; }
+      50% { opacity: 0.9; }
+      100% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- HEADER -->
+  <header class="flex-between" style="padding: 1.2rem 0;">
+    <div class="flex-center gap-1">
+      <i class="fas fa-bolt" style="color:#e11d1d; font-size: 2rem;"></i>
+      <span class="brand-font" style="font-weight: 900; font-size: 1.8rem; color:#fff;">ELITE<span style="color:#e11d1d;">.</span>TOKENS</span>
+    </div>
+    <div class="flex-center gap-2">
+      <span class="stat-pill"><i class="fas fa-user" style="color:#e11d1d;"></i> 1.8k online</span>
+      <span class="stat-pill"><i class="fas fa-gamepad" style="color:#e11d1d;"></i> 63 matches</span>
+      <a href="auth.html" class="btn-red" style="padding: 0.4rem 1.4rem; text-decoration:none;"><i class="fas fa-right-to-bracket"></i> Sign in</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-animated"></div>
+    <div style="position: relative; z-index: 2;">
+      <div class="flex-center" style="gap:2rem; flex-wrap:wrap; justify-content:space-between;">
+        <div>
+          <h1 style="font-size: 3.6rem; font-weight: 800; letter-spacing: -1px; line-height:1.1;">Play. Win. <span style="color:#e11d1d;">Cash Out.</span></h1>
+          <p style="color:#b0b0b0; max-width:550px; font-size:1.2rem; margin-top:0.3rem;">Skill-based competition · Virtual token economy · Elite series</p>
+          <div class="flex-center gap-1" style="margin-top:1.8rem; flex-wrap:wrap;">
+            <a href="matches.html" class="btn-red" style="text-decoration:none;"><i class="fas fa-trophy"></i> Join match</a>
+            <a href="wallet.html" class="btn-outline-red" style="text-decoration:none;"><i class="fas fa-wallet"></i> Get tokens</a>
+          </div>
+        </div>
+        <div class="glass" style="padding:1.2rem 2.2rem; min-width:220px; backdrop-filter: blur(12px);">
+          <div><span style="color:#e11d1d;">◆</span> <span class="text-muted">Total prize pool</span></div>
+          <div style="font-size:2.2rem; font-weight:800; color:#fff;">$187,420</div>
+          <div class="flex-between" style="font-size:0.9rem; margin-top:0.5rem;">
+            <span><span class="live-dot"></span> 2,140 players</span>
+            <span><i class="fas fa-fire" style="color:#e11d1d;"></i> 41 active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE STATS + RECENT WINNERS -->
+  <div class="grid-2" style="margin-bottom: 2.5rem;">
+    <div class="card-dark">
+      <div class="flex-between"><span><i class="fas fa-trophy" style="color:#e11d1d;"></i> Recent winners</span> <span class="text-muted" style="font-size:0.8rem;">Live</span></div>
+      <div style="margin-top:0.5rem;">
+        <div class="flex-between"><span><i class="fas fa-user"></i> ReaperX</span> <span style="color:#e11d1d;">+18.5 tokens</span></div>
+        <div class="flex-between"><span><i class="fas fa-user"></i> Venom_</span> <span style="color:#e11d1d;">+9.2 tokens</span></div>
+        <div class="flex-between"><span><i class="fas fa-user"></i> Lxgend</span> <span style="color:#e11d1d;">+27.0 tokens</span></div>
+        <div class="flex-between"><span><i class="fas fa-user"></i> iitzFury</span> <span style="color:#e11d1d;">+6.8 tokens</span></div>
+      </div>
+    </div>
+    <div class="card-dark">
+      <div class="flex-between"><span><i class="fas fa-ranking-star" style="color:#e11d1d;"></i> Daily leaderboard</span> <span class="text-muted">top 5</span></div>
+      <div>
+        <div class="flex-between"><span>1. <b>Fury</b> <span class="text-muted">2,880 pts</span></span> <span style="color:#e11d1d;">+18</span></div>
+        <div class="flex-between"><span>2. <b>K1ng</b> <span class="text-muted">2,540 pts</span></span> <span style="color:#e11d1d;">+14</span></div>
+        <div class="flex-between"><span>3. <b>Shifty</b> <span class="text-muted">2,210 pts</span></span> <span style="color:#e11d1d;">+11</span></div>
+        <div class="flex-between"><span>4. <b>Dre4m</b> <span class="text-muted">1,980 pts</span></span> <span style="color:#e11d1d;">+9</span></div>
+        <div class="flex-between"><span>5. <b>Rex</b> <span class="text-muted">1,720 pts</span></span> <span style="color:#e11d1d;">+7</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED TOURNAMENTS -->
+  <div class="grid-2" style="margin-bottom:2.5rem;">
+    <div class="card-dark">
+      <h3 style="font-weight:700;"><i class="fas fa-award" style="color:#e11d1d;"></i> Featured tournaments</h3>
+      <div class="match-card" style="margin-top:0.8rem;">
+        <div class="flex-between"><span><b>Zone Wars Elite</b> <span class="badge-red">$240</span></span> <span class="text-muted">96/128</span></div>
+        <div class="flex-between" style="font-size:0.85rem;"><span>Entry 2.5 tokens</span> <span><i class="far fa-clock"></i> 3h left</span></div>
+      </div>
+      <div class="match-card" style="margin-top:0.8rem;">
+        <div class="flex-between"><span><b>Box Fight Pro</b> <span class="badge-red">$160</span></span> <span class="text-muted">32/64</span></div>
+        <div class="flex-between" style="font-size:0.85rem;"><span>Entry 1.8 tokens</span> <span><i class="far fa-clock"></i> 5h left</span></div>
+      </div>
+    </div>
+    <div class="card-dark">
+      <h3 style="font-weight:700;"><i class="fas fa-gamepad" style="color:#e11d1d;"></i> Popular modes</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:0.8rem;">
+        <span class="badge-red" style="background:#1f0a0a; color:#ddd;">1v1</span>
+        <span class="badge-red" style="background:#1f0a0a; color:#ddd;">2v2</span>
+        <span class="badge-red" style="background:#1f0a0a; color:#ddd;">Box Fights</span>
+        <span class="badge-red" style="background:#1f0a0a; color:#ddd;">Zone Wars</span>
+        <span class="badge-red" style="background:#1f0a0a; color:#ddd;">Realistics</span>
+        <span class="badge-red" style="background:#1f0a0a; color:#ddd;">Build Fights</span>
+      </div>
+      <div style="margin-top:1.2rem;"><span class="text-muted">Ranked ladders · Tournaments · Custom events</span></div>
+    </div>
+  </div>
+
+  <!-- FAQ + SUPPORT -->
+  <div class="grid-2" style="margin:2.5rem 0;">
+    <div class="card-dark">
+      <h4 style="font-weight:700;"><i class="fas fa-question-circle" style="color:#e11d1d;"></i> FAQ</h4>
+      <div><b>How to earn tokens?</b> <span class="text-muted">Win matches, tournaments, and events.</span></div>
+      <div><b>Withdrawal time?</b> <span class="text-muted">24-48h after approval.</span></div>
+      <div><b>Entry fee transparency?</b> <span class="text-muted">Fee displayed before joining.</span></div>
+    </div>
+    <div class="card-dark">
+      <h4 style="font-weight:700;"><i class="fas fa-headset" style="color:#e11d1d;"></i> Support</h4>
+      <div class="flex-center gap-1"><i class="fas fa-comment-dots"></i> Live chat</div>
+      <div class="flex-center gap-1"><i class="fas fa-ticket"></i> Ticket system</div>
+      <div class="flex-center gap-1"><i class="fab fa-discord"></i> Discord community</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="flex-between" style="flex-wrap:wrap; gap:0.8rem;">
+    <span>© 2026 ELITE TOKENS · esports token platform</span>
+    <span class="flex-center gap-1"><i class="fab fa-discord"></i> <i class="fab fa-twitter"></i> <i class="fab fa-youtube"></i></span>
+    <span class="text-muted">Play. Win. Cash Out.</span>
+  </footer>
+</div>
+</body>
+</html>

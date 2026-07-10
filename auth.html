@@ -20,6 +20,7 @@
       align-items: center;
       justify-content: center;
       background-image: radial-gradient(circle at 10% 20%, #1a0505 0%, #0a0a0a 90%);
+      padding: 20px;
     }
     .auth-container {
       max-width: 480px;
@@ -79,6 +80,24 @@
     .divider::before, .divider::after {
       content: ""; flex: 1; height: 1px; background: #222;
     }
+    .toggle-form {
+      color: #e11d1d;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .toggle-form:hover { color: #ff2a2a; }
+    .error-msg {
+      color: #e11d1d;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    .success-msg {
+      color: #4ade80;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -89,29 +108,34 @@
     <span class="brand-font" style="font-weight: 900; font-size: 1.8rem; color:#fff;">ELITE<span style="color:#e11d1d;">.</span>TOKENS</span>
   </div>
 
-  <h2 style="text-align:center; font-weight:700; margin-bottom:0.3rem;">Welcome back</h2>
-  <p style="text-align:center; color:#9a9a9a; margin-bottom:1.5rem;">Sign in to your account</p>
+  <h2 style="text-align:center; font-weight:700; margin-bottom:0.3rem;" id="formTitle">Welcome back</h2>
+  <p style="text-align:center; color:#9a9a9a; margin-bottom:1.5rem;" id="formSubtitle">Sign in to your account</p>
 
   <!-- Social Auth -->
-  <button class="btn-outline-red" style="margin-bottom:0.6rem;"><i class="fab fa-discord"></i> Continue with Discord</button>
-  <button class="btn-outline-red" style="margin-bottom:1.2rem;"><i class="fab fa-google"></i> Continue with Google</button>
+  <button class="btn-outline-red" style="margin-bottom:0.6rem;" onclick="authWithDiscord()"><i class="fab fa-discord"></i> Continue with Discord</button>
+  <button class="btn-outline-red" style="margin-bottom:1.2rem;" onclick="authWithGoogle()"><i class="fab fa-google"></i> Continue with Google</button>
 
   <div class="divider">or</div>
 
   <!-- Form -->
-  <form style="margin-top:1.2rem;">
-    <input type="email" placeholder="Email address" class="input-field" style="margin-bottom:0.8rem;" />
-    <input type="password" placeholder="Password" class="input-field" style="margin-bottom:0.8rem;" />
+  <form id="authForm" style="margin-top:1.2rem;" onsubmit="handleAuth(event)">
+    <input type="email" id="email" placeholder="Email address" class="input-field" style="margin-bottom:0.8rem;" required />
+    <input type="password" id="password" placeholder="Password" class="input-field" style="margin-bottom:0.8rem;" required />
+    <input type="text" id="username" placeholder="Username" class="input-field" style="margin-bottom:0.8rem; display:none;" />
+    
     <div class="flex-center" style="justify-content:space-between; margin-bottom:1.2rem;">
-      <label><input type="checkbox" /> Remember me</label>
-      <a href="#" style="color:#e11d1d; text-decoration:none; font-size:0.9rem;">Forgot password?</a>
+      <label><input type="checkbox" id="rememberMe" /> Remember me</label>
+      <a href="#" style="color:#e11d1d; text-decoration:none; font-size:0.9rem;" onclick="forgotPassword()">Forgot password?</a>
     </div>
-    <button class="btn-red">Sign In</button>
+    
+    <button type="submit" class="btn-red" id="submitBtn">Sign In</button>
   </form>
 
-  <p style="text-align:center; margin-top:1rem; color:#9a9a9a;">
-    Don't have an account? <a href="#" style="color:#e11d1d; text-decoration:none;">Sign up</a>
+  <p style="text-align:center; margin-top:1rem; color:#9a9a9a;" id="toggleText">
+    Don't have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign up</span>
   </p>
+
+  <div id="message"></div>
 
   <!-- 2FA placeholder -->
   <div style="margin-top:1.2rem; padding:0.8rem; background:#0d0d0d; border-radius:16px; border:1px solid #1f1f1f;">
@@ -120,10 +144,163 @@
       <span class="text-muted" style="font-size:0.85rem;">Two-factor authentication available</span>
     </div>
   </div>
-
-  <p style="text-align:center; margin-top:1rem; font-size:0.75rem; color:#555;">
-    By continuing you agree to our Terms & Privacy Policy
-  </p>
 </div>
+
+<script>
+  // ===== SUPABASE CONFIG =====
+  const SUPABASE_URL = 'https://kjpjopcxagdvnzhgijvg.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_5ko2Wr62diplPRl5VSlrEw_O601WowO';
+
+  let isLoginMode = true;
+
+  function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    const title = document.getElementById('formTitle');
+    const subtitle = document.getElementById('formSubtitle');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleText = document.getElementById('toggleText');
+    const usernameField = document.getElementById('username');
+    
+    if (isLoginMode) {
+      title.textContent = 'Welcome back';
+      subtitle.textContent = 'Sign in to your account';
+      submitBtn.textContent = 'Sign In';
+      toggleText.innerHTML = `Don't have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign up</span>`;
+      usernameField.style.display = 'none';
+    } else {
+      title.textContent = 'Create account';
+      subtitle.textContent = 'Join the Elite Tokens community';
+      submitBtn.textContent = 'Sign Up';
+      toggleText.innerHTML = `Already have an account? <span class="toggle-form" onclick="toggleAuthMode()">Sign in</span>`;
+      usernameField.style.display = 'block';
+    }
+    document.getElementById('message').innerHTML = '';
+  }
+
+  async function handleAuth(event) {
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value;
+    const messageEl = document.getElementById('message');
+
+    messageEl.innerHTML = '<div class="text-muted" style="text-align:center;">Processing...</div>';
+
+    try {
+      if (isLoginMode) {
+        // LOGIN
+        const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          messageEl.innerHTML = `<div class="error-msg">❌ ${data.error.message}</div>`;
+          return;
+        }
+
+        // Save token
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Get user profile from users table
+        const userRes = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${email}`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${data.access_token}`
+          }
+        });
+        const userData = await userRes.json();
+        
+        if (userData && userData.length > 0) {
+          localStorage.setItem('userData', JSON.stringify(userData[0]));
+        }
+
+        messageEl.innerHTML = `<div class="success-msg">✅ Login successful! Redirecting...</div>`;
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+
+      } else {
+        // REGISTER
+        // First create auth user
+        const signupResponse = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            email, 
+            password,
+            data: { username }
+          })
+        });
+
+        const signupData = await signupResponse.json();
+
+        if (signupData.error) {
+          messageEl.innerHTML = `<div class="error-msg">❌ ${signupData.error.message}</div>`;
+          return;
+        }
+
+        // Create user profile
+        const userRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${signupData.access_token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: signupData.user.id,
+            username: username || email.split('@')[0],
+            email: email,
+            token_balance: 0
+          })
+        });
+
+        messageEl.innerHTML = `<div class="success-msg">✅ Account created! Please check your email to verify.</div>`;
+        
+        // Auto login after registration
+        setTimeout(() => {
+          messageEl.innerHTML = `<div class="success-msg">✅ Login successful! Redirecting...</div>`;
+          localStorage.setItem('token', signupData.access_token);
+          localStorage.setItem('user', JSON.stringify(signupData.user));
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 1000);
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Auth error:', error);
+      messageEl.innerHTML = `<div class="error-msg">❌ Network error. Please try again.</div>`;
+    }
+  }
+
+  function authWithDiscord() {
+    alert('Discord OAuth coming soon!');
+  }
+
+  function authWithGoogle() {
+    alert('Google OAuth coming soon!');
+  }
+
+  function forgotPassword() {
+    alert('Password reset functionality coming soon!');
+  }
+
+  // Check if already logged in
+  const token = localStorage.getItem('token');
+  if (token) {
+    window.location.href = 'dashboard.html';
+  }
+</script>
 </body>
 </html>

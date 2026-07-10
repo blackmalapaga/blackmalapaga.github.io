@@ -17,9 +17,9 @@
       line-height: 1.5;
       padding: 0 1.5rem 2rem;
       background-image: radial-gradient(circle at 10% 20%, #1a0505 0%, #0a0a0a 90%);
+      min-height: 100vh;
     }
     .text-red { color: #e11d1d; }
-    .bg-red { background: #e11d1d; }
     .glass {
       background: rgba(20, 0, 0, 0.6);
       backdrop-filter: blur(8px);
@@ -35,7 +35,7 @@
       transition: 0.25s ease;
       box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     }
-    .card-dark:hover { border-color: #e11d1d; box-shadow: 0 0 0 1px #e11d1d55, 0 8px 30px rgba(225,29,29,0.2); }
+    .card-dark:hover { border-color: #e11d1d; }
     .btn-red {
       background: #e11d1d;
       color: #fff;
@@ -44,10 +44,11 @@
       border-radius: 60px;
       border: none;
       transition: 0.2s;
-      box-shadow: 0 4px 16px rgba(225, 29, 29, 0.3);
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
-    .btn-red:hover { background: #ff2a2a; transform: scale(1.02); box-shadow: 0 8px 28px rgba(225, 29, 29, 0.5); }
+    .btn-red:hover { background: #ff2a2a; transform: scale(1.02); }
     .btn-outline-red {
       background: transparent;
       color: #e11d1d;
@@ -57,6 +58,8 @@
       font-weight: 600;
       transition: 0.2s;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
     .btn-outline-red:hover { background: #e11d1d; color: #fff; }
     .badge-red {
@@ -151,19 +154,24 @@
       50% { opacity: 0.9; }
       100% { opacity: 0.3; }
     }
+    .loading-text {
+      color: #555;
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <!-- HEADER -->
-  <header class="flex-between" style="padding: 1.2rem 0;">
+  <header class="flex-between" style="padding: 1.2rem 0; flex-wrap:wrap; gap:1rem;">
     <div class="flex-center gap-1">
       <i class="fas fa-bolt" style="color:#e11d1d; font-size: 2rem;"></i>
       <span class="brand-font" style="font-weight: 900; font-size: 1.8rem; color:#fff;">ELITE<span style="color:#e11d1d;">.</span>TOKENS</span>
     </div>
-    <div class="flex-center gap-2">
-      <span class="stat-pill"><i class="fas fa-user" style="color:#e11d1d;"></i> 1.8k online</span>
-      <span class="stat-pill"><i class="fas fa-gamepad" style="color:#e11d1d;"></i> 63 matches</span>
+    <div class="flex-center gap-2" style="flex-wrap:wrap;">
+      <span class="stat-pill" id="onlineUsers"><i class="fas fa-user" style="color:#e11d1d;"></i> <span id="onlineCount">0</span> online</span>
+      <span class="stat-pill" id="activeMatches"><i class="fas fa-gamepad" style="color:#e11d1d;"></i> <span id="matchCount">0</span> matches</span>
       <a href="auth.html" class="btn-red" style="padding: 0.4rem 1.4rem; text-decoration:none;"><i class="fas fa-right-to-bracket"></i> Sign in</a>
     </div>
   </header>
@@ -183,10 +191,10 @@
         </div>
         <div class="glass" style="padding:1.2rem 2.2rem; min-width:220px; backdrop-filter: blur(12px);">
           <div><span style="color:#e11d1d;">◆</span> <span class="text-muted">Total prize pool</span></div>
-          <div style="font-size:2.2rem; font-weight:800; color:#fff;">$187,420</div>
+          <div style="font-size:2.2rem; font-weight:800; color:#fff;" id="totalPrizePool">$0</div>
           <div class="flex-between" style="font-size:0.9rem; margin-top:0.5rem;">
-            <span><span class="live-dot"></span> 2,140 players</span>
-            <span><i class="fas fa-fire" style="color:#e11d1d;"></i> 41 active</span>
+            <span><span class="live-dot"></span> <span id="totalPlayers">0</span> players</span>
+            <span><i class="fas fa-fire" style="color:#e11d1d;"></i> <span id="activeMatchesCount">0</span> active</span>
           </div>
         </div>
       </div>
@@ -197,21 +205,14 @@
   <div class="grid-2" style="margin-bottom: 2.5rem;">
     <div class="card-dark">
       <div class="flex-between"><span><i class="fas fa-trophy" style="color:#e11d1d;"></i> Recent winners</span> <span class="text-muted" style="font-size:0.8rem;">Live</span></div>
-      <div style="margin-top:0.5rem;">
-        <div class="flex-between"><span><i class="fas fa-user"></i> ReaperX</span> <span style="color:#e11d1d;">+18.5 tokens</span></div>
-        <div class="flex-between"><span><i class="fas fa-user"></i> Venom_</span> <span style="color:#e11d1d;">+9.2 tokens</span></div>
-        <div class="flex-between"><span><i class="fas fa-user"></i> Lxgend</span> <span style="color:#e11d1d;">+27.0 tokens</span></div>
-        <div class="flex-between"><span><i class="fas fa-user"></i> iitzFury</span> <span style="color:#e11d1d;">+6.8 tokens</span></div>
+      <div id="recentWinners" style="margin-top:0.5rem;">
+        <div class="loading-text">Loading winners...</div>
       </div>
     </div>
     <div class="card-dark">
       <div class="flex-between"><span><i class="fas fa-ranking-star" style="color:#e11d1d;"></i> Daily leaderboard</span> <span class="text-muted">top 5</span></div>
-      <div>
-        <div class="flex-between"><span>1. <b>Fury</b> <span class="text-muted">2,880 pts</span></span> <span style="color:#e11d1d;">+18</span></div>
-        <div class="flex-between"><span>2. <b>K1ng</b> <span class="text-muted">2,540 pts</span></span> <span style="color:#e11d1d;">+14</span></div>
-        <div class="flex-between"><span>3. <b>Shifty</b> <span class="text-muted">2,210 pts</span></span> <span style="color:#e11d1d;">+11</span></div>
-        <div class="flex-between"><span>4. <b>Dre4m</b> <span class="text-muted">1,980 pts</span></span> <span style="color:#e11d1d;">+9</span></div>
-        <div class="flex-between"><span>5. <b>Rex</b> <span class="text-muted">1,720 pts</span></span> <span style="color:#e11d1d;">+7</span></div>
+      <div id="leaderboard" style="margin-top:0.5rem;">
+        <div class="loading-text">Loading leaderboard...</div>
       </div>
     </div>
   </div>
@@ -220,13 +221,8 @@
   <div class="grid-2" style="margin-bottom:2.5rem;">
     <div class="card-dark">
       <h3 style="font-weight:700;"><i class="fas fa-award" style="color:#e11d1d;"></i> Featured tournaments</h3>
-      <div class="match-card" style="margin-top:0.8rem;">
-        <div class="flex-between"><span><b>Zone Wars Elite</b> <span class="badge-red">$240</span></span> <span class="text-muted">96/128</span></div>
-        <div class="flex-between" style="font-size:0.85rem;"><span>Entry 2.5 tokens</span> <span><i class="far fa-clock"></i> 3h left</span></div>
-      </div>
-      <div class="match-card" style="margin-top:0.8rem;">
-        <div class="flex-between"><span><b>Box Fight Pro</b> <span class="badge-red">$160</span></span> <span class="text-muted">32/64</span></div>
-        <div class="flex-between" style="font-size:0.85rem;"><span>Entry 1.8 tokens</span> <span><i class="far fa-clock"></i> 5h left</span></div>
+      <div id="featuredTournaments">
+        <div class="loading-text">Loading tournaments...</div>
       </div>
     </div>
     <div class="card-dark">
@@ -266,5 +262,107 @@
     <span class="text-muted">Play. Win. Cash Out.</span>
   </footer>
 </div>
+
+<!-- Supabase Connection Script -->
+<script>
+  // ===== SUPABASE CONFIG =====
+  const SUPABASE_URL = 'https://kjpjopcxagdvnzhgijvg.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_5ko2Wr62diplPRl5VSlrEw_O601WowO';
+
+  // ===== FETCH REAL DATA =====
+  async function fetchData() {
+    try {
+      // 1. Get total users
+      const usersRes = await fetch(`${SUPABASE_URL}/rest/v1/users?select=count`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY }
+      });
+      const usersCount = await usersRes.json();
+      document.getElementById('totalPlayers').textContent = usersCount.length || 0;
+      document.getElementById('onlineCount').textContent = usersCount.length || 0;
+
+      // 2. Get matches
+      const matchesRes = await fetch(`${SUPABASE_URL}/rest/v1/matches?select=*`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY }
+      });
+      const matches = await matchesRes.json();
+      const activeMatches = matches?.filter(m => m.status === 'waiting' || m.status === 'active') || [];
+      document.getElementById('matchCount').textContent = activeMatches.length;
+      document.getElementById('activeMatchesCount').textContent = activeMatches.length;
+
+      // 3. Calculate total prize pool from matches
+      const totalPrize = matches?.reduce((sum, m) => sum + parseFloat(m.prize_pool || 0), 0) || 0;
+      document.getElementById('totalPrizePool').textContent = `$${totalPrize.toFixed(2)}`;
+
+      // 4. Get recent winners (completed matches with winner)
+      const winnersRes = await fetch(`${SUPABASE_URL}/rest/v1/matches?select=winner_id,prize_pool,completed_at&status=eq.completed&order=completed_at.desc&limit=5`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY }
+      });
+      const winners = await winnersRes.json();
+      
+      const winnersContainer = document.getElementById('recentWinners');
+      if (winners && winners.length > 0) {
+        winnersContainer.innerHTML = winners.map(w => `
+          <div class="flex-between">
+            <span><i class="fas fa-user"></i> ${w.winner_id ? 'Winner' : 'Unknown'}</span>
+            <span style="color:#e11d1d;">+${parseFloat(w.prize_pool || 0).toFixed(1)} tokens</span>
+          </div>
+        `).join('');
+      } else {
+        winnersContainer.innerHTML = '<div class="text-muted" style="text-align:center;">No winners yet. Be the first!</div>';
+      }
+
+      // 5. Get leaderboard (top 5 by wins)
+      const leaderboardRes = await fetch(`${SUPABASE_URL}/rest/v1/users?select=username,total_wins,token_balance&order=total_wins.desc&limit=5`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY }
+      });
+      const leaderboard = await leaderboardRes.json();
+      
+      const leaderboardContainer = document.getElementById('leaderboard');
+      if (leaderboard && leaderboard.length > 0) {
+        leaderboardContainer.innerHTML = leaderboard.map((u, i) => `
+          <div class="flex-between">
+            <span>${i+1}. <b>${u.username || 'Unknown'}</b> <span class="text-muted">${u.total_wins || 0} wins</span></span>
+            <span style="color:#e11d1d;">${u.token_balance || 0} tokens</span>
+          </div>
+        `).join('');
+      } else {
+        leaderboardContainer.innerHTML = '<div class="text-muted" style="text-align:center;">No players yet. Join now!</div>';
+      }
+
+      // 6. Get featured tournaments
+      const tournRes = await fetch(`${SUPABASE_URL}/rest/v1/tournaments?select=*&status=eq.open&limit=3`, {
+        headers: { 'apikey': SUPABASE_ANON_KEY }
+      });
+      const tournaments = await tournRes.json();
+      
+      const tournContainer = document.getElementById('featuredTournaments');
+      if (tournaments && tournaments.length > 0) {
+        tournContainer.innerHTML = tournaments.map(t => `
+          <div class="match-card" style="margin-top:0.8rem;">
+            <div class="flex-between">
+              <span><b>${t.name || 'Tournament'}</b> <span class="badge-red">$${parseFloat(t.prize_pool || 0).toFixed(0)}</span></span>
+              <span class="text-muted">${t.current_players || 0}/${t.max_players || 0}</span>
+            </div>
+            <div class="flex-between" style="font-size:0.85rem;">
+              <span>Entry ${parseFloat(t.entry_fee || 0).toFixed(1)} tokens</span>
+              <span><i class="far fa-clock"></i> ${t.schedule ? new Date(t.schedule).toLocaleDateString() : 'TBD'}</span>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        tournContainer.innerHTML = '<div class="text-muted" style="text-align:center; padding:10px;">No tournaments available. Check back soon!</div>';
+      }
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      document.querySelectorAll('.loading-text').forEach(el => {
+        el.textContent = '⚠️ Error loading data. Please refresh.';
+      });
+    }
+  }
+
+  // Load data on page load
+  fetchData();
+</script>
 </body>
 </html>

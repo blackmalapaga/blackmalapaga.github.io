@@ -324,9 +324,7 @@
             const container = document.getElementById('licensesContainer');
             container.innerHTML = '<div class="loading">Loading licenses...</div>';
 
-            fetch('/api/list_licenses', {
-                credentials: 'include'
-            })
+            fetch('/api/list_licenses')
             .then(res => {
                 if (res.status === 401) {
                     throw new Error('Please login again');
@@ -338,7 +336,7 @@
                 updateStats(data);
             })
             .catch(err => {
-                container.innerHTML = `<div style="color:#ff4444;text-align:center;padding:40px;">❌ ${err.message}</div>`;
+                container.innerHTML = `<div style="color:#ff4444;text-align:center;padding:40px;">ERROR: ${err.message}</div>`;
             });
         }
 

@@ -14,47 +14,48 @@
         }
 
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
         ::-webkit-scrollbar-track {
-            background: #1a1a1a;
+            background: #0a0a0a;
         }
         ::-webkit-scrollbar-thumb {
-            background: #d32f2f;
+            background: linear-gradient(180deg, #d32f2f, #b71c1c);
             border-radius: 12px;
-            border: 1px solid #2a2a2a;
+            border: 2px solid #1a1a1a;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #b71c1c;
+            background: linear-gradient(180deg, #e53935, #c62828);
         }
 
         body {
-            background: #0b0b0b;
+            background: #0a0a0a;
             color: #f0f0f0;
             font-weight: 300;
-            line-height: 1.5;
+            line-height: 1.6;
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 4rem;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(4px);
-            border-bottom: 1px solid #2a2a2a;
+            padding: 1.2rem 5rem;
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(211, 47, 47, 0.3);
             position: sticky;
             top: 0;
-            z-index: 99;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            z-index: 999;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.9);
         }
 
         .nav-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 800;
             letter-spacing: -0.5px;
-            background: linear-gradient(145deg, #e53935, #b71c1c);
+            background: linear-gradient(135deg, #f5f5f5 0%, #d32f2f 70%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -67,69 +68,75 @@
 
         .nav-links {
             display: flex;
-            gap: 2.8rem;
-            font-size: 1.2rem;
-            font-weight: 400;
+            gap: 3rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            align-items: center;
         }
         .nav-links a {
-            color: #ddd;
+            color: #ccc;
             text-decoration: none;
-            transition: 0.25s ease;
-            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
             padding-bottom: 4px;
         }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #d32f2f, #e53935);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
         .nav-links a:hover {
-            color: #ff4d4d;
-            border-bottom-color: #d32f2f;
+            color: #fff;
         }
         .nav-links a.active {
             color: #fff;
-            border-bottom-color: #d32f2f;
         }
 
         .nav-join {
-            background: #d32f2f;
-            padding: 0.6rem 1.6rem;
-            border-radius: 40px;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            padding: 0.7rem 2rem;
+            border-radius: 50px;
             color: white !important;
             font-weight: 600;
-            border-bottom: none !important;
-            transition: 0.2s;
-            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+        .nav-join::after {
+            display: none !important;
         }
         .nav-join:hover {
-            background: #b71c1c;
-            transform: scale(1.02);
-            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(211, 47, 47, 0.5);
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        section {
-            padding: 3.5rem 0;
-            animation: fadeUp 0.6s ease;
-        }
-
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
+            padding: 0 3rem;
         }
 
         .products-header {
             text-align: center;
-            padding: 2rem 0;
+            padding: 3rem 0 1.5rem;
         }
         .products-header h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #f5f5f5 0%, #d32f2f 80%);
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #d32f2f 60%, #b71c1c 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -1px;
         }
         .products-header p {
             color: #aaa;
@@ -139,107 +146,115 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 3rem;
             margin-top: 2rem;
+            padding-bottom: 2rem;
         }
         .product-card {
-            background: #141414;
+            background: linear-gradient(145deg, #141414, #0f0f0f);
             border-radius: 32px;
-            padding: 2.5rem 2rem 2.2rem;
-            border: 1px solid #2a2a2a;
-            transition: 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            padding: 2.8rem 2.2rem 2.5rem;
+            border: 1px solid #1f1f1f;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
             position: relative;
         }
         .product-card:hover {
-            transform: translateY(-8px);
-            border-color: #d32f2f;
-            box-shadow: 0 16px 40px rgba(211, 47, 47, 0.25);
+            transform: translateY(-10px);
+            border-color: rgba(211, 47, 47, 0.4);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.8);
         }
         .product-card .badge {
             position: absolute;
-            top: -10px;
-            right: -8px;
-            background: #d32f2f;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
             color: white;
             font-weight: 700;
-            font-size: 0.8rem;
-            padding: 0.3rem 1rem;
+            font-size: 0.75rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 40px;
             letter-spacing: 0.5px;
-            border: 1px solid #b71c1c;
-            box-shadow: 0 2px 12px rgba(211, 47, 47, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(211, 47, 47, 0.4);
             text-transform: uppercase;
         }
         .product-card .best-seller-tag {
             display: inline-block;
-            background: #d32f2f;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
             color: #fff;
             font-weight: 700;
-            font-size: 0.75rem;
-            padding: 0.2rem 1rem;
+            font-size: 0.7rem;
+            padding: 0.25rem 1rem;
             border-radius: 30px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-        .product-card h3 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-            color: #f0f0f0;
+            margin-bottom: 12px;
         }
         .product-card .stars {
             color: #ffb74d;
-            letter-spacing: 1px;
-            font-size: 1.1rem;
-            margin: 6px 0;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+        .product-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: #fff;
         }
         .product-card .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #d32f2f;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #d32f2f, #e53935);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 0.6rem 0 0.5rem;
         }
         .product-card .desc {
             color: #aaa;
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 1.5rem;
-            min-height: 60px;
+            min-height: 50px;
         }
         .product-card .features-list {
             list-style: none;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
         .product-card .features-list li {
             color: #bbb;
-            padding: 0.3rem 0;
-            font-size: 0.9rem;
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .product-card .features-list li i {
             color: #d32f2f;
-            margin-right: 8px;
-            width: 16px;
+            width: 20px;
         }
         .btn-buy {
             display: inline-block;
-            background: #d32f2f;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
             color: white;
-            font-weight: 600;
-            padding: 0.8rem 2rem;
+            font-weight: 700;
+            padding: 0.9rem 2rem;
             border-radius: 60px;
             text-decoration: none;
-            transition: 0.2s;
+            transition: all 0.3s ease;
             width: 100%;
             text-align: center;
             font-size: 1.1rem;
             letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
         }
         .btn-buy:hover {
-            background: #b71c1c;
             transform: scale(1.02);
-            box-shadow: 0 4px 18px rgba(211, 47, 47, 0.5);
+            box-shadow: 0 6px 30px rgba(211, 47, 47, 0.4);
+            background: linear-gradient(135deg, #e53935, #c62828);
         }
 
         .back-link {
@@ -247,34 +262,44 @@
             color: #aaa;
             text-decoration: none;
             margin-top: 2rem;
-            transition: 0.2s;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
         }
         .back-link:hover {
             color: #d32f2f;
+            transform: translateX(-5px);
         }
 
         footer {
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             text-align: center;
             color: #555;
-            border-top: 1px solid #1e1e1e;
-            margin-top: 1rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 2rem;
         }
 
-        @media (max-width: 780px) {
+        @media (max-width: 968px) {
             .navbar {
+                padding: 1rem 2rem;
                 flex-wrap: wrap;
-                gap: 0.8rem;
-                padding: 1rem 1.5rem;
+                gap: 1rem;
             }
             .nav-links {
-                gap: 1.2rem;
+                gap: 1.8rem;
                 font-size: 1rem;
                 flex-wrap: wrap;
                 justify-content: center;
             }
+            .products-header h1 {
+                font-size: 2.8rem;
+            }
             .products-grid {
                 grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            .container {
+                padding: 0 1.5rem;
             }
         }
     </style>
@@ -283,9 +308,9 @@
     <nav class="navbar">
         <div class="nav-logo">EVAL<span>Tweaks</span></div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="products.html" class="active">Products</a>
-            <a href="about.html">About Us</a>
+            <a href="/">Home</a>
+            <a href="/products" class="active">Products</a>
+            <a href="/about">About Us</a>
         </div>
         <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="nav-join"><i class="fab fa-discord" style="margin-right: 8px;"></i> Join Discord</a>
     </nav>
@@ -294,26 +319,24 @@
         <section>
             <div class="products-header">
                 <h1>Our Tweaks</h1>
-                <p>Choose the optimization package that fits your needs</p>
+                <p>Choose the optimization package that fits your gaming needs</p>
             </div>
 
             <div class="products-grid">
-                <!-- Basic -->
                 <div class="product-card">
                     <div class="stars">★★★★★ (30)</div>
                     <h3>Basic Eval Tweaks</h3>
                     <div class="price">$15</div>
-                    <div class="desc">Essential optimizations for everyday gaming and performance.</div>
+                    <div class="desc">Essential optimizations for everyday gaming and system performance.</div>
                     <ul class="features-list">
                         <li><i class="fas fa-check-circle"></i> Registry optimization</li>
                         <li><i class="fas fa-check-circle"></i> Power plan tweaks</li>
                         <li><i class="fas fa-check-circle"></i> Background process reduction</li>
                         <li><i class="fas fa-check-circle"></i> Network latency improvements</li>
                     </ul>
-                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 6px;"></i> Buy Now</a>
+                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 8px;"></i> Buy Now</a>
                 </div>
 
-                <!-- Ultimate + BEST SELLER -->
                 <div class="product-card">
                     <span class="badge">⭐ best seller</span>
                     <div class="best-seller-tag">⭐ Best Seller</div>
@@ -328,10 +351,9 @@
                         <li><i class="fas fa-check-circle"></i> Advanced network stack tweaks</li>
                         <li><i class="fas fa-check-circle"></i> Memory management optimization</li>
                     </ul>
-                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 6px;"></i> Buy Now</a>
+                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 8px;"></i> Buy Now</a>
                 </div>
 
-                <!-- Aim Tweaks -->
                 <div class="product-card">
                     <div class="stars">★★★★★ (12)</div>
                     <h3>Eval Aim Tweaks</h3>
@@ -343,17 +365,17 @@
                         <li><i class="fas fa-check-circle"></i> DPI and sensitivity tweaks</li>
                         <li><i class="fas fa-check-circle"></i> Display latency reduction</li>
                     </ul>
-                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 6px;"></i> Buy Now</a>
+                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 8px;"></i> Buy Now</a>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 3rem;">
-                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
             </div>
         </section>
 
         <footer>
-            <p>© 2026 EvalTweaks · founded 2026 · 10+ Years of experience</p>
+            <p>© 2026 EvalTweaks · Founded 2026 · 10+ Years of experience · 100% customer satisfaction</p>
         </footer>
     </div>
 </body>

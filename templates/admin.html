@@ -344,7 +344,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Login Box -->
         <div id="loginBox" class="login-box">
             <h1>🔐 Admin Panel</h1>
             <p>Enter your credentials to manage licenses</p>
@@ -354,7 +353,6 @@
             <div id="loginError" class="login-error">Invalid credentials</div>
         </div>
 
-        <!-- Admin Panel -->
         <div id="adminPanel" class="admin-panel">
             <div class="header">
                 <div>
@@ -368,7 +366,6 @@
                 </div>
             </div>
 
-            <!-- API URL Configuration -->
             <div class="api-url-input">
                 <label>API Server:</label>
                 <input type="text" id="apiUrl" placeholder="http://localhost:5000/api" value="http://localhost:5000/api">
@@ -376,7 +373,6 @@
                 <span id="connectionStatus" class="status-dot offline"></span>
             </div>
 
-            <!-- Stats -->
             <div class="stats" id="statsContainer">
                 <div class="stat-card">
                     <div class="number" id="totalKeys">0</div>
@@ -392,7 +388,6 @@
                 </div>
             </div>
 
-            <!-- Generate Section -->
             <div class="generate-section">
                 <h2>Generate New License</h2>
                 <div class="form-row">
@@ -412,7 +407,6 @@
                 </div>
             </div>
 
-            <!-- Licenses Table -->
             <h3 style="color:#fff;margin-bottom:15px;">All Licenses</h3>
             <div id="licensesContainer">
                 <div class="loading">Loading licenses...</div>
@@ -424,7 +418,6 @@
         let currentKeys = {};
         let apiBase = 'http://localhost:5000/api';
 
-        // Load saved API URL
         function loadApiUrl() {
             const saved = localStorage.getItem('evaltweaks_api_url');
             if (saved) {
@@ -502,7 +495,10 @@
                     showLoginError(data.error);
                 }
             })
-            .catch(() => showLoginError('Connection error. Make sure the server is running.'));
+            .catch((err) => {
+                console.error('Login error:', err);
+                showLoginError('Connection error. Make sure the server is running.');
+            });
         }
 
         function logout() {
@@ -545,6 +541,7 @@
                 }
             })
             .catch(err => {
+                console.error('Generate error:', err);
                 alert('Connection error. Make sure the server is running.');
             })
             .finally(() => {
@@ -558,7 +555,6 @@
             navigator.clipboard.writeText(key).then(() => {
                 alert('Key copied to clipboard!');
             }).catch(() => {
-                // Fallback
                 const textArea = document.createElement('textarea');
                 textArea.value = key;
                 document.body.appendChild(textArea);
@@ -575,11 +571,16 @@
             container.innerHTML = '<div class="loading">Loading licenses...</div>';
 
             fetch(`${url}/list_licenses`, {
-                credentials: 'include'
+                method: 'GET',
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'}
             })
             .then(res => {
+                if (res.status === 401) {
+                    throw new Error('Unauthorized - Please login again');
+                }
                 if (!res.ok) {
-                    throw new Error('Unauthorized');
+                    throw new Error('Failed to load licenses');
                 }
                 return res.json();
             })
@@ -588,8 +589,9 @@
                 renderTable(data);
                 updateStats(data);
             })
-            .catch(() => {
-                container.innerHTML = '<div style="color:#ff4444;text-align:center;padding:40px;">❌ Failed to load licenses. Make sure you\'re logged in and the server is running.</div>';
+            .catch((err) => {
+                console.error('Load licenses error:', err);
+                container.innerHTML = `<div style="color:#ff4444;text-align:center;padding:40px;">❌ ${err.message || 'Failed to load licenses. Make sure you\'re logged in and the server is running.'}</div>`;
             });
         }
 
@@ -680,7 +682,10 @@
                 body: JSON.stringify({key})
             })
             .then(res => res.json())
-            .then(() => loadLicenses());
+            .then(() => loadLicenses())
+            .catch(err => {
+                alert('Error: ' + err.message);
+            });
         }
 
         function deleteKey(key) {
@@ -694,14 +699,17 @@
                 body: JSON.stringify({key})
             })
             .then(res => res.json())
-            .then(() => loadLicenses());
+            .then(() => loadLicenses())
+            .catch(err => {
+                alert('Error: ' + err.message);
+            });
         }
 
-        // Auto-login check
         function checkAuth() {
             const url = getApiUrl();
             fetch(`${url}/check_auth`, {
-                credentials: 'include'
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'}
             })
             .then(res => res.json())
             .then(data => {
@@ -716,7 +724,6 @@
             .catch(() => {});
         }
 
-        // Enter key for login
         document.getElementById('password').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') login();
         });
@@ -724,11 +731,9 @@
             if (e.key === 'Enter') login();
         });
 
-        // Initialize
         loadApiUrl();
         checkAuth();
 
-        // Test connection periodically
         setInterval(() => {
             if (document.getElementById('adminPanel').style.display !== 'none') {
                 testConnection();

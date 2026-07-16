@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvalTweaks · Products</title>
+    <title>EvalTweaks · About</title>
+    
+    <!-- Discord Embed Meta Tags -->
+    <meta property="og:title" content="EvalTweaks - About Us">
+    <meta property="og:description" content="Max Performance · Eval Tweaks. Specializing in PC optimization for maximum performance, lower input delay, and smooth gameplay.">
+    <meta property="og:url" content="https://evaltweaks.com/about">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://media.discordapp.net/attachments/1350625202358452334/1527183829830340628/ChatGPT_Image_Jul_15_2026_02_50_55_AM.png?ex=6a59bc46&is=6a586ac6&hm=0110e32a6bed3d112dfa5c2beabf1edbe831573b45729d47175033444a9857c7&=&format=webp&quality=lossless&width=350&height=350">
+    <meta name="theme-color" content="#cc0000">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -114,147 +123,177 @@
             padding: 0 2rem;
         }
 
-        .products-header {
+        .about-header {
             text-align: center;
             padding: 4rem 0 1.5rem;
         }
-        .products-header h1 {
+        .about-header h1 {
             font-size: 3.5rem;
             font-weight: 700;
             color: #ffffff;
             letter-spacing: -1px;
         }
-        .products-header h1 span {
+        .about-header h1 span {
             color: #cc0000;
         }
-        .products-header p {
+        .about-header p {
             color: #888888;
             font-size: 1.1rem;
-            margin-top: 0.3rem;
+            max-width: 700px;
+            margin: 0.5rem auto;
         }
 
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            margin-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        .product-card {
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3rem 5rem;
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 2.5rem 3rem;
             border-radius: 4px;
-            padding: 2.5rem 2rem 2rem;
-            transition: all 0.3s ease;
-            position: relative;
+            margin: 2rem 0 3rem;
         }
-        .product-card:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(204, 0, 0, 0.15);
-            transform: translateY(-3px);
+        .stats div {
+            text-align: center;
         }
-        .product-card .badge {
-            position: absolute;
-            top: -10px;
-            right: 20px;
-            background: #cc0000;
-            color: #ffffff;
-            font-weight: 600;
-            font-size: 0.7rem;
-            padding: 0.3rem 1rem;
-            border-radius: 2px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .product-card .best-seller-tag {
-            display: inline-block;
-            background: rgba(204, 0, 0, 0.1);
-            color: #cc0000;
-            font-weight: 600;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(204, 0, 0, 0.1);
-        }
-        .product-card .stars {
-            color: #ffb74d;
-            letter-spacing: 1px;
-            font-size: 1rem;
-            margin: 8px 0 4px;
-        }
-        .product-card .stars span {
-            color: #666666;
-            font-weight: 300;
-        }
-        .product-card h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-            color: #ffffff;
-        }
-        .product-card .price {
-            font-size: 2.5rem;
+        .stats .number {
+            font-size: 2.8rem;
             font-weight: 700;
             color: #ffffff;
-            margin: 0.6rem 0 0.3rem;
+            letter-spacing: -0.5px;
         }
-        .product-card .price span {
+        .stats .number span {
             color: #cc0000;
         }
-        .product-card .desc {
-            color: #888888;
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            min-height: 45px;
-        }
-        .product-card .features-list {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-        .product-card .features-list li {
-            color: #999999;
-            padding: 0.4rem 0;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .product-card .features-list li:last-child {
-            border-bottom: none;
-        }
-        .product-card .features-list li i {
-            color: #cc0000;
-            width: 18px;
+        .stats .label {
+            color: #666666;
             font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 4px;
         }
-        .btn-buy {
-            display: inline-block;
-            background: #cc0000;
+
+        .team-section {
+            margin: 3rem 0 2rem;
+        }
+        .team-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
             color: #ffffff;
-            font-weight: 500;
-            padding: 0.8rem 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .team-section h2 span {
+            color: #cc0000;
+        }
+
+        .about-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            justify-content: center;
+        }
+        .about-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 4px;
+            padding: 2.5rem 2.2rem;
+            width: 300px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .about-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(204, 0, 0, 0.1);
+        }
+        .about-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(204, 0, 0, 0.3);
+            margin-bottom: 1.2rem;
+        }
+        .about-card h4 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .about-card .role {
+            color: #cc0000;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+        .about-card p {
+            color: #888888;
+            font-size: 0.9rem;
+        }
+
+        .cta-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            padding: 3rem 2.5rem;
+            margin: 3rem 0 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .cta-section h2 i {
+            color: #cc0000;
+            margin-right: 12px;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #cccccc;
+            padding: 0.7rem 2.2rem;
+            border-radius: 4px;
+            font-weight: 500;
             text-decoration: none;
             transition: all 0.3s ease;
-            width: 100%;
-            text-align: center;
-            font-size: 1rem;
-            letter-spacing: 0.3px;
-            border: none;
+            font-size: 0.95rem;
         }
-        .btn-buy:hover {
+        .btn-outline:hover {
+            border-color: #cc0000;
+            color: #ffffff;
+            background: rgba(204, 0, 0, 0.05);
+        }
+        .btn-solid {
+            background: #cc0000;
+            border: 1px solid #cc0000;
+            color: #ffffff;
+            padding: 0.7rem 2.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        .btn-solid:hover {
             background: #ff1a1a;
+            border-color: #ff1a1a;
         }
 
         .back-link {
             display: inline-block;
             color: #666666;
             text-decoration: none;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             transition: color 0.3s ease;
             font-size: 0.95rem;
         }
@@ -283,16 +322,33 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            .products-header h1 {
+            .about-header h1 {
                 font-size: 2.5rem;
             }
-            .products-grid {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-                margin: 0 auto;
+            .stats {
+                gap: 2rem;
+                padding: 2rem;
+            }
+            .about-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .cta-section {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
+                padding: 2rem;
             }
             .container {
                 padding: 0 1.2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .about-header h1 {
+                font-size: 2rem;
+            }
+            .team-section h2 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -302,73 +358,58 @@
         <a href="/" class="nav-logo">EVAL<span>Tweaks</span></a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/products" class="active">Products</a>
-            <a href="/about">About</a>
+            <a href="/products">Products</a>
+            <a href="/about" class="active">About</a>
         </div>
         <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="nav-join"><i class="fab fa-discord" style="margin-right: 8px;"></i> Discord</a>
     </nav>
 
     <div class="container">
         <section>
-            <div class="products-header">
-                <h1>Our <span>Tweaks</span></h1>
-                <p>Choose the optimization package that fits your gaming needs</p>
+            <div class="about-header">
+                <h1>Max Performance · <span>Eval Tweaks</span></h1>
+                <p>We specialize in optimizing PCs for maximum performance, lower input delay, and silky smooth gameplay – all without expensive hardware upgrades.</p>
             </div>
 
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="stars">★★★★★ <span>(30)</span></div>
-                    <h3>Basic Eval Tweaks</h3>
-                    <div class="price"><span>$</span>15</div>
-                    <div class="desc">Essential optimizations for everyday gaming and system performance.</div>
-                    <ul class="features-list">
-                        <li><i class="fas fa-check"></i> Registry optimization</li>
-                        <li><i class="fas fa-check"></i> Power plan tweaks</li>
-                        <li><i class="fas fa-check"></i> Background process reduction</li>
-                        <li><i class="fas fa-check"></i> Network latency improvements</li>
-                    </ul>
-                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 8px;"></i> Buy Now</a>
-                </div>
+            <div class="stats">
+                <div><div class="number">2026</div><div class="label">Founded</div></div>
+                <div><div class="number">10<span>+</span></div><div class="label">Years experience</div></div>
+                <div><div class="number">100<span>%</span></div><div class="label">Happy customers</div></div>
+            </div>
 
-                <div class="product-card">
-                    <span class="badge">Best Seller</span>
-                    <div class="best-seller-tag">⭐ Best Seller</div>
-                    <div class="stars">★★★★★ <span>(63)</span></div>
-                    <h3>Ultimate Eval</h3>
-                    <div class="price"><span>$</span>35</div>
-                    <div class="desc">Complete system overhaul for maximum competitive advantage.</div>
-                    <ul class="features-list">
-                        <li><i class="fas fa-check"></i> Everything in Basic</li>
-                        <li><i class="fas fa-check"></i> Process Lasso optimization</li>
-                        <li><i class="fas fa-check"></i> GPU & CPU priority tuning</li>
-                        <li><i class="fas fa-check"></i> Advanced network stack tweaks</li>
-                        <li><i class="fas fa-check"></i> Memory management optimization</li>
-                    </ul>
-                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 8px;"></i> Buy Now</a>
-                </div>
-
-                <div class="product-card">
-                    <div class="stars">★★★★★ <span>(12)</span></div>
-                    <h3>Eval Aim Tweaks</h3>
-                    <div class="price"><span>$</span>5</div>
-                    <div class="desc">Specialized optimizations for precision aiming and reduced input lag.</div>
-                    <ul class="features-list">
-                        <li><i class="fas fa-check"></i> Mouse input optimization</li>
-                        <li><i class="fas fa-check"></i> Polling rate adjustments</li>
-                        <li><i class="fas fa-check"></i> DPI and sensitivity tweaks</li>
-                        <li><i class="fas fa-check"></i> Display latency reduction</li>
-                    </ul>
-                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-buy"><i class="fab fa-discord" style="margin-right: 8px;"></i> Buy Now</a>
+            <div class="team-section">
+                <h2>Meet the <span>Team</span></h2>
+                <div class="about-grid">
+                    <div class="about-card">
+                        <img src="https://media.discordapp.net/attachments/1350625202358452334/1527183829830340628/ChatGPT_Image_Jul_15_2026_02_50_55_AM.png?ex=6a59bc46&is=6a586ac6&hm=0110e32a6bed3d112dfa5c2beabf1edbe831573b45729d47175033444a9857c7&=&format=webp&quality=lossless&width=350&height=350" alt="Arc">
+                        <h4>Arc</h4>
+                        <div class="role">Developer</div>
+                        <p>Deep kernel & driver-level optimizations. Architecture expert focused on low-level performance tuning.</p>
+                    </div>
+                    <div class="about-card">
+                        <img src="https://media.discordapp.net/attachments/1350625202358452334/1527184312846385152/1a4d856e67c4595df9c273ca75bdd5d1.jpg?ex=6a59bcb9&is=6a586b39&hm=ffc2d4d765d24fdda058a6047d6cc68836b9bb30dd6f8c78579a185e6194022b&=&format=webp&width=720&height=960" alt="Swify">
+                        <h4>Swify</h4>
+                        <div class="role">Owner</div>
+                        <p>Visionary leader, performance architect & lead tweaker. 10+ years of optimization experience.</p>
+                    </div>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 0.5rem;">
+            <div class="cta-section">
+                <h2><i class="fas fa-rocket"></i> Ready to optimize your PC?</h2>
+                <div class="cta-buttons">
+                    <a href="/products" class="btn-outline">Explore services</a>
+                    <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="btn-solid"><i class="fab fa-discord" style="margin-right: 8px;"></i> Join Discord</a>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
                 <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
             </div>
         </section>
 
         <footer>
-            <p>© 2026 EvalTweaks · Founded 2026 · 10+ Years experience · 100% satisfaction</p>
+            <p>© 2026 EvalTweaks · Professional Windows Optimization</p>
         </footer>
     </div>
 </body>

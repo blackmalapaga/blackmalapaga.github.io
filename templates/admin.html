@@ -82,6 +82,8 @@
             padding: 20px 0;
             border-bottom: 1px solid #222;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .header h1 {
             color: #fff;
@@ -107,6 +109,14 @@
         .header .logout-btn:hover {
             border-color: #cc0000;
             color: #fff;
+        }
+        .header .server-status {
+            color: #44ff44;
+            font-size: 12px;
+            margin-left: 15px;
+        }
+        .header .server-status.offline {
+            color: #ff4444;
         }
         .generate-section {
             background: #141414;
@@ -153,6 +163,10 @@
         .form-row button:hover {
             background: #e60000;
         }
+        .form-row button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .generated-key {
             margin-top: 15px;
             padding: 15px;
@@ -175,6 +189,18 @@
         }
         .generated-key .info span {
             color: #fff;
+        }
+        .generated-key button {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .generated-key button:hover {
+            background: #444;
         }
         .licenses-table {
             width: 100%;
@@ -260,6 +286,42 @@
             text-align: center;
             padding: 40px;
         }
+        .api-url-input {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .api-url-input label {
+            color: #888;
+            font-size: 13px;
+        }
+        .api-url-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 13px;
+        }
+        .api-url-input .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .api-url-input .status-dot.online {
+            background: #44ff44;
+        }
+        .api-url-input .status-dot.offline {
+            background: #ff4444;
+        }
+        .api-url-input .status-dot.checking {
+            background: #ffa500;
+        }
         @media (max-width: 768px) {
             .form-row {
                 flex-direction: column;
@@ -272,6 +334,10 @@
             }
             .licenses-table th, .licenses-table td {
                 padding: 8px 10px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -291,11 +357,23 @@
         <!-- Admin Panel -->
         <div id="adminPanel" class="admin-panel">
             <div class="header">
-                <h1>EVAL<span>TWEAKS</span> · Admin</h1>
                 <div>
+                    <h1>EVAL<span>TWEAKS</span> · Admin</h1>
+                    <span style="color:#666;font-size:12px;">License Management System</span>
+                </div>
+                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;">
                     <span class="user-info" id="userDisplay">Admin</span>
+                    <span id="serverStatus" class="server-status offline">● Server Offline</span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
+            </div>
+
+            <!-- API URL Configuration -->
+            <div class="api-url-input">
+                <label>API Server:</label>
+                <input type="text" id="apiUrl" placeholder="http://localhost:5000/api" value="http://localhost:5000/api">
+                <button onclick="testConnection()" style="padding:8px 15px;background:#333;color:#fff;border:none;border-radius:4px;cursor:pointer;">Test Connection</button>
+                <span id="connectionStatus" class="status-dot offline"></span>
             </div>
 
             <!-- Stats -->
@@ -325,12 +403,12 @@
                     </select>
                     <input type="number" id="daysInput" value="30" min="1" max="365">
                     <span style="color:#666;font-size:13px;">days</span>
-                    <button onclick="generateKey()">Generate Key</button>
+                    <button onclick="generateKey()" id="generateBtn">Generate Key</button>
                 </div>
                 <div id="generatedKey" class="generated-key">
                     <div class="key" id="newKey">EVAL-XXXX-XXXX-XXXX</div>
                     <div class="info">Plan: <span id="newKeyPlan">Basic</span> · Valid for: <span id="newKeyDays">30</span> days</div>
-                    <button style="margin-top:10px;padding:8px 20px;background:#333;color:#fff;border:none;border-radius:4px;cursor:pointer;" onclick="copyKey()">Copy to Clipboard</button>
+                    <button onclick="copyKey()">Copy to Clipboard</button>
                 </div>
             </div>
 
@@ -344,6 +422,25 @@
 
     <script>
         let currentKeys = {};
+        let apiBase = 'http://localhost:5000/api';
+
+        // Load saved API URL
+        function loadApiUrl() {
+            const saved = localStorage.getItem('evaltweaks_api_url');
+            if (saved) {
+                document.getElementById('apiUrl').value = saved;
+                apiBase = saved;
+            }
+        }
+
+        function getApiUrl() {
+            const url = document.getElementById('apiUrl').value.trim();
+            if (url) {
+                localStorage.setItem('evaltweaks_api_url', url);
+                apiBase = url;
+            }
+            return apiBase;
+        }
 
         function showLoginError(msg) {
             const error = document.getElementById('loginError');
@@ -351,13 +448,46 @@
             error.style.display = 'block';
         }
 
+        function testConnection() {
+            const url = getApiUrl();
+            const statusDot = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('serverStatus');
+            
+            statusDot.className = 'status-dot checking';
+            statusText.textContent = '● Checking...';
+            statusText.className = 'server-status';
+            
+            fetch(`${url}/check_auth`, {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'include'
+            })
+            .then(res => {
+                if (res.ok) {
+                    statusDot.className = 'status-dot online';
+                    statusText.textContent = '● Server Online';
+                    statusText.className = 'server-status';
+                    return true;
+                } else {
+                    throw new Error('Server offline');
+                }
+            })
+            .catch(() => {
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = '● Server Offline';
+                statusText.className = 'server-status offline';
+            });
+        }
+
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const url = getApiUrl();
 
-            fetch('/api/login', {
+            fetch(`${url}/login`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
+                credentials: 'include',
                 body: JSON.stringify({username, password})
             })
             .then(res => res.json())
@@ -366,16 +496,21 @@
                     document.getElementById('loginBox').style.display = 'none';
                     document.getElementById('adminPanel').style.display = 'block';
                     document.getElementById('userDisplay').textContent = username;
+                    testConnection();
                     loadLicenses();
                 } else {
                     showLoginError(data.error);
                 }
             })
-            .catch(() => showLoginError('Connection error'));
+            .catch(() => showLoginError('Connection error. Make sure the server is running.'));
         }
 
         function logout() {
-            fetch('/api/logout', {method: 'POST'})
+            const url = getApiUrl();
+            fetch(`${url}/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            })
             .then(() => {
                 document.getElementById('loginBox').style.display = 'block';
                 document.getElementById('adminPanel').style.display = 'none';
@@ -385,10 +520,16 @@
         function generateKey() {
             const plan = document.getElementById('planSelect').value;
             const days = parseInt(document.getElementById('daysInput').value) || 30;
+            const url = getApiUrl();
+            const btn = document.getElementById('generateBtn');
+            
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
 
-            fetch('/api/generate_key', {
+            fetch(`${url}/generate_key`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
+                credentials: 'include',
                 body: JSON.stringify({plan, days_valid: days})
             })
             .then(res => res.json())
@@ -399,23 +540,56 @@
                     document.getElementById('newKeyDays').textContent = data.days_valid;
                     document.getElementById('generatedKey').style.display = 'block';
                     loadLicenses();
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to generate key'));
                 }
+            })
+            .catch(err => {
+                alert('Connection error. Make sure the server is running.');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.textContent = 'Generate Key';
             });
         }
 
         function copyKey() {
             const key = document.getElementById('newKey').textContent;
-            navigator.clipboard.writeText(key);
-            alert('Key copied to clipboard!');
+            navigator.clipboard.writeText(key).then(() => {
+                alert('Key copied to clipboard!');
+            }).catch(() => {
+                // Fallback
+                const textArea = document.createElement('textarea');
+                textArea.value = key;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+                alert('Key copied to clipboard!');
+            });
         }
 
         function loadLicenses() {
-            fetch('/api/list_licenses')
-            .then(res => res.json())
+            const url = getApiUrl();
+            const container = document.getElementById('licensesContainer');
+            container.innerHTML = '<div class="loading">Loading licenses...</div>';
+
+            fetch(`${url}/list_licenses`, {
+                credentials: 'include'
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Unauthorized');
+                }
+                return res.json();
+            })
             .then(data => {
                 currentKeys = data;
                 renderTable(data);
                 updateStats(data);
+            })
+            .catch(() => {
+                container.innerHTML = '<div style="color:#ff4444;text-align:center;padding:40px;">❌ Failed to load licenses. Make sure you\'re logged in and the server is running.</div>';
             });
         }
 
@@ -498,9 +672,11 @@
         function resetKey(key) {
             if (!confirm(`Reset license ${key}? This will allow it to be used on another PC.`)) return;
             
-            fetch('/api/reset_key', {
+            const url = getApiUrl();
+            fetch(`${url}/reset_key`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
+                credentials: 'include',
                 body: JSON.stringify({key})
             })
             .then(res => res.json())
@@ -510,9 +686,11 @@
         function deleteKey(key) {
             if (!confirm(`Delete license ${key}? This cannot be undone.`)) return;
             
-            fetch('/api/delete_key', {
+            const url = getApiUrl();
+            fetch(`${url}/delete_key`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
+                credentials: 'include',
                 body: JSON.stringify({key})
             })
             .then(res => res.json())
@@ -520,16 +698,23 @@
         }
 
         // Auto-login check
-        fetch('/api/check_auth')
-        .then(res => res.json())
-        .then(data => {
-            if (data.authenticated) {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                document.getElementById('userDisplay').textContent = data.username;
-                loadLicenses();
-            }
-        });
+        function checkAuth() {
+            const url = getApiUrl();
+            fetch(`${url}/check_auth`, {
+                credentials: 'include'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated) {
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('userDisplay').textContent = data.username;
+                    testConnection();
+                    loadLicenses();
+                }
+            })
+            .catch(() => {});
+        }
 
         // Enter key for login
         document.getElementById('password').addEventListener('keydown', (e) => {
@@ -538,6 +723,17 @@
         document.getElementById('username').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') login();
         });
+
+        // Initialize
+        loadApiUrl();
+        checkAuth();
+
+        // Test connection periodically
+        setInterval(() => {
+            if (document.getElementById('adminPanel').style.display !== 'none') {
+                testConnection();
+            }
+        }, 30000);
     </script>
 </body>
 </html>

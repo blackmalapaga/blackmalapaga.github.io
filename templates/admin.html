@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvalTweaks · Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            background: #141414;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+        .login-box h1 {
+            color: #fff;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .login-box p {
+            color: #888;
+            margin-bottom: 25px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .login-box input:focus {
+            border-color: #cc0000;
+            outline: none;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            background: #cc0000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-box button:hover {
+            background: #e60000;
+        }
+        .login-error {
+            color: #ff4444;
+            margin-top: 10px;
+            display: none;
+        }
+        .admin-panel {
+            display: none;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #222;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #fff;
+            font-size: 24px;
+        }
+        .header h1 span {
+            color: #cc0000;
+        }
+        .header .user-info {
+            color: #888;
+            font-size: 14px;
+        }
+        .header .logout-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 15px;
+        }
+        .header .logout-btn:hover {
+            border-color: #cc0000;
+            color: #fff;
+        }
+        .generate-section {
+            background: #141414;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            margin-bottom: 30px;
+        }
+        .generate-section h2 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .form-row select, .form-row input {
+            padding: 10px 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .form-row select {
+            min-width: 150px;
+        }
+        .form-row input {
+            min-width: 100px;
+        }
+        .form-row button {
+            padding: 10px 30px;
+            background: #cc0000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .form-row button:hover {
+            background: #e60000;
+        }
+        .generated-key {
+            margin-top: 15px;
+            padding: 15px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 6px;
+            display: none;
+        }
+        .generated-key .key {
+            font-family: monospace;
+            font-size: 18px;
+            color: #44ff44;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .generated-key .info {
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        .generated-key .info span {
+            color: #fff;
+        }
+        .licenses-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #141414;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .licenses-table th {
+            background: #1a1a1a;
+            padding: 12px 15px;
+            text-align: left;
+            color: #888;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .licenses-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 13px;
+        }
+        .licenses-table td .status-active {
+            color: #44ff44;
+        }
+        .licenses-table td .status-inactive {
+            color: #888;
+        }
+        .licenses-table td .status-expired {
+            color: #ff4444;
+        }
+        .licenses-table .action-btn {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        .licenses-table .action-btn.reset {
+            background: #ffa500;
+            color: #000;
+        }
+        .licenses-table .action-btn.delete {
+            background: #cc0000;
+            color: #fff;
+        }
+        .licenses-table .action-btn:hover {
+            opacity: 0.8;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: #141414;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            text-align: center;
+        }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .stat-card .number span {
+            color: #cc0000;
+        }
+        .stat-card .label {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        .loading {
+            color: #888;
+            text-align: center;
+            padding: 40px;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            .form-row select, .form-row input {
+                width: 100%;
+            }
+            .licenses-table {
+                font-size: 12px;
+            }
+            .licenses-table th, .licenses-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Box -->
+        <div id="loginBox" class="login-box">
+            <h1>🔐 Admin Panel</h1>
+            <p>Enter your credentials to manage licenses</p>
+            <input type="text" id="username" placeholder="Username" value="admin">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <div id="loginError" class="login-error">Invalid credentials</div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <div class="header">
+                <h1>EVAL<span>TWEAKS</span> · Admin</h1>
+                <div>
+                    <span class="user-info" id="userDisplay">Admin</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats" id="statsContainer">
+                <div class="stat-card">
+                    <div class="number" id="totalKeys">0</div>
+                    <div class="label">Total Keys</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="activeKeys">0</div>
+                    <div class="label">Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="usedKeys">0</div>
+                    <div class="label">Used</div>
+                </div>
+            </div>
+
+            <!-- Generate Section -->
+            <div class="generate-section">
+                <h2>Generate New License</h2>
+                <div class="form-row">
+                    <select id="planSelect">
+                        <option value="Basic">Basic</option>
+                        <option value="Ultimate">Ultimate</option>
+                        <option value="Aim Tweaks">Aim Tweaks</option>
+                    </select>
+                    <input type="number" id="daysInput" value="30" min="1" max="365">
+                    <span style="color:#666;font-size:13px;">days</span>
+                    <button onclick="generateKey()">Generate Key</button>
+                </div>
+                <div id="generatedKey" class="generated-key">
+                    <div class="key" id="newKey">EVAL-XXXX-XXXX-XXXX</div>
+                    <div class="info">Plan: <span id="newKeyPlan">Basic</span> · Valid for: <span id="newKeyDays">30</span> days</div>
+                    <button style="margin-top:10px;padding:8px 20px;background:#333;color:#fff;border:none;border-radius:4px;cursor:pointer;" onclick="copyKey()">Copy to Clipboard</button>
+                </div>
+            </div>
+
+            <!-- Licenses Table -->
+            <h3 style="color:#fff;margin-bottom:15px;">All Licenses</h3>
+            <div id="licensesContainer">
+                <div class="loading">Loading licenses...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentKeys = {};
+
+        function showLoginError(msg) {
+            const error = document.getElementById('loginError');
+            error.textContent = msg || 'Invalid credentials';
+            error.style.display = 'block';
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('userDisplay').textContent = username;
+                    loadLicenses();
+                } else {
+                    showLoginError(data.error);
+                }
+            })
+            .catch(() => showLoginError('Connection error'));
+        }
+
+        function logout() {
+            fetch('/api/logout', {method: 'POST'})
+            .then(() => {
+                document.getElementById('loginBox').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+            });
+        }
+
+        function generateKey() {
+            const plan = document.getElementById('planSelect').value;
+            const days = parseInt(document.getElementById('daysInput').value) || 30;
+
+            fetch('/api/generate_key', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({plan, days_valid: days})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('newKey').textContent = data.key;
+                    document.getElementById('newKeyPlan').textContent = data.plan;
+                    document.getElementById('newKeyDays').textContent = data.days_valid;
+                    document.getElementById('generatedKey').style.display = 'block';
+                    loadLicenses();
+                }
+            });
+        }
+
+        function copyKey() {
+            const key = document.getElementById('newKey').textContent;
+            navigator.clipboard.writeText(key);
+            alert('Key copied to clipboard!');
+        }
+
+        function loadLicenses() {
+            fetch('/api/list_licenses')
+            .then(res => res.json())
+            .then(data => {
+                currentKeys = data;
+                renderTable(data);
+                updateStats(data);
+            });
+        }
+
+        function updateStats(licenses) {
+            const keys = Object.keys(licenses);
+            const total = keys.length;
+            let active = 0, used = 0;
+            
+            keys.forEach(key => {
+                const l = licenses[key];
+                const expired = new Date(l.expires) < new Date();
+                if (!expired) active++;
+                if (l.activated) used++;
+            });
+
+            document.getElementById('totalKeys').textContent = total;
+            document.getElementById('activeKeys').textContent = active;
+            document.getElementById('usedKeys').textContent = used;
+        }
+
+        function renderTable(licenses) {
+            const container = document.getElementById('licensesContainer');
+            const keys = Object.keys(licenses);
+            
+            if (keys.length === 0) {
+                container.innerHTML = '<div style="color:#666;text-align:center;padding:40px;">No licenses generated yet</div>';
+                return;
+            }
+
+            let html = `<table class="licenses-table">
+                <thead>
+                    <tr>
+                        <th>License Key</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Expires</th>
+                        <th>HWID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            keys.forEach(key => {
+                const l = licenses[key];
+                const expired = new Date(l.expires) < new Date();
+                let status = 'Active';
+                let statusClass = 'status-active';
+                
+                if (expired) {
+                    status = 'Expired';
+                    statusClass = 'status-expired';
+                } else if (l.activated) {
+                    status = 'Used';
+                    statusClass = 'status-active';
+                } else {
+                    status = 'Available';
+                    statusClass = 'status-inactive';
+                }
+
+                const hwid = l.hwid ? l.hwid.substring(0, 12) + '...' : 'Not set';
+                const expires = new Date(l.expires).toLocaleDateString();
+
+                html += `<tr>
+                    <td style="font-family:monospace;color:#fff;font-weight:600;">${key}</td>
+                    <td>${l.plan}</td>
+                    <td class="${statusClass}">${status}</td>
+                    <td>${expires}</td>
+                    <td style="font-family:monospace;font-size:11px;color:#888;">${hwid}</td>
+                    <td>
+                        <button class="action-btn reset" onclick="resetKey('${key}')">Reset</button>
+                        <button class="action-btn delete" onclick="deleteKey('${key}')">Delete</button>
+                    </td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function resetKey(key) {
+            if (!confirm(`Reset license ${key}? This will allow it to be used on another PC.`)) return;
+            
+            fetch('/api/reset_key', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({key})
+            })
+            .then(res => res.json())
+            .then(() => loadLicenses());
+        }
+
+        function deleteKey(key) {
+            if (!confirm(`Delete license ${key}? This cannot be undone.`)) return;
+            
+            fetch('/api/delete_key', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({key})
+            })
+            .then(res => res.json())
+            .then(() => loadLicenses());
+        }
+
+        // Auto-login check
+        fetch('/api/check_auth')
+        .then(res => res.json())
+        .then(data => {
+            if (data.authenticated) {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('userDisplay').textContent = data.username;
+                loadLicenses();
+            }
+        });
+
+        // Enter key for login
+        document.getElementById('password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') login();
+        });
+        document.getElementById('username').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

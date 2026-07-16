@@ -67,6 +67,36 @@
         }
         .header .logout-btn:hover { border-color: #cc0000; color: #fff; }
         
+        .server-config {
+            background: #141414;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            margin-bottom: 25px;
+        }
+        .server-config label { color: #888; font-size: 13px; display: block; margin-bottom: 5px; }
+        .server-config input {
+            width: 100%;
+            padding: 10px 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .server-config input:focus { border-color: #cc0000; outline: none; }
+        .server-config .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .server-config .status.online { background: #00cc00; color: #fff; }
+        .server-config .status.offline { background: #cc0000; color: #fff; }
+        .server-config .status.checking { background: #ffa500; color: #fff; }
+        
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -117,6 +147,7 @@
             cursor: pointer;
         }
         .form-row button:hover { background: #e60000; }
+        .form-row button:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .generated-key {
             margin-top: 15px;
@@ -179,12 +210,15 @@
         }
         .licenses-table .action-btn.reset { background: #ffa500; color: #000; }
         .licenses-table .action-btn.delete { background: #cc0000; color: #fff; }
+        .licenses-table .action-btn:hover { opacity: 0.8; }
         
         .loading { color: #888; text-align: center; padding: 40px; }
         
         @media (max-width: 768px) {
             .form-row { flex-direction: column; }
             .form-row select, .form-row input { width: 100%; }
+            .licenses-table { font-size: 12px; }
+            .licenses-table th, .licenses-table td { padding: 8px 10px; }
         }
     </style>
 </head>
@@ -207,6 +241,17 @@
                 <div>
                     <span id="userDisplay" style="color:#888;margin-right:15px;">Admin</span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Server Configuration -->
+            <div class="server-config">
+                <label>License Server API URL:</label>
+                <input type="text" id="apiUrl" placeholder="http://localhost:5000/api" value="http://localhost:5000/api">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <button onclick="testConnection()" style="padding:8px 20px;background:#333;color:#fff;border:none;border-radius:4px;cursor:pointer;">Test Connection</button>
+                    <span id="serverStatus" class="status offline">Offline</span>
+                    <span style="color:#666;font-size:12px;">Make sure your Python server is running</span>
                 </div>
             </div>
 
@@ -246,17 +291,56 @@
     </div>
 
     <script>
+        let authToken = localStorage.getItem('evaltweaks_token') || null;
+        
+        function getApiUrl() {
+            return document.getElementById('apiUrl').value.trim();
+        }
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            };
+        }
+
         function showLoginError(msg) {
             const error = document.getElementById('loginError');
             error.textContent = msg || 'Invalid credentials';
             error.style.display = 'block';
         }
 
+        function testConnection() {
+            const url = getApiUrl();
+            const statusEl = document.getElementById('serverStatus');
+            
+            statusEl.className = 'status checking';
+            statusEl.textContent = 'Checking...';
+            
+            fetch(`${url}/check_auth`, {
+                method: 'GET',
+                headers: getHeaders()
+            })
+            .then(res => {
+                if (res.ok) {
+                    statusEl.className = 'status online';
+                    statusEl.textContent = 'Online';
+                } else {
+                    throw new Error('Offline');
+                }
+            })
+            .catch(() => {
+                statusEl.className = 'status offline';
+                statusEl.textContent = 'Offline';
+            });
+        }
+
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const url = getApiUrl();
 
-            fetch('/api/login', {
+            fetch(`${url}/login`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username, password})
@@ -264,9 +348,13 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
+                    authToken = data.token;
+                    localStorage.setItem('evaltweaks_token', authToken);
+                    
                     document.getElementById('loginBox').style.display = 'none';
                     document.getElementById('adminPanel').style.display = 'block';
                     document.getElementById('userDisplay').textContent = data.username;
+                    testConnection();
                     loadLicenses();
                 } else {
                     showLoginError(data.error);
@@ -276,24 +364,24 @@
         }
 
         function logout() {
-            fetch('/api/logout', {method: 'POST'})
-            .then(() => {
-                document.getElementById('loginBox').style.display = 'block';
-                document.getElementById('adminPanel').style.display = 'none';
-            });
+            authToken = null;
+            localStorage.removeItem('evaltweaks_token');
+            document.getElementById('loginBox').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
         }
 
         function generateKey() {
             const plan = document.getElementById('planSelect').value;
             const days = parseInt(document.getElementById('daysInput').value) || 30;
+            const url = getApiUrl();
             const btn = document.getElementById('generateBtn');
             
             btn.disabled = true;
             btn.textContent = 'Generating...';
 
-            fetch('/api/generate_key', {
+            fetch(`${url}/generate_key`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: getHeaders(),
                 body: JSON.stringify({plan, days_valid: days})
             })
             .then(res => res.json())
@@ -321,10 +409,13 @@
         }
 
         function loadLicenses() {
+            const url = getApiUrl();
             const container = document.getElementById('licensesContainer');
             container.innerHTML = '<div class="loading">Loading licenses...</div>';
 
-            fetch('/api/list_licenses')
+            fetch(`${url}/list_licenses`, {
+                headers: getHeaders()
+            })
             .then(res => {
                 if (res.status === 401) {
                     throw new Error('Please login again');
@@ -401,10 +492,11 @@
 
         function resetKey(key) {
             if (!confirm(`Reset license ${key}?`)) return;
+            const url = getApiUrl();
             
-            fetch('/api/reset_key', {
+            fetch(`${url}/reset_key`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: getHeaders(),
                 body: JSON.stringify({key})
             })
             .then(() => loadLicenses());
@@ -412,26 +504,36 @@
 
         function deleteKey(key) {
             if (!confirm(`Delete license ${key}?`)) return;
+            const url = getApiUrl();
             
-            fetch('/api/delete_key', {
+            fetch(`${url}/delete_key`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: getHeaders(),
                 body: JSON.stringify({key})
             })
             .then(() => loadLicenses());
         }
 
         // Check if already logged in
-        fetch('/api/check_auth')
-        .then(res => res.json())
-        .then(data => {
-            if (data.authenticated) {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                document.getElementById('userDisplay').textContent = data.username;
-                loadLicenses();
-            }
-        });
+        const savedToken = localStorage.getItem('evaltweaks_token');
+        if (savedToken) {
+            authToken = savedToken;
+            const url = getApiUrl();
+            
+            fetch(`${url}/check_auth`, {
+                headers: getHeaders()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated) {
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('userDisplay').textContent = data.username;
+                    testConnection();
+                    loadLicenses();
+                }
+            });
+        }
 
         // Enter key for login
         document.getElementById('password').addEventListener('keydown', (e) => {

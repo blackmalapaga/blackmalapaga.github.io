@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvalTweaks · Optimize Your PC For Gaming</title>
+    <title>EvalTweaks · Download Optimizer</title>
     
     <!-- Discord Embed Meta Tags -->
-    <meta property="og:title" content="EvalTweaks - Optimize Your PC For Gaming">
-    <meta property="og:description" content="Professional Windows optimization for competitive gaming. Increase FPS, reduce input delay, and unlock maximum system performance with EvalTweaks.">
-    <meta property="og:url" content="https://evaltweaks.com/">
+    <meta property="og:title" content="EvalTweaks - Download Windows Optimizer">
+    <meta property="og:description" content="Get the official EvalTweaks optimization pack. Boost FPS, reduce latency, and unlock peak gaming performance.">
+    <meta property="og:url" content="https://evaltweaks.com/download">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://media.discordapp.net/attachments/1350625202358452334/1527190667648827462/ChatGPT_Image_Jul_16_2026_12_11_16_AM.png?ex=6a59c2a4&is=6a587124&hm=1658ed584307682c4858d122f06e7647aef58be8c325385c18f9ef5974784a86&=&format=webp&quality=lossless&width=856&height=856">
     <meta name="theme-color" content="#cc0000">
@@ -43,6 +43,9 @@
             line-height: 1.7;
             scroll-behavior: smooth;
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .navbar {
@@ -121,97 +124,218 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
+            flex: 1;
         }
 
-        .hero {
+        /* HERO DOWNLOAD SECTION */
+        .download-hero {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 3rem 0 2rem;
-            min-height: 80vh;
+            padding: 2.5rem 0 3rem;
+            min-height: 70vh;
             justify-content: center;
         }
 
-        .logo-container {
-            margin-bottom: 2rem;
-        }
-        .logo-container img {
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
-            border-radius: 50%;
-            border: 2px solid rgba(204, 0, 0, 0.2);
-        }
-
-        .brand-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 4px;
-            margin-bottom: 0.3rem;
-        }
-        .brand-title span {
-            color: #cc0000;
-        }
-
-        .brand-tagline {
-            color: #666666;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 2rem;
-        }
-        .brand-tagline span {
-            margin: 0 8px;
-        }
-
-        .hero h1 {
+        .download-icon {
             font-size: 4rem;
+            color: #cc0000;
+            margin-bottom: 1.2rem;
+            background: rgba(204, 0, 0, 0.08);
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(204, 0, 0, 0.2);
+        }
+
+        .download-hero h1 {
+            font-size: 3.2rem;
             font-weight: 700;
             color: #ffffff;
-            letter-spacing: -1px;
-            line-height: 1.1;
-            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.6rem;
         }
-        .hero h1 span {
+        .download-hero h1 span {
             color: #cc0000;
         }
-        .hero p {
+
+        .download-hero .sub {
             font-size: 1.1rem;
+            color: #888888;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .file-badge {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #aaaaaa;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 2.5rem;
+        }
+        .file-badge i {
+            color: #cc0000;
+        }
+
+        /* DOWNLOAD CARD */
+        .download-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 2.5rem 3.5rem;
             max-width: 700px;
-            color: #888888;
-            margin: 0.8rem auto 1.5rem;
-            font-weight: 300;
-            line-height: 1.8;
+            width: 100%;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transition: border 0.2s;
+        }
+        .download-card:hover {
+            border-color: rgba(204, 0, 0, 0.2);
         }
 
-        .hero-tagline {
+        .file-info {
             display: flex;
-            gap: 2.5rem;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
-            margin: 0.5rem 0 1.5rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            border-left: 3px solid #cc0000;
         }
-        .hero-tagline span {
-            color: #888888;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .file-info .name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e0e0e0;
+            font-weight: 400;
         }
-        .hero-tagline span i {
+        .file-info .name i {
+            font-size: 2rem;
             color: #cc0000;
-            margin-right: 6px;
+        }
+        .file-info .meta {
+            color: #777777;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+        }
+        .file-info .meta span {
+            color: #aaaaaa;
+            font-weight: 400;
         }
 
-        .hero-highlight {
-            color: #999999;
-            font-size: 0.95rem;
-            margin: 0.5rem 0 2rem;
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #cc0000;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 1rem 2.8rem;
+            border-radius: 60px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(204, 0, 0, 0.3);
         }
-        .hero-highlight i {
+        .btn-download:hover {
+            background: #ff1a1a;
+            transform: scale(1.01);
+            box-shadow: 0 8px 32px rgba(204, 0, 0, 0.5);
+        }
+        .btn-download i {
+            font-size: 1.3rem;
+        }
+
+        .download-note {
+            margin-top: 1.8rem;
+            color: #555555;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .download-note i {
             color: #cc0000;
-            margin-right: 6px;
+            font-size: 0.7rem;
+        }
+
+        .how-to {
+            margin-top: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: left;
+            max-width: 700px;
+            width: 100%;
+        }
+        .how-to h3 {
+            color: #cccccc;
+            font-weight: 400;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .how-to h3 i {
+            color: #cc0000;
+        }
+        .how-to ol {
+            list-style: none;
+            counter-reset: step;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .how-to ol li {
+            counter-increment: step;
+            color: #999999;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .how-to ol li::before {
+            content: counter(step);
+            background: rgba(204, 0, 0, 0.15);
+            color: #cc0000;
+            font-weight: 600;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .how-to ol li code {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.1rem 0.6rem;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #dddddd;
+            font-size: 0.8rem;
         }
 
         .stats-bar {
@@ -219,7 +343,7 @@
             justify-content: center;
             gap: 4rem;
             padding: 2rem 0;
-            margin: 1rem 0 0;
+            margin: 2rem 0 0;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             width: 100%;
@@ -253,6 +377,7 @@
             margin-top: 1rem;
         }
 
+        /* responsive */
         @media (max-width: 968px) {
             .navbar {
                 padding: 1rem 1.5rem;
@@ -265,17 +390,16 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            .hero h1 {
-                font-size: 2.8rem;
+            .download-hero h1 {
+                font-size: 2.4rem;
             }
-            .brand-title {
-                font-size: 2.2rem;
+            .download-card {
+                padding: 2rem 1.5rem;
             }
-            .hero p {
-                font-size: 1rem;
-            }
-            .hero-tagline {
-                gap: 1.5rem;
+            .file-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
             }
             .stats-bar {
                 gap: 2rem;
@@ -286,20 +410,20 @@
             }
         }
         @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .brand-title {
+            .download-hero h1 {
                 font-size: 1.8rem;
             }
-            .logo-container img {
-                width: 80px;
-                height: 80px;
+            .download-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2.5rem;
             }
-            .hero-tagline {
-                gap: 1rem;
-                flex-direction: column;
-                align-items: center;
+            .btn-download {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .how-to {
+                padding: 1.2rem;
             }
         }
     </style>
@@ -308,35 +432,65 @@
     <nav class="navbar">
         <a href="/" class="nav-logo">EVAL<span>Tweaks</span></a>
         <div class="nav-links">
-            <a href="/" class="active">Home</a>
+            <a href="/">Home</a>
             <a href="/products">Products</a>
             <a href="/about">About</a>
+            <a href="/download" class="active">Download</a>
         </div>
         <a href="https://discord.gg/AaDjfEFk5D" target="_blank" class="nav-join"><i class="fab fa-discord" style="margin-right: 8px;"></i> Discord</a>
     </nav>
 
     <div class="container">
-        <section class="hero">
-            <div class="logo-container">
-                <img src="https://media.discordapp.net/attachments/1350625202358452334/1527190667648827462/ChatGPT_Image_Jul_16_2026_12_11_16_AM.png?ex=6a59c2a4&is=6a587124&hm=1658ed584307682c4858d122f06e7647aef58be8c325385c18f9ef5974784a86&=&format=webp&quality=lossless&width=856&height=856" alt="EvalTweaks Logo">
+        <section class="download-hero">
+            <div class="download-icon">
+                <i class="fas fa-file-archive"></i>
+            </div>
+            <h1>Get <span>EvalTweaks</span> Pack</h1>
+            <p class="sub">One-click optimization. Increase FPS, reduce input lag, and strip away Windows bloatware.</p>
+
+            <div class="file-badge">
+                <i class="fas fa-shield-alt"></i> version 2.4.1 · signed · 12.8 MB
             </div>
 
-            <div class="brand-title">EVAL<span>TWEAKS</span></div>
-            <div class="brand-tagline">BOOST FPS <span>·</span> LOWER LATENCY <span>·</span> PROFESSIONAL WINDOWS OPTIMIZATION</div>
+            <!-- DOWNLOAD CARD -->
+            <div class="download-card">
+                <div class="file-info">
+                    <div class="name">
+                        <i class="fas fa-file-archive"></i>
+                        <span><strong>EvalTweaks_Setup.rar</strong></span>
+                    </div>
+                    <div class="meta">
+                        <span>📦 12.8 MB</span> · <span>🔒 RAR</span>
+                    </div>
+                </div>
 
-            <h1>Optimize your PC <span>for gaming</span></h1>
-            <p>Professional Windows optimization for competitive gaming. Increase FPS, reduce input delay, and unlock maximum system performance with EvalTweaks.</p>
+                <!-- 
+                    ***********************************************
+                    *  REPLACE THE href BELOW WITH YOUR ACTUAL    *
+                    *  .rar FILE URL (GitHub, Dropbox, etc.)      *
+                    ***********************************************
+                -->
+                <a href="#" class="btn-download" id="downloadBtn">
+                    <i class="fas fa-download"></i> Download .rar
+                </a>
 
-            <div class="hero-tagline">
-                <span><i class="fas fa-bolt"></i> Boost FPS</span>
-                <span><i class="fas fa-clock"></i> Lower Latency</span>
-                <span><i class="fas fa-microchip"></i> Max Performance</span>
+                <div class="download-note">
+                    <i class="fas fa-circle-check"></i> 100% safe · Windows 10/11
+                </div>
             </div>
 
-            <div class="hero-highlight">
-                <i class="fas fa-check-circle"></i> Remove bloatware · zero delay · precision tweaks
+            <!-- how-to extract -->
+            <div class="how-to">
+                <h3><i class="fas fa-circle-info"></i> How to install</h3>
+                <ol>
+                    <li>Download the <code>.rar</code> file (above)</li>
+                    <li>Extract with WinRAR or 7-Zip</li>
+                    <li>Run <code>EvalTweaks_Optimizer.exe</code> as admin</li>
+                    <li>Apply tweaks &amp; reboot for best results</li>
+                </ol>
             </div>
 
+            <!-- stats bar for trust -->
             <div class="stats-bar">
                 <div><div class="number">2026</div><div class="label">Founded</div></div>
                 <div><div class="number">10<span>+</span></div><div class="label">Years experience</div></div>
@@ -348,5 +502,30 @@
             <p>© 2026 EvalTweaks · Professional Windows Optimization</p>
         </footer>
     </div>
+
+    <!-- tiny script to show a demo message if the link is still "#" -->
+    <script>
+        (function() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const originalHref = downloadBtn.getAttribute('href');
+
+            // If the href is still "#" (placeholder), show a friendly alert
+            // and open a new tab to a sample placeholder (optional)
+            // but we let the user know they need to replace it.
+            downloadBtn.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '' || href === 'https://evaltweaks.com/download') {
+                    e.preventDefault();
+                    alert(
+                        '📦 Replace the download link!\n\n' +
+                        'Update the href in the <a> tag (id="downloadBtn") with your actual .rar URL.\n\n' +
+                        'Example: href="https://github.com/your-username/your-repo/EvalTweaks_Setup.rar"\n\n' +
+                        'You can host the .rar on GitHub Releases, Dropbox, or any direct link.'
+                    );
+                    // open a new tab with a guide (optional) — but we just show the alert.
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
